@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // Custom brand colours (from Georges River Council)
 const brandColors = {
@@ -16,8 +16,22 @@ const brandColors = {
   filterButtonHoverBg: '#E8EAED',
 };
 
+// Define types for better TypeScript support
+interface LanguageInfo {
+  code: string;
+  nativeName: string;
+}
+
+interface Phrase {
+  id: string;
+  english: string;
+  category: string;
+  type: string;
+  translations?: Record<string, string>;
+}
+
 // Mapping of display names to BCP-47 language codes
-const LANGUAGE_CODES = {
+const LANGUAGE_CODES: Record<string, LanguageInfo> = {
   'Mandarin': { code: 'zh-CN', nativeName: '普通话' },
   'Cantonese': { code: 'zh-HK', nativeName: '粤语' },
   'Nepali': { code: 'ne-NP', nativeName: 'नेपाली' },
@@ -46,9 +60,9 @@ const CUSTOMER_CATEGORY_ORDER = [
 ];
 
 // Sample phrases data
-const samplePhrases = [
+const samplePhrases: Phrase[] = [
   { 
-    id: 1, 
+    id: "1", 
     type: 'staff', 
     category: 'General Enquiries', 
     english: 'Please follow me.',
@@ -65,7 +79,7 @@ const samplePhrases = [
     }
   },
   { 
-    id: 2, 
+    id: "2", 
     type: 'staff', 
     category: 'General Enquiries', 
     english: 'Thank you.',
@@ -82,7 +96,7 @@ const samplePhrases = [
     }
   },
   { 
-    id: 3, 
+    id: "3", 
     type: 'staff', 
     category: 'Transactional', 
     english: 'Please show me your library card',
@@ -99,7 +113,7 @@ const samplePhrases = [
     }
   },
   { 
-    id: 4, 
+    id: "4", 
     type: 'staff', 
     category: 'Digital Services', 
     english: 'Would you like to use the internet?',
@@ -116,7 +130,7 @@ const samplePhrases = [
     }
   },
   { 
-    id: 5, 
+    id: "5", 
     type: 'customer', 
     category: 'General Assistance', 
     english: 'How do I renew my borrowed items?',
@@ -133,7 +147,7 @@ const samplePhrases = [
     }
   },
   { 
-    id: 6, 
+    id: "6", 
     type: 'customer', 
     category: 'Library Layout', 
     english: 'Where is the bathroom?',
@@ -192,7 +206,7 @@ function App() {
   });
 
   // Group filtered phrases by category
-  const groupedPhrases = filteredPhrases.reduce((acc, phrase) => {
+  const groupedPhrases: Record<string, Phrase[]> = filteredPhrases.reduce((acc: Record<string, Phrase[]>, phrase) => {
     if (!acc[phrase.category]) {
       acc[phrase.category] = [];
     }
@@ -340,8 +354,9 @@ function App() {
             alt="Georges River Libraries Logo"
             className="h-24 md:h-28 object-contain rounded-md"
             onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "https://placehold.co/160x80/cccccc/333333?text=Logo+Error";
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = "https://placehold.co/160x80/cccccc/333333?text=Logo+Error";
             }}
           />
         </div>
@@ -503,7 +518,7 @@ function App() {
                       console.log('Play audio for:', phrase.english);
                     }}
                     className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
-                    style={{ backgroundColor: currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed, color: 'white', focusRingColor: brandColors.primaryTeal }}
+                    style={{ backgroundColor: currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed, color: 'white' }}
                     title="Play audio"
                   >
                     {speakerIcon}
