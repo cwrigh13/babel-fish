@@ -149,12 +149,16 @@
         <div style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
             <p>Your Babel Fish application is now live on GitHub Pages!</p>
             <p>Ready to start building the full application.</p>
+            <p><small>Last updated: <span id="timestamp"></span></small></p>
         </div>
     </div>
     
     <script>
         // Simple interaction
         document.addEventListener('DOMContentLoaded', function() {
+            // Add timestamp
+            document.getElementById('timestamp').textContent = new Date().toLocaleString();
+            
             const features = document.querySelectorAll('.feature');
             features.forEach(feature => {
                 feature.addEventListener('mouseenter', function() {
