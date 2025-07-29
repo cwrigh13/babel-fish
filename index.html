@@ -1,15 +1,937 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Babel Fish - Library Translation Tool</title>
-    <script type="module" crossorigin src="./assets/index-CVCtI77d.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-COI5Clqh.css">
-  </head>
-  <body>
-    <div id="app"></div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Georges River Libraries Babel Fish</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap');
+        body { 
+            font-family: 'Work Sans', sans-serif; 
+            margin: 0; 
+            background-color: #F9FAFB;
+        }
+        .text-shadow-light { 
+            text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.05); 
+        }
+        .min-h-screen { 
+            min-height: 100vh; 
+        }
+        .max-w-4xl { 
+            max-width: 56rem; 
+        }
+        .mx-auto { 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        .rounded-xl { 
+            border-radius: 0.75rem; 
+        }
+        .shadow-lg { 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+        }
+        .p-6 { 
+            padding: 1.5rem; 
+        }
+        .md\:p-8 { 
+            padding: 2rem; 
+        }
+        .flex { 
+            display: flex; 
+        }
+        .justify-center { 
+            justify-content: center; 
+        }
+        .mb-6 { 
+            margin-bottom: 1.5rem; 
+        }
+        .rounded-lg { 
+            border-radius: 0.5rem; 
+        }
+        .text-4xl { 
+            font-size: 2.25rem; 
+        }
+        .md\:text-5xl { 
+            font-size: 3rem; 
+        }
+        .font-bold { 
+            font-weight: 700; 
+        }
+        .text-center { 
+            text-align: center; 
+        }
+        .gap-4 { 
+            gap: 1rem; 
+        }
+        .mb-8 { 
+            margin-bottom: 2rem; 
+        }
+        .button-base { 
+            padding: 0.75rem 1.5rem; 
+            border-radius: 9999px; 
+            font-weight: 600; 
+            transition: all 0.2s ease-in-out; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+            border: none; 
+        }
+        .mt-2 { 
+            margin-top: 0.5rem; 
+        }
+        .button-primary-active { 
+            background-color: #00A99D; 
+            color: white; 
+            transform: scale(1.05); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+        .button-primary-inactive { 
+            background-color: #E5E7EB; 
+            color: #333333; 
+        }
+        .button-primary-inactive:hover { 
+            background-color: #E0F2F1; 
+            color: #007A70; 
+            transform: translateY(-1px); 
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); 
+        }
+        .button-accent-active { 
+            background-color: #EB001B; 
+            color: white; 
+            transform: scale(1.05); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+        .button-accent-inactive { 
+            background-color: #E5E7EB; 
+            color: #333333; 
+        }
+        .button-accent-inactive:hover { 
+            background-color: #FDE0DF; 
+            color: #EB001B; 
+            transform: translateY(-1px); 
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); 
+        }
+        .grid { 
+            display: grid; 
+        }
+        .grid-cols-1 { 
+            grid-template-columns: repeat(1, minmax(0, 1fr)); 
+        }
+        .md\:grid-cols-2 { 
+            grid-template-columns: repeat(2, minmax(0, 1fr)); 
+        }
+        .gap-6 { 
+            gap: 1.5rem; 
+        }
+        .bg-white { 
+            background-color: white; 
+        }
+        .p-4 { 
+            padding: 1rem; 
+        }
+        .rounded-lg { 
+            border-radius: 0.5rem; 
+        }
+        .border { 
+            border-width: 1px; 
+        }
+        .border-gray-200 { 
+            border-color: #e5e7eb; 
+        }
+        .text-lg { 
+            font-size: 1.125rem; 
+        }
+        .font-semibold { 
+            font-weight: 600; 
+        }
+        .mb-2 { 
+            margin-bottom: 0.5rem; 
+        }
+        .text-gray-600 { 
+            color: #4b5563; 
+        }
+        .text-sm { 
+            font-size: 0.875rem; 
+        }
+        .phrase-card { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 1rem; 
+            margin-bottom: 0.75rem; 
+            background-color: white; 
+            border-radius: 0.5rem; 
+            border: 1px solid #e5e7eb; 
+            transition: all 0.2s; 
+        }
+        .phrase-card:hover { 
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.12); 
+            transform: translateY(-2px); 
+        }
+        .phrase-list-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(calc(50% - 1rem), 1fr)); 
+            gap: 1rem; 
+        }
+        @media (max-width: 640px) { 
+            .phrase-list-grid { 
+                grid-template-columns: 1fr; 
+            } 
+        }
+        .category-section { 
+            background-color: #E0F2F1; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+        }
+        .staff-category-button-active { 
+            background-color: #00A99D; 
+            color: white; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+        }
+        .staff-category-button-inactive { 
+            background-color: #F1F3F4; 
+            color: #3C4043; 
+        }
+        .staff-category-button-inactive:hover { 
+            background-color: #E8EAED; 
+            color: #00A99D; 
+        }
+        .customer-category-button-active { 
+            background-color: #00A99D; 
+            color: white; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+        }
+        .customer-category-button-inactive { 
+            background-color: #F1F3F4; 
+            color: #3C4043; 
+        }
+        .customer-category-button-inactive:hover { 
+            background-color: #E8EAED; 
+            color: #00A99D; 
+        }
+        .language-buttons-container { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 1rem; 
+        }
+        .language-buttons-row { 
+            display: flex; 
+            justify-content: center; 
+            gap: 0.75rem; 
+            flex-wrap: wrap; 
+        }
+        .language-button { 
+            padding: 0.625rem 1.25rem; 
+            border-radius: 9999px; 
+            font-weight: 500; 
+            font-size: 0.875rem; 
+            transition: all 0.2s ease-in-out; 
+            border: none; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: inline-block; 
+            text-align: center; 
+            min-width: 90px; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+        }
+        .language-button-active { 
+            background-color: #00A99D; 
+            color: white; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+        }
+        .language-button-inactive { 
+            background-color: #F1F3F4; 
+            color: #3C4043; 
+        }
+        .language-button-inactive:hover { 
+            background-color: #E8EAED; 
+            color: #00A99D; 
+        }
+        .cursor-pointer { 
+            cursor: pointer; 
+        }
+        .flex-1 { 
+            flex: 1 1 0%; 
+        }
+        .text-left { 
+            text-align: left; 
+        }
+        .text-base { 
+            font-size: 1rem; 
+        }
+        .font-medium { 
+            font-weight: 500; 
+        }
+        .mb-1 { 
+            margin-bottom: 0.25rem; 
+        }
+        .flex-shrink-0 { 
+            flex-shrink: 0; 
+        }
+        .p-3 { 
+            padding: 0.75rem; 
+        }
+        .rounded-full { 
+            border-radius: 9999px; 
+        }
+        .shadow-md { 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
+        }
+        .transition-transform { 
+            transition-property: transform; 
+        }
+        .transform { 
+            transform: translateZ(0); 
+        }
+        .hover\:scale-105:hover { 
+            transform: scale(1.05); 
+        }
+        .focus\:outline-none:focus { 
+            outline: 2px solid transparent; 
+            outline-offset: 2px; 
+        }
+        .focus\:ring-2:focus { 
+            box-shadow: 0 0 0 2px rgba(0, 169, 157, 0.5); 
+        }
+        .focus\:ring-opacity-75:focus { 
+            box-shadow: 0 0 0 2px rgba(0, 169, 157, 0.75); 
+        }
+        .popup-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background-color: rgba(0, 0, 0, 0.7); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000; 
+        }
+        .popup-content { 
+            background-color: white; 
+            padding: 2rem; 
+            border-radius: 1rem; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+            text-align: center; 
+            position: relative; 
+            max-width: 90vw; 
+            max-height: 90vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .popup-close { 
+            position: absolute; 
+            top: 0.75rem; 
+            right: 0.75rem; 
+            background: none; 
+            border: none; 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+            color: #333333; 
+            padding: 0.25rem; 
+            line-height: 1; 
+        }
+        .text-2xl { 
+            font-size: 1.5rem; 
+        }
+        .text-teal-800 { 
+            color: #115e59; 
+        }
+        .mb-4 { 
+            margin-bottom: 1rem; 
+        }
+        .text-gray-700 { 
+            color: #374151; 
+        }
+        .w-48 { 
+            width: 12rem; 
+        }
+        .h-48 { 
+            height: 12rem; 
+        }
+        .object-contain { 
+            object-fit: contain; 
+        }
+        .mx-auto { 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        .rounded-md { 
+            border-radius: 0.375rem; 
+        }
+        .mt-4 { 
+            margin-top: 1rem; 
+        }
+        .text-gray-500 { 
+            color: #6b7280; 
+        }
+        .hidden { 
+            display: none; 
+        }
+        .block { 
+            display: block; 
+        }
+        .w-full { 
+            width: 100%; 
+        }
+        .h-300 { 
+            height: 300px; 
+        }
+        .border-0 { 
+            border: 0; 
+        }
+        .loading-lazy { 
+            loading: lazy; 
+        }
+        .no-referrer-when-downgrade { 
+            referrerpolicy: no-referrer-when-downgrade; 
+        }
+        @media (min-width: 768px) {
+            .md\:p-8 { 
+                padding: 2rem; 
+            }
+            .md\:text-5xl { 
+                font-size: 3rem; 
+            }
+            .md\:grid-cols-2 { 
+                grid-template-columns: repeat(2, minmax(0, 1fr)); 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
-  </body>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Custom brand colours (approximated from the Georges River Council website)
+        const brandColors = {
+            primaryTeal: '#00A99D',
+            darkTeal: '#007A70',
+            lightTealBackground: '#E0F2F1',
+            accentRed: '#EB001B',
+            lightRedBackground: '#FDE0DF',
+            darkGreyText: '#333333',
+            mediumGrey: '#6B7280',
+            lightGreyBackground: '#F9FAFB',
+            filterButtonActiveBlue: '#4285F4',
+            filterButtonInactiveBg: '#F1F3F4',
+            filterButtonInactiveText: '#3C4043',
+            filterButtonHoverBg: '#E8EAED',
+        };
+
+        // Mapping of display names to BCP-47 language codes for SpeechSynthesisUtterance
+        const LANGUAGE_CODES = {
+            'Mandarin': { code: 'zh-CN', nativeName: '普通话' },
+            'Cantonese': { code: 'zh-HK', nativeName: '粤语' },
+            'Nepali': { code: 'ne-NP', nativeName: 'नेपाली' },
+            'Greek': { code: 'el-GR', nativeName: 'Ελληνικά' },
+            'Arabic': { code: 'ar-SA', nativeName: 'العربية' },
+            'Macedonian': { code: 'mk-MK', nativeName: 'Македонски' },
+            'Spanish': { code: 'es-ES', nativeName: 'Español' },
+            'Italian': { code: 'it-IT', nativeName: 'Italiano' },
+            'Indonesian': { code: 'id-ID', nativeName: 'Bahasa Indonesia' },
+            'English': { code: 'en-US', nativeName: 'English' },
+        };
+
+        // Speaker icon SVG
+        const speakerIcon = (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+        );
+
+        function App() {
+            const [currentMode, setCurrentMode] = useState('staff');
+            const [showQrPopup, setShowQrPopup] = useState(false);
+            const [showLanguageChoicePopup, setShowLanguageChoicePopup] = useState(false);
+            const [staffLanguage, setStaffLanguage] = useState('Mandarin');
+            const [customerLanguage, setCustomerLanguage] = useState('Mandarin');
+            const [staffSubcategoryFilter, setStaffSubcategoryFilter] = useState('All');
+            const [customerSubcategoryFilter, setCustomerSubcategoryFilter] = useState('All');
+            const [userId, setUserId] = useState('Loading...');
+            const [isAuthReady, setIsAuthReady] = useState(false);
+            const [phrases, setPhrases] = useState([]);
+
+            // Sample phrases data (simplified version of the full database)
+            const samplePhrases = [
+                {
+                    id: '1',
+                    english: 'Hello, how can I help you today?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '你好，今天我能为您做些什么？',
+                        'zh-HK': '你好，今天我能為您做些什麼？',
+                        'ne-NP': 'नमस्ते, आज म तपाईंलाई कसरी मद्दत गर्न सक्छु?',
+                        'el-GR': 'Γεια σας, πώς μπορώ να σας βοηθήσω σήμερα;',
+                        'ar-SA': 'مرحباً، كيف يمكنني مساعدتك اليوم؟',
+                        'mk-MK': 'Здраво, како можам да ви помогнам денес?',
+                        'es-ES': 'Hola, ¿cómo puedo ayudarte hoy?',
+                        'it-IT': 'Ciao, come posso aiutarti oggi?',
+                        'id-ID': 'Halo, bagaimana saya bisa membantu Anda hari ini?'
+                    }
+                },
+                {
+                    id: '2',
+                    english: 'Do you have a library card?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '您有借书证吗？',
+                        'zh-HK': '您有借書證嗎？',
+                        'ne-NP': 'तपाईंसँग पुस्तकालय कार्ड छ?',
+                        'el-GR': 'Έχετε κάρτα βιβλιοθήκης;',
+                        'ar-SA': 'هل لديك بطاقة مكتبة؟',
+                        'mk-MK': 'Дали имате библиотекарска картичка?',
+                        'es-ES': '¿Tienes una tarjeta de biblioteca?',
+                        'it-IT': 'Hai una tessera della biblioteca?',
+                        'id-ID': 'Apakah Anda memiliki kartu perpustakaan?'
+                    }
+                },
+                {
+                    id: '3',
+                    english: 'I need help finding a book.',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我需要帮助找一本书。',
+                        'zh-HK': '我需要幫助找一本書。',
+                        'ne-NP': 'मलाई एउटा किताब भेट्न मद्दत चाहिन्छ।',
+                        'el-GR': 'Χρειάζομαι βοήθεια για να βρω ένα βιβλίο.',
+                        'ar-SA': 'أحتاج مساعدة في العثور على كتاب.',
+                        'mk-MK': 'Ми треба помош за да најдам книга.',
+                        'es-ES': 'Necesito ayuda para encontrar un libro.',
+                        'it-IT': 'Ho bisogno di aiuto per trovare un libro.',
+                        'id-ID': 'Saya perlu bantuan untuk menemukan buku.'
+                    }
+                },
+                {
+                    id: '4',
+                    english: 'Where are the computers?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '电脑在哪里？',
+                        'zh-HK': '電腦在哪裡？',
+                        'ne-NP': 'कम्प्युटरहरू कहाँ छन्?',
+                        'el-GR': 'Πού είναι οι υπολογιστές;',
+                        'ar-SA': 'أين أجهزة الكمبيوتر؟',
+                        'mk-MK': 'Каде се компјутерите?',
+                        'es-ES': '¿Dónde están las computadoras?',
+                        'it-IT': 'Dove sono i computer?',
+                        'id-ID': 'Di mana komputer-komputer itu?'
+                    }
+                },
+                {
+                    id: '5',
+                    english: 'How do I get to Centrelink?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我怎么去Centrelink？',
+                        'zh-HK': '我怎麼去Centrelink？',
+                        'ne-NP': 'म कसरी Centrelink मा जान सक्छु?',
+                        'el-GR': 'Πώς μπορώ να φτάσω στο Centrelink;',
+                        'ar-SA': 'كيف أصل إلى Centrelink؟',
+                        'mk-MK': 'Како да стигнам до Centrelink?',
+                        'es-ES': '¿Cómo llego a Centrelink?',
+                        'it-IT': 'Come arrivo a Centrelink?',
+                        'id-ID': 'Bagaimana saya bisa ke Centrelink?'
+                    }
+                }
+            ];
+
+            useEffect(() => {
+                // Simulate loading phrases
+                setTimeout(() => {
+                    setPhrases(samplePhrases);
+                    setIsAuthReady(true);
+                    setUserId('demo-user-123');
+                }, 1000);
+            }, []);
+
+            const speakPhrase = (text, langCode) => {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = langCode;
+                    utterance.rate = 0.8;
+                    speechSynthesis.speak(utterance);
+                }
+            };
+
+            // Filter phrases based on current mode and filters
+            const filteredPhrases = phrases.filter(phrase => {
+                if (phrase.type !== currentMode) return false;
+                if (currentMode === 'staff' && staffSubcategoryFilter !== 'All' && phrase.category !== staffSubcategoryFilter) return false;
+                if (currentMode === 'customer' && customerSubcategoryFilter !== 'All' && phrase.category !== customerSubcategoryFilter) return false;
+                return true;
+            });
+
+            // Group phrases by category
+            const groupedPhrases = filteredPhrases.reduce((acc, phrase) => {
+                if (!acc[phrase.category]) {
+                    acc[phrase.category] = [];
+                }
+                acc[phrase.category].push(phrase);
+                return acc;
+            }, {});
+
+            // Get category names for filtering
+            const staffCategories = [...new Set(phrases.filter(p => p.type === 'staff').map(p => p.category))];
+            const customerCategories = [...new Set(phrases.filter(p => p.type === 'customer').map(p => p.category))];
+
+            return (
+                <div className="min-h-screen" style={{ backgroundColor: brandColors.lightGreyBackground }}>
+                    <div className="max-w-4xl mx-auto rounded-xl shadow-lg p-6 md:p-8" style={{ backgroundColor: 'white' }}>
+                        {/* Logo */}
+                        <div className="flex justify-center mb-6 p-4 rounded-lg" style={{ backgroundColor: brandColors.darkTeal }}>
+                            <img
+                                src="https://georgesriver.spydus.com/api/maintenance/1.0/imagebrowser/image?blobName=a31cf63f-7e24-41d5-b1f8-c206bde45ce6.png"
+                                alt="Georges River Libraries Logo"
+                                className="h-1 md:h-2 object-contain rounded-md"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "https://placehold.co/300x80/007A70/ffffff?text=Georges+River+Libraries";
+                                }}
+                            />
+                        </div>
+
+                        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-shadow-light" style={{ color: brandColors.darkTeal }}>
+                            Georges River Libraries Babel Fish
+                        </h1>
+
+                        {/* Mode Selection Buttons */}
+                        <div className="flex justify-center gap-4 mb-8">
+                            <button
+                                onClick={() => setCurrentMode('staff')}
+                                className={`button-base mt-2 ${currentMode === 'staff' ? 'button-primary-active' : 'button-primary-inactive'}`}
+                            >
+                                For Staff
+                            </button>
+                            <button
+                                onClick={() => setCurrentMode('customer')}
+                                className={`button-base mt-2 ${currentMode === 'customer' ? 'button-accent-active' : 'button-accent-inactive'}`}
+                            >
+                                For Customers
+                            </button>
+                        </div>
+
+
+
+                        {/* Language Selection */}
+                        <div className="language-buttons-container mb-8">
+                            {currentMode === 'staff' ? (
+                                <>
+                                    <div className="language-buttons-row">
+                                        <button
+                                            onClick={() => setStaffLanguage('Mandarin')}
+                                            className={`language-button ${staffLanguage === 'Mandarin' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Mandarin
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Cantonese')}
+                                            className={`language-button ${staffLanguage === 'Cantonese' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Cantonese
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Nepali')}
+                                            className={`language-button ${staffLanguage === 'Nepali' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Nepali
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Greek')}
+                                            className={`language-button ${staffLanguage === 'Greek' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Greek
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Arabic')}
+                                            className={`language-button ${staffLanguage === 'Arabic' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Arabic
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Macedonian')}
+                                            className={`language-button ${staffLanguage === 'Macedonian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Macedonian
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Spanish')}
+                                            className={`language-button ${staffLanguage === 'Spanish' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Spanish
+                                        </button>
+                                    </div>
+                                    <div className="language-buttons-row">
+                                        <button
+                                            onClick={() => setStaffLanguage('Italian')}
+                                            className={`language-button ${staffLanguage === 'Italian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Italian
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Indonesian')}
+                                            className={`language-button ${staffLanguage === 'Indonesian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Indonesian
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="language-buttons-row">
+                                        <button
+                                            onClick={() => setCustomerLanguage('Mandarin')}
+                                            className={`language-button ${customerLanguage === 'Mandarin' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Mandarin
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Cantonese')}
+                                            className={`language-button ${customerLanguage === 'Cantonese' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Cantonese
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Nepali')}
+                                            className={`language-button ${customerLanguage === 'Nepali' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Nepali
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Greek')}
+                                            className={`language-button ${customerLanguage === 'Greek' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Greek
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Arabic')}
+                                            className={`language-button ${customerLanguage === 'Arabic' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Arabic
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Macedonian')}
+                                            className={`language-button ${customerLanguage === 'Macedonian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Macedonian
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Spanish')}
+                                            className={`language-button ${customerLanguage === 'Spanish' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Spanish
+                                        </button>
+                                    </div>
+                                    <div className="language-buttons-row">
+                                        <button
+                                            onClick={() => setCustomerLanguage('Italian')}
+                                            className={`language-button ${customerLanguage === 'Italian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Italian
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Indonesian')}
+                                            className={`language-button ${customerLanguage === 'Indonesian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            Indonesian
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Category Filter Buttons */}
+                        <div className="flex flex-wrap justify-center gap-4 mb-8">
+                            {currentMode === 'staff' ? (
+                                <>
+                                    <button
+                                        onClick={() => setStaffSubcategoryFilter('All')}
+                                        className={`language-button ${staffSubcategoryFilter === 'All'
+                                            ? 'language-button-active'
+                                            : 'language-button-inactive'
+                                        }`}
+                                    >
+                                        All
+                                    </button>
+                                    {staffCategories.map((actualCategoryName) => (
+                                        <button
+                                            key={actualCategoryName}
+                                            onClick={() => setStaffSubcategoryFilter(actualCategoryName)}
+                                            className={`language-button ${staffSubcategoryFilter === actualCategoryName
+                                                ? 'language-button-active'
+                                                : 'language-button-inactive'
+                                            }`}
+                                        >
+                                            {actualCategoryName}
+                                        </button>
+                                    ))}
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => setCustomerSubcategoryFilter('All')}
+                                        className={`language-button ${customerSubcategoryFilter === 'All'
+                                            ? 'language-button-active'
+                                            : 'language-button-inactive'
+                                        }`}
+                                    >
+                                        All
+                                    </button>
+                                    {customerCategories.map((actualCategoryName) => (
+                                        <button
+                                            key={actualCategoryName}
+                                            onClick={() => setCustomerSubcategoryFilter(actualCategoryName)}
+                                            className={`language-button ${customerSubcategoryFilter === actualCategoryName
+                                                ? 'language-button-active'
+                                                : 'language-button-inactive'
+                                            }`}
+                                        >
+                                            {actualCategoryName}
+                                        </button>
+                                    ))}
+                                </>
+                            )}
+                        </div>
+
+                        {/* Phrase List Display */}
+                        {Object.keys(groupedPhrases).length === 0 && (
+                            <div className="text-center text-lg py-10" style={{ color: brandColors.mediumGrey }}>
+                                {isAuthReady ? 'Loading phrases or no phrases found.' : 'Initialising application...'}
+                            </div>
+                        )}
+
+                        {Object.keys(groupedPhrases).map((category) => (
+                            <div key={category} className="mb-8 category-section">
+                                <h2 className="text-2xl md:text-3xl font-bold mb-4 pb-2 border-b-2" style={{ color: brandColors.darkTeal, borderColor: brandColors.primaryTeal }}>
+                                    {category}
+                                </h2>
+                                <ul className="phrase-list-grid">
+                                    {groupedPhrases[category].map((phrase) => (
+                                        <li
+                                            key={phrase.id}
+                                            className="phrase-card cursor-pointer"
+                                            onClick={() => {
+                                                if (phrase.english === 'How do I get to Centrelink?' && currentMode === 'customer') {
+                                                    setShowQrPopup(true);
+                                                } else {
+                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                    const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                    const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                    speakPhrase(translatedText, langCode);
+                                                }
+                                            }}
+                                        >
+                                            {currentMode === 'staff' ? (
+                                                <>
+                                                    <p className="text-base font-medium mb-1" style={{ color: brandColors.darkGreyText }}>{phrase.english}</p>
+                                                    <p className="text-lg font-semibold" style={{ color: brandColors.darkTeal }}>
+                                                        {phrase.translations?.[LANGUAGE_CODES[staffLanguage].code] || phrase.english}
+                                                    </p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <p className="text-lg font-semibold mb-1" style={{ color: brandColors.darkTeal }}>
+                                                        {phrase.translations?.[LANGUAGE_CODES[customerLanguage].code] || phrase.english}
+                                                    </p>
+                                                    <p className="text-base font-medium" style={{ color: brandColors.darkGreyText }}>
+                                                        {phrase.english}
+                                                        {phrase.english === 'How do I get to Centrelink?' && (
+                                                            <>
+                                                                <br />
+                                                                <span className="text-sm ml-0 italic" style={{color: brandColors.mediumGrey}}>
+                                                                    Click on me for a map
+                                                                </span>
+                                                            </>
+                                                        )}
+                                                    </p>
+                                                </>
+                                            )}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                    const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                    const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                    speakPhrase(translatedText, langCode);
+                                                }}
+                                                className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+                                                style={{ backgroundColor: currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed, color: 'white' }}
+                                                title="Play audio"
+                                            >
+                                                {speakerIcon}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+
+                        {/* QR Code Button */}
+                        <div className="text-center mt-8">
+                            <button
+                                onClick={() => setShowQrPopup(true)}
+                                className="button-base button-primary-active"
+                                style={{ backgroundColor: brandColors.primaryTeal }}
+                            >
+                                Get Directions to Centrelink
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* QR Code Pop-up Modal */}
+                    {showQrPopup && (
+                        <div className="popup-overlay">
+                            <div className="popup-content">
+                                <button className="popup-close" onClick={() => setShowQrPopup(false)}>
+                                    &times;
+                                </button>
+                                <h3 className="text-2xl font-bold text-teal-800 mb-4">Directions to Centrelink</h3>
+                                <p className="text-lg text-gray-700 mb-4">Scan this QR code for Google Maps directions (in Mandarin):</p>
+                                
+                                {/* Google Map iframe */}
+                                <iframe
+                                    src="https://www.google.com/maps/embed/v1/directions?key=&origin=Hurstville+Library,+12-16+MacMahon+St,+Hurstville+NSW+2220,+Australia&destination=Centrelink+Hurstville,+125+Forest+Rd,+Hurstville+NSW+2220,+Australia&mode=driving&language=zh-CN"
+                                    width="100%"
+                                    height="300"
+                                    style={{ border: 0, borderRadius: '0.5rem', marginBottom: '1rem' }}
+                                    allowFullScreen=""
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    title="Directions to Centrelink Hurstville"
+                                ></iframe>
+                                
+                                <img
+                                    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.google.com/maps/dir/?api=1&origin=12-16%20MacMahon%20St,%20Hurstville%20NSW%202220,%20Australia&destination=125%20Forest%20Rd,%20Hurstville%20NSW%202220,%20Australia&travelmode=driving&hl=zh-CN"
+                                    alt="QR Code for Centrelink Directions"
+                                    className="w-48 h-48 object-contain mx-auto rounded-md"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = "https://placehold.co/192x192/cccccc/333333?text=QR+Error";
+                                    }}
+                                />
+                                <p className="text-sm text-gray-500 mt-4">Opens in Google Maps app or browser.</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
 </html>
