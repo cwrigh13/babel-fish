@@ -158,24 +158,23 @@
             font-size: 0.875rem; 
         }
         .phrase-card { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 1rem; 
-            margin-bottom: 0.75rem; 
             background-color: white; 
-            border-radius: 0.5rem; 
-            border: 1px solid #e5e7eb; 
-            transition: all 0.2s; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; /* rounded-lg */ 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start; /* Align content to the start (left) */ 
+            transition: all 0.2s ease-in-out; 
         }
         .phrase-card:hover { 
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.12); 
             transform: translateY(-2px); 
         }
-        .phrase-list-grid { 
+        .phrase-list-grid { /* New class for grid layout */ 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(calc(50% - 1rem), 1fr)); 
-            gap: 1rem; 
+            grid-template-columns: repeat(auto-fit, minmax(calc(50% - 1rem), 1fr)); /* Two columns, considering gap */ 
+            gap: 1rem; /* Gap between cards */ 
         }
         @media (max-width: 640px) { 
             .phrase-list-grid { 
@@ -450,13 +449,25 @@
         );
 
         function App() {
-            const [currentMode, setCurrentMode] = useState('staff');
+            // Load saved state from localStorage or use defaults
+            const getSavedState = (key, defaultValue) => {
+                try {
+                    const saved = localStorage.getItem(`babelFish_${key}`);
+                    return saved ? JSON.parse(saved) : defaultValue;
+                } catch (error) {
+                    console.warn(`Error loading saved state for ${key}:`, error);
+                    return defaultValue;
+                }
+            };
+
+            const [currentMode, setCurrentMode] = useState(() => getSavedState('currentMode', 'staff'));
             const [showQrPopup, setShowQrPopup] = useState(false);
+        const [qrPopupType, setQrPopupType] = useState('');
             const [showLanguageChoicePopup, setShowLanguageChoicePopup] = useState(false);
-            const [staffLanguage, setStaffLanguage] = useState('Mandarin');
-            const [customerLanguage, setCustomerLanguage] = useState('Mandarin');
-            const [staffSubcategoryFilter, setStaffSubcategoryFilter] = useState('All');
-            const [customerSubcategoryFilter, setCustomerSubcategoryFilter] = useState('All');
+            const [staffLanguage, setStaffLanguage] = useState(() => getSavedState('staffLanguage', 'Mandarin'));
+            const [customerLanguage, setCustomerLanguage] = useState(() => getSavedState('customerLanguage', 'Mandarin'));
+            const [staffSubcategoryFilter, setStaffSubcategoryFilter] = useState(() => getSavedState('staffSubcategoryFilter', 'All'));
+            const [customerSubcategoryFilter, setCustomerSubcategoryFilter] = useState(() => getSavedState('customerSubcategoryFilter', 'All'));
             const [userId, setUserId] = useState('Loading...');
             const [isAuthReady, setIsAuthReady] = useState(false);
             const [phrases, setPhrases] = useState([]);
@@ -481,6 +492,261 @@
                     }
                 },
                 {
+                    id: '6',
+                    english: 'What are your opening hours?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '你们的营业时间是什么？',
+                        'zh-HK': '你們的營業時間是什麼？',
+                        'ne-NP': 'तपाईंको खुला समय के हो?',
+                        'el-GR': 'Ποιες είναι οι ώρες λειτουργίας σας;',
+                        'ar-SA': 'ما هي ساعات العمل لديكم؟',
+                        'mk-MK': 'Кои се вашите работни часови?',
+                        'es-ES': '¿Cuáles son sus horarios de apertura?',
+                        'it-IT': 'Quali sono i vostri orari di apertura?',
+                        'id-ID': 'Apa jam buka Anda?'
+                    }
+                },
+                {
+                    id: '7',
+                    english: 'Where is the nearest bathroom?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '最近的洗手间在哪里？',
+                        'zh-HK': '最近的洗手間在哪裡？',
+                        'ne-NP': 'नजिकैको बाथरूम कहाँ छ?',
+                        'el-GR': 'Πού είναι η πλησιέστερη τουαλέτα;',
+                        'ar-SA': 'أين أقرب حمام؟',
+                        'mk-MK': 'Каде е најблиската тоалетна?',
+                        'es-ES': '¿Dónde está el baño más cercano?',
+                        'it-IT': 'Dove si trova il bagno più vicino?',
+                        'id-ID': 'Di mana kamar mandi terdekat?'
+                    }
+                },
+                {
+                    id: '8',
+                    english: 'Do you have free Wi-Fi?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '你们有免费Wi-Fi吗？',
+                        'zh-HK': '你們有免費Wi-Fi嗎？',
+                        'ne-NP': 'तपाईंसँग निःशुल्क Wi-Fi छ?',
+                        'el-GR': 'Έχετε δωρεάν Wi-Fi;',
+                        'ar-SA': 'هل لديكم واي فاي مجاني؟',
+                        'mk-MK': 'Дали имате бесплатен Wi-Fi?',
+                        'es-ES': '¿Tienen Wi-Fi gratuito?',
+                        'it-IT': 'Avete Wi-Fi gratuito?',
+                        'id-ID': 'Apakah Anda memiliki Wi-Fi gratis?'
+                    }
+                },
+                {
+                    id: '13',
+                    english: 'Where can I find the children\'s section?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '儿童区在哪里？',
+                        'zh-HK': '兒童區在哪裡？',
+                        'ne-NP': 'बच्चाहरूको खण्ड कहाँ छ?',
+                        'el-GR': 'Πού μπορώ να βρω την παιδική ενότητα;',
+                        'ar-SA': 'أين يمكنني العثور على قسم الأطفال؟',
+                        'mk-MK': 'Каде можам да најдам детска секција?',
+                        'es-ES': '¿Dónde puedo encontrar la sección infantil?',
+                        'it-IT': 'Dove posso trovare la sezione per bambini?',
+                        'id-ID': 'Di mana saya bisa menemukan bagian anak-anak?'
+                    }
+                },
+                {
+                    id: '14',
+                    english: 'Do you have study rooms available?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '你们有学习室可用吗？',
+                        'zh-HK': '你們有學習室可用嗎？',
+                        'ne-NP': 'तपाईंसँग अध्ययन कोठाहरू उपलब्ध छन्?',
+                        'el-GR': 'Έχετε διαθέσιμες αίθουσες μελέτης;',
+                        'ar-SA': 'هل لديكم غرف دراسة متاحة؟',
+                        'mk-MK': 'Дали имате достапни студиски простори?',
+                        'es-ES': '¿Tienen salas de estudio disponibles?',
+                        'it-IT': 'Avete sale di studio disponibili?',
+                        'id-ID': 'Apakah Anda memiliki ruang belajar yang tersedia?'
+                    }
+                },
+                {
+                    id: '15',
+                    english: 'Can I bring food and drinks into the library?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '我可以带食物和饮料进图书馆吗？',
+                        'zh-HK': '我可以帶食物和飲料進圖書館嗎？',
+                        'ne-NP': 'म पुस्तकालयमा खाना र पेय ल्याउन सक्छु?',
+                        'el-GR': 'Μπορώ να φέρω φαγητό και ποτά στη βιβλιοθήκη;',
+                        'ar-SA': 'هل يمكنني إحضار الطعام والشراب إلى المكتبة؟',
+                        'mk-MK': 'Можам ли да донесам храна и пијалаци во библиотеката?',
+                        'es-ES': '¿Puedo traer comida y bebidas a la biblioteca?',
+                        'it-IT': 'Posso portare cibo e bevande in biblioteca?',
+                        'id-ID': 'Bisakah saya membawa makanan dan minuman ke perpustakaan?'
+                    }
+                },
+                {
+                    id: '16',
+                    english: 'Is there a quiet area for reading?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '有安静阅读区吗？',
+                        'zh-HK': '有安靜閱讀區嗎？',
+                        'ne-NP': 'पढ्नको लागि शान्त क्षेत्र छ?',
+                        'el-GR': 'Υπάρχει ήσυχη περιοχή για ανάγνωση;',
+                        'ar-SA': 'هل هناك منطقة هادئة للقراءة؟',
+                        'mk-MK': 'Дали има тивка област за читање?',
+                        'es-ES': '¿Hay un área tranquila para leer?',
+                        'it-IT': 'C\'è un\'area tranquilla per la lettura?',
+                        'id-ID': 'Apakah ada area tenang untuk membaca?'
+                    }
+                },
+                {
+                    id: '9',
+                    english: 'How do I access the internet on your computers?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我如何在你们的电脑上访问互联网？',
+                        'zh-HK': '我如何在你們的電腦上訪問互聯網？',
+                        'ne-NP': 'म तपाईंको कम्प्युटरहरूमा इन्टरनेट कसरी एक्सेस गर्न सक्छु?',
+                        'el-GR': 'Πώς μπορώ να αποκτήσω πρόσβαση στο διαδίκτυο στους υπολογιστές σας;',
+                        'ar-SA': 'كيف يمكنني الوصول إلى الإنترنت على أجهزة الكمبيوتر لديكم؟',
+                        'mk-MK': 'Како можам да пристапам до интернет на вашите компјутери?',
+                        'es-ES': '¿Cómo accedo a Internet en sus computadoras?',
+                        'it-IT': 'Come posso accedere a Internet sui vostri computer?',
+                        'id-ID': 'Bagaimana saya bisa mengakses internet di komputer Anda?'
+                    }
+                },
+                {
+                    id: '10',
+                    english: 'Can I print documents here?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我可以在这里打印文件吗？',
+                        'zh-HK': '我可以在這裡打印文件嗎？',
+                        'ne-NP': 'म यहाँ कागजातहरू प्रिन्ट गर्न सक्छु?',
+                        'el-GR': 'Μπορώ να εκτυπώσω έγγραφα εδώ;',
+                        'ar-SA': 'هل يمكنني طباعة المستندات هنا؟',
+                        'mk-MK': 'Можам ли да печатам документи овде?',
+                        'es-ES': '¿Puedo imprimir documentos aquí?',
+                        'it-IT': 'Posso stampare documenti qui?',
+                        'id-ID': 'Bisakah saya mencetak dokumen di sini?'
+                    }
+                },
+                {
+                    id: '11',
+                    english: 'How much does it cost to print?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '打印要多少钱？',
+                        'zh-HK': '打印要多少錢？',
+                        'ne-NP': 'प्रिन्ट गर्न कति लाग्छ?',
+                        'el-GR': 'Πόσο κοστίζει η εκτύπωση;',
+                        'ar-SA': 'كم تكلفة الطباعة؟',
+                        'mk-MK': 'Колку чини печатењето?',
+                        'es-ES': '¿Cuánto cuesta imprimir?',
+                        'it-IT': 'Quanto costa stampare?',
+                        'id-ID': 'Berapa biaya untuk mencetak?'
+                    }
+                },
+                {
+                    id: '12',
+                    english: 'Do you have scanning services?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '你们有扫描服务吗？',
+                        'zh-HK': '你們有掃描服務嗎？',
+                        'ne-NP': 'तपाईंसँग स्क्यानिङ सेवाहरू छन्?',
+                        'el-GR': 'Έχετε υπηρεσίες σάρωσης;',
+                        'ar-SA': 'هل لديكم خدمات المسح الضوئي؟',
+                        'mk-MK': 'Дали имате услуги за скенирање?',
+                        'es-ES': '¿Tienen servicios de escaneo?',
+                        'it-IT': 'Avete servizi di scansione?',
+                        'id-ID': 'Apakah Anda memiliki layanan pemindaian?'
+                    }
+                },
+                {
+                    id: '17',
+                    english: 'Can I use the photocopier?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我可以使用复印机吗？',
+                        'zh-HK': '我可以使用複印機嗎？',
+                        'ne-NP': 'म फोटोकपी मेसिन प्रयोग गर्न सक्छु?',
+                        'el-GR': 'Μπορώ να χρησιμοποιήσω τον φωτοτυπικό;',
+                        'ar-SA': 'هل يمكنني استخدام آلة النسخ؟',
+                        'mk-MK': 'Можам ли да го користам фотокопирачот?',
+                        'es-ES': '¿Puedo usar la fotocopiadora?',
+                        'it-IT': 'Posso usare la fotocopiatrice?',
+                        'id-ID': 'Bisakah saya menggunakan mesin fotokopi?'
+                    }
+                },
+                {
+                    id: '18',
+                    english: 'How do I connect to the library Wi-Fi?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我如何连接到图书馆Wi-Fi？',
+                        'zh-HK': '我如何連接到圖書館Wi-Fi？',
+                        'ne-NP': 'म पुस्तकालय Wi-Fi मा कसरी जडान गर्न सक्छु?',
+                        'el-GR': 'Πώς μπορώ να συνδεθώ στο Wi-Fi της βιβλιοθήκης;',
+                        'ar-SA': 'كيف يمكنني الاتصال بواي فاي المكتبة؟',
+                        'mk-MK': 'Како да се поврзам со Wi-Fi на библиотеката?',
+                        'es-ES': '¿Cómo me conecto al Wi-Fi de la biblioteca?',
+                        'it-IT': 'Come mi connetto al Wi-Fi della biblioteca?',
+                        'id-ID': 'Bagaimana saya bisa terhubung ke Wi-Fi perpustakaan?'
+                    }
+                },
+                {
+                    id: '19',
+                    english: 'Do you have computer training classes?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '你们有电脑培训课程吗？',
+                        'zh-HK': '你們有電腦培訓課程嗎？',
+                        'ne-NP': 'तपाईंसँग कम्प्युटर प्रशिक्षण कक्षाहरू छन्?',
+                        'el-GR': 'Έχετε μαθήματα εκπαίδευσης υπολογιστών;',
+                        'ar-SA': 'هل لديكم دروس تدريب على الكمبيوتر؟',
+                        'mk-MK': 'Дали имате часови за обука на компјутер?',
+                        'es-ES': '¿Tienen clases de capacitación en computación?',
+                        'it-IT': 'Avete corsi di formazione informatica?',
+                        'id-ID': 'Apakah Anda memiliki kelas pelatihan komputer?'
+                    }
+                },
+                {
+                    id: '20',
+                    english: 'Can I use the library\'s online resources?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我可以使用图书馆的在线资源吗？',
+                        'zh-HK': '我可以使用圖書館的線上資源嗎？',
+                        'ne-NP': 'म पुस्तकालयको अनलाइन स्रोतहरू प्रयोग गर्न सक्छु?',
+                        'el-GR': 'Μπορώ να χρησιμοποιήσω τους διαδικτυακούς πόρους της βιβλιοθήκης;',
+                        'ar-SA': 'هل يمكنني استخدام الموارد الإلكترونية للمكتبة؟',
+                        'mk-MK': 'Можам ли да ги користам онлајн ресурсите на библиотеката?',
+                        'es-ES': '¿Puedo usar los recursos en línea de la biblioteca?',
+                        'it-IT': 'Posso usare le risorse online della biblioteca?',
+                        'id-ID': 'Bisakah saya menggunakan sumber daya online perpustakaan?'
+                    }
+                },
+                {
                     id: '2',
                     english: 'Do you have a library card?',
                     type: 'staff',
@@ -495,6 +761,125 @@
                         'es-ES': '¿Tienes una tarjeta de biblioteca?',
                         'it-IT': 'Hai una tessera della biblioteca?',
                         'id-ID': 'Apakah Anda memiliki kartu perpustakaan?'
+                    }
+                },
+                {
+                    id: '21',
+                    english: 'Would you like to renew your library card?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '您想续借您的借书证吗？',
+                        'zh-HK': '您想續借您的借書證嗎？',
+                        'ne-NP': 'तपाईं आफ्नो पुस्तकालय कार्ड नवीनीकरण गर्न चाहनुहुन्छ?',
+                        'el-GR': 'Θα θέλατε να ανανεώσετε την κάρτα βιβλιοθήκης σας;',
+                        'ar-SA': 'هل تريد تجديد بطاقة المكتبة الخاصة بك؟',
+                        'mk-MK': 'Дали би сакале да ја обновите вашата библиотекарска картичка?',
+                        'es-ES': '¿Le gustaría renovar su tarjeta de biblioteca?',
+                        'it-IT': 'Vorrebbe rinnovare la sua tessera della biblioteca?',
+                        'id-ID': 'Apakah Anda ingin memperbarui kartu perpustakaan Anda?'
+                    }
+                },
+                {
+                    id: '22',
+                    english: 'How many items can I borrow?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我可以借多少件物品？',
+                        'zh-HK': '我可以借多少件物品？',
+                        'ne-NP': 'म कति वस्तुहरू सापटी लिन सक्छु?',
+                        'el-GR': 'Πόσα αντικείμενα μπορώ να δανειστώ;',
+                        'ar-SA': 'كم عدد العناصر التي يمكنني استعارتها؟',
+                        'mk-MK': 'Колку предмети можам да позајмам?',
+                        'es-ES': '¿Cuántos artículos puedo pedir prestados?',
+                        'it-IT': 'Quanti articoli posso prendere in prestito?',
+                        'id-ID': 'Berapa banyak item yang bisa saya pinjam?'
+                    }
+                },
+                {
+                    id: '23',
+                    english: 'What is the loan period for books?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '图书的借阅期限是多久？',
+                        'zh-HK': '圖書的借閱期限是多久？',
+                        'ne-NP': 'किताबहरूको सापटी अवधि कति छ?',
+                        'el-GR': 'Ποια είναι η περίοδος δανεισμού για τα βιβλία;',
+                        'ar-SA': 'ما هي مدة الاستعارة للكتب؟',
+                        'mk-MK': 'Која е рокот на позајмување за книги?',
+                        'es-ES': '¿Cuál es el período de préstamo para los libros?',
+                        'it-IT': 'Qual è il periodo di prestito per i libri?',
+                        'id-ID': 'Berapa lama masa pinjaman untuk buku?'
+                    }
+                },
+                {
+                    id: '24',
+                    english: 'Can I place a hold on a book?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我可以预约一本书吗？',
+                        'zh-HK': '我可以預約一本書嗎？',
+                        'ne-NP': 'म एउटा किताबमा होल्ड राख्न सक्छु?',
+                        'el-GR': 'Μπορώ να κλείσω κράτηση για ένα βιβλίο;',
+                        'ar-SA': 'هل يمكنني حجز كتاب؟',
+                        'mk-MK': 'Можам ли да ставам резервација за книга?',
+                        'es-ES': '¿Puedo reservar un libro?',
+                        'it-IT': 'Posso prenotare un libro?',
+                        'id-ID': 'Bisakah saya memesan buku?'
+                    }
+                },
+                {
+                    id: '25',
+                    english: 'Do you have any overdue items?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '您有任何逾期物品吗？',
+                        'zh-HK': '您有任何逾期物品嗎？',
+                        'ne-NP': 'तपाईंसँग कुनै ओभरड्यु आइटम छन्?',
+                        'el-GR': 'Έχετε καθυστερημένα αντικείμενα;',
+                        'ar-SA': 'هل لديك أي عناصر متأخرة؟',
+                        'mk-MK': 'Дали имате задоцнети предмети?',
+                        'es-ES': '¿Tiene algún artículo vencido?',
+                        'it-IT': 'Ha articoli scaduti?',
+                        'id-ID': 'Apakah Anda memiliki item yang terlambat?'
+                    }
+                },
+                {
+                    id: '26',
+                    english: 'Would you like to pay your fines?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '您想支付您的罚款吗？',
+                        'zh-HK': '您想支付您的罰款嗎？',
+                        'ne-NP': 'तपाईं आफ्नो जरिवाना तिर्न चाहनुहुन्छ?',
+                        'el-GR': 'Θα θέλατε να πληρώσετε τα πρόστιμά σας;',
+                        'ar-SA': 'هل تريد دفع الغرامات الخاصة بك؟',
+                        'mk-MK': 'Дали би сакале да ги платите вашите казни?',
+                        'es-ES': '¿Le gustaría pagar sus multas?',
+                        'it-IT': 'Vorrebbe pagare le sue multe?',
+                        'id-ID': 'Apakah Anda ingin membayar denda Anda?'
+                    }
+                },
+                {
+                    id: '27',
+                    english: 'Can I return books at any branch?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我可以在任何分馆还书吗？',
+                        'zh-HK': '我可以在任何分館還書嗎？',
+                        'ne-NP': 'म कुनै पनि शाखामा किताबहरू फिर्ता गर्न सक्छु?',
+                        'el-GR': 'Μπορώ να επιστρέψω βιβλία σε οποιοδήποτε υποκατάστημα;',
+                        'ar-SA': 'هل يمكنني إرجاع الكتب في أي فرع؟',
+                        'mk-MK': 'Можам ли да вратам книги во која било филијала?',
+                        'es-ES': '¿Puedo devolver libros en cualquier sucursal?',
+                        'it-IT': 'Posso restituire i libri in qualsiasi filiale?',
+                        'id-ID': 'Bisakah saya mengembalikan buku di cabang mana pun?'
                     }
                 },
                 {
@@ -547,8 +932,396 @@
                         'it-IT': 'Come arrivo a Centrelink?',
                         'id-ID': 'Bagaimana saya bisa ke Centrelink?'
                     }
-                }
+                },
+                {
+                    id: '28',
+                    english: 'I would like to sign up for a library card.',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我想申请一张借书证。',
+                        'zh-HK': '我想申請一張借書證。',
+                        'ne-NP': 'म पुस्तकालय कार्डको लागि साइन अप गर्न चाहन्छु।',
+                        'el-GR': 'Θα ήθελα να εγγραφώ για κάρτα βιβλιοθήκης.',
+                        'ar-SA': 'أود التسجيل للحصول على بطاقة مكتبة.',
+                        'mk-MK': 'Би сакав да се регистрирам за библиотекарска картичка.',
+                        'es-ES': 'Me gustaría registrarme para una tarjeta de biblioteca.',
+                        'it-IT': 'Vorrei iscrivermi per una tessera della biblioteca.',
+                        'id-ID': 'Saya ingin mendaftar untuk kartu perpustakaan.'
+                    }
+                },
+                {
+                    id: '29',
+                    english: 'How much does it cost to join the library?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '加入图书馆要多少钱？',
+                        'zh-HK': '加入圖書館要多少錢？',
+                        'ne-NP': 'पुस्तकालयमा सामेल हुन कति लाग्छ?',
+                        'el-GR': 'Πόσο κοστίζει η ένταξη στη βιβλιοθήκη;',
+                        'ar-SA': 'كم تكلفة الانضمام إلى المكتبة؟',
+                        'mk-MK': 'Колку чини да се приклучиш во библиотеката?',
+                        'es-ES': '¿Cuánto cuesta unirse a la biblioteca?',
+                        'it-IT': 'Quanto costa iscriversi alla biblioteca?',
+                        'id-ID': 'Berapa biaya untuk bergabung dengan perpustakaan?'
+                    }
+                },
+                {
+                    id: '30',
+                    english: 'I do not have a library card.',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我没有借书证。',
+                        'zh-HK': '我沒有借書證。',
+                        'ne-NP': 'मसँग पुस्तकालय कार्ड छैन।',
+                        'el-GR': 'Δεν έχω κάρτα βιβλιοθήκης.',
+                        'ar-SA': 'ليس لدي بطاقة مكتبة.',
+                        'mk-MK': 'Немам библиотекарска картичка.',
+                        'es-ES': 'No tengo tarjeta de biblioteca.',
+                        'it-IT': 'Non ho una tessera della biblioteca.',
+                        'id-ID': 'Saya tidak memiliki kartu perpustakaan.'
+                    }
+                },
+                {
+                    id: '31',
+                    english: 'Can you help me find a specific book?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '您能帮我找一本特定的书吗？',
+                        'zh-HK': '您能幫我找一本特定的書嗎？',
+                        'ne-NP': 'तपाईं मलाई एउटा विशेष किताब भेट्न मद्दत गर्न सक्नुहुन्छ?',
+                        'el-GR': 'Μπορείτε να με βοηθήσετε να βρω ένα συγκεκριμένο βιβλίο;',
+                        'ar-SA': 'هل يمكنك مساعدتي في العثور على كتاب معين؟',
+                        'mk-MK': 'Можете ли да ми помогнете да најдам одредена книга?',
+                        'es-ES': '¿Puede ayudarme a encontrar un libro específico?',
+                        'it-IT': 'Può aiutarmi a trovare un libro specifico?',
+                        'id-ID': 'Bisakah Anda membantu saya menemukan buku tertentu?'
+                    }
+                },
+                {
+                    id: '32',
+                    english: 'Where can I find the latest magazines?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我在哪里可以找到最新的杂志？',
+                        'zh-HK': '我在哪裡可以找到最新的雜誌？',
+                        'ne-NP': 'म नयाँ पत्रिकाहरू कहाँ भेट्न सक्छु?',
+                        'el-GR': 'Πού μπορώ να βρω τα τελευταία περιοδικά;',
+                        'ar-SA': 'أين يمكنني العثور على أحدث المجلات؟',
+                        'mk-MK': 'Каде можам да најдам најнови списанија?',
+                        'es-ES': '¿Dónde puedo encontrar las revistas más recientes?',
+                        'it-IT': 'Dove posso trovare le riviste più recenti?',
+                        'id-ID': 'Di mana saya bisa menemukan majalah terbaru?'
+                    }
+                },
+                {
+                    id: '33',
+                    english: 'Do you have any study rooms available?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '你们有任何可用的学习室吗？',
+                        'zh-HK': '你們有任何可用的學習室嗎？',
+                        'ne-NP': 'तपाईंसँग कुनै अध्ययन कोठाहरू उपलब्ध छन्?',
+                        'el-GR': 'Έχετε διαθέσιμες αίθουσες μελέτης;',
+                        'ar-SA': 'هل لديكم غرف دراسة متاحة؟',
+                        'mk-MK': 'Дали имате достапни студиски простори?',
+                        'es-ES': '¿Tienen salas de estudio disponibles?',
+                        'it-IT': 'Avete sale di studio disponibili?',
+                        'id-ID': 'Apakah Anda memiliki ruang belajar yang tersedia?'
+                    }
+                },
+                {
+                    id: '34',
+                    english: 'How do I reserve a book online?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我如何在线预约一本书？',
+                        'zh-HK': '我如何在線預約一本書？',
+                        'ne-NP': 'म अनलाइन एउटा किताब कसरी रिजर्भ गर्न सक्छु?',
+                        'el-GR': 'Πώς μπορώ να κλείσω κράτηση βιβλίου διαδικτυακά;',
+                        'ar-SA': 'كيف يمكنني حجز كتاب عبر الإنترنت؟',
+                        'mk-MK': 'Како можам да резервирам книга онлајн?',
+                        'es-ES': '¿Cómo puedo reservar un libro en línea?',
+                        'it-IT': 'Come posso prenotare un libro online?',
+                        'id-ID': 'Bagaimana saya bisa memesan buku secara online?'
+                    }
+                },
+                {
+                    id: '35',
+                    english: 'What are your opening hours today?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '你们今天什么时候开门？',
+                        'zh-HK': '你們今天什麼時候開門？',
+                        'ne-NP': 'तपाईंको आजको खुला समय के हो?',
+                        'el-GR': 'Ποιες είναι οι ώρες λειτουργίας σας σήμερα;',
+                        'ar-SA': 'ما هي ساعات العمل لديكم اليوم؟',
+                        'mk-MK': 'Кои се вашите работни часови денес?',
+                        'es-ES': '¿Cuáles son sus horarios de apertura hoy?',
+                        'it-IT': 'Quali sono i vostri orari di apertura oggi?',
+                        'id-ID': 'Apa jam buka Anda hari ini?'
+                    }
+                },
+                {
+                    id: '36',
+                    english: 'Can I bring my laptop to the library?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我可以带笔记本电脑到图书馆吗？',
+                        'zh-HK': '我可以帶筆記本電腦到圖書館嗎？',
+                        'ne-NP': 'म पुस्तकालयमा मेरो ल्यापटप ल्याउन सक्छु?',
+                        'el-GR': 'Μπορώ να φέρω τον φορητό υπολογιστή μου στη βιβλιοθήκη;',
+                        'ar-SA': 'هل يمكنني إحضار جهاز الكمبيوتر المحمول إلى المكتبة؟',
+                        'mk-MK': 'Можам ли да го донесам мојот лаптоп во библиотеката?',
+                        'es-ES': '¿Puedo traer mi computadora portátil a la biblioteca?',
+                        'it-IT': 'Posso portare il mio laptop in biblioteca?',
+                        'id-ID': 'Bisakah saya membawa laptop ke perpustakaan?'
+                    }
+                },
+                {
+                    id: '37',
+                    english: 'How can I connect to the Wi-Fi?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我如何连接Wi-Fi？',
+                        'zh-HK': '我如何連接Wi-Fi？',
+                        'ne-NP': 'म Wi-Fi मा कसरी जडान गर्न सक्छु?',
+                        'el-GR': 'Πώς μπορώ να συνδεθώ στο Wi-Fi;',
+                        'ar-SA': 'كيف يمكنني الاتصال بالواي فاي؟',
+                        'mk-MK': 'Како да се поврзам со Wi-Fi?',
+                        'es-ES': '¿Cómo puedo conectarme al Wi-Fi?',
+                        'it-IT': 'Come posso connettermi al Wi-Fi?',
+                        'id-ID': 'Bagaimana saya bisa terhubung ke Wi-Fi?'
+                    }
+                },
+                {
+                    id: '38',
+                    english: 'Are there public computers available?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '有公共电脑可用吗？',
+                        'zh-HK': '有公共電腦可用嗎？',
+                        'ne-NP': 'सार्वजनिक कम्प्युटरहरू उपलब्ध छन्?',
+                        'el-GR': 'Υπάρχουν διαθέσιμοι δημόσιοι υπολογιστές;',
+                        'ar-SA': 'هل هناك أجهزة كمبيوتر عامة متاحة؟',
+                        'mk-MK': 'Дали има достапни јавни компјутери?',
+                        'es-ES': '¿Hay computadoras públicas disponibles?',
+                        'it-IT': 'Ci sono computer pubblici disponibili?',
+                        'id-ID': 'Apakah ada komputer publik yang tersedia?'
+                    }
+                },
+                {
+                    id: '39',
+                    english: 'I need help using a computer.',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助使用电脑。',
+                        'zh-HK': '我需要幫助使用電腦。',
+                        'ne-NP': 'मलाई कम्प्युटर प्रयोग गर्न मद्दत चाहिन्छ।',
+                        'el-GR': 'Χρειάζομαι βοήθεια για τη χρήση υπολογιστή.',
+                        'ar-SA': 'أحتاج مساعدة في استخدام الكمبيوتر.',
+                        'mk-MK': 'Ми треба помош за користење компјутер.',
+                        'es-ES': 'Necesito ayuda para usar una computadora.',
+                        'it-IT': 'Ho bisogno di aiuto per usare un computer.',
+                        'id-ID': 'Saya perlu bantuan menggunakan komputer.'
+                    }
+                },
+                {
+                    id: '40',
+                    english: 'I need help using the internet.',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助使用互联网。',
+                        'zh-HK': '我需要幫助使用互聯網。',
+                        'ne-NP': 'मलाई इन्टरनेट प्रयोग गर्न मद्दत चाहिन्छ।',
+                        'el-GR': 'Χρειάζομαι βοήθεια για τη χρήση του διαδικτύου.',
+                        'ar-SA': 'أحتاج مساعدة في استخدام الإنترنت.',
+                        'mk-MK': 'Ми треба помош за користење интернет.',
+                        'es-ES': 'Necesito ayuda para usar Internet.',
+                        'it-IT': 'Ho bisogno di aiuto per usare Internet.',
+                        'id-ID': 'Saya perlu bantuan menggunakan internet.'
+                    }
+                },
+                {
+                    id: '41',
+                    english: 'Are there printers available?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '有打印机可用吗？',
+                        'zh-HK': '有打印機可用嗎？',
+                        'ne-NP': 'प्रिन्टरहरू उपलब्ध छन्?',
+                        'el-GR': 'Υπάρχουν διαθέσιμοι εκτυπωτές;',
+                        'ar-SA': 'هل هناك طابعات متاحة؟',
+                        'mk-MK': 'Дали има достапни печатачи?',
+                        'es-ES': '¿Hay impresoras disponibles?',
+                        'it-IT': 'Ci sono stampanti disponibili?',
+                        'id-ID': 'Apakah ada printer yang tersedia?'
+                    }
+                },
+                {
+                    id: '42',
+                    english: 'I need help using a printer.',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助使用打印机。',
+                        'zh-HK': '我需要幫助使用打印機。',
+                        'ne-NP': 'मलाई प्रिन्टर प्रयोग गर्न मद्दत चाहिन्छ।',
+                        'el-GR': 'Χρειάζομαι βοήθεια για τη χρήση εκτυπωτή.',
+                        'ar-SA': 'أحتاج مساعدة في استخدام الطابعة.',
+                        'mk-MK': 'Ми треба помош за користење печатач.',
+                        'es-ES': 'Necesito ayuda para usar una impresora.',
+                        'it-IT': 'Ho bisogno di aiuto per usare una stampante.',
+                        'id-ID': 'Saya perlu bantuan menggunakan printer.'
+                    }
+                },
+                {
+                    id: '43',
+                    english: 'Are there scanners available?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '有扫描仪可用吗？',
+                        'zh-HK': '有掃描儀可用嗎？',
+                        'ne-NP': 'स्क्यानरहरू उपलब्ध छन्?',
+                        'el-GR': 'Υπάρχουν διαθέσιμα σκάνερ;',
+                        'ar-SA': 'هل هناك ماسحات ضوئية متاحة؟',
+                        'mk-MK': 'Дали има достапни скенери?',
+                        'es-ES': '¿Hay escáneres disponibles?',
+                        'it-IT': 'Ci sono scanner disponibili?',
+                        'id-ID': 'Apakah ada scanner yang tersedia?'
+                    }
+                },
+                {
+                    id: '44',
+                    english: 'How many books can I borrow?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我可以借多少本书？',
+                        'zh-HK': '我可以借多少本書？',
+                        'ne-NP': 'म कति किताबहरू सापटी लिन सक्छु?',
+                        'el-GR': 'Πόσα βιβλία μπορώ να δανειστώ;',
+                        'ar-SA': 'كم عدد الكتب التي يمكنني استعارتها؟',
+                        'mk-MK': 'Колку книги можам да позајмам?',
+                        'es-ES': '¿Cuántos libros puedo pedir prestados?',
+                        'it-IT': 'Quanti libri posso prendere in prestito?',
+                        'id-ID': 'Berapa banyak buku yang bisa saya pinjam?'
+                    }
+                },
+                {
+                    id: '45',
+                    english: 'What is the loan period for books?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '图书的借阅期限是多久？',
+                        'zh-HK': '圖書的借閱期限是多久？',
+                        'ne-NP': 'किताबहरूको सापटी अवधि कति छ?',
+                        'el-GR': 'Ποια είναι η περίοδος δανεισμού για τα βιβλία;',
+                        'ar-SA': 'ما هي مدة الاستعارة للكتب؟',
+                        'mk-MK': 'Која е рокот на позајмување за книги?',
+                        'es-ES': '¿Cuál es el período de préstamo para los libros?',
+                        'it-IT': 'Qual è il periodo di prestito per i libri?',
+                        'id-ID': 'Berapa lama masa pinjaman untuk buku?'
+                    }
+                },
+                {
+                    id: '46',
+                    english: 'Can I place a hold on a book?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我可以预约一本书吗？',
+                        'zh-HK': '我可以預約一本書嗎？',
+                        'ne-NP': 'म एउटा किताबमा होल्ड राख्न सक्छु?',
+                        'el-GR': 'Μπορώ να κλείσω κράτηση για ένα βιβλίο;',
+                        'ar-SA': 'هل يمكنني حجز كتاب؟',
+                        'mk-MK': 'Можам ли да ставам резервација за книга?',
+                        'es-ES': '¿Puedo reservar un libro?',
+                        'it-IT': 'Posso prenotare un libro?',
+                        'id-ID': 'Bisakah saya memesan buku?'
+                    }
+                },
+                {
+                    id: '47',
+                    english: 'Do I have any overdue items?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我有任何逾期物品吗？',
+                        'zh-HK': '我有任何逾期物品嗎？',
+                        'ne-NP': 'मसँग कुनै ओभरड्यु आइटम छन्?',
+                        'el-GR': 'Έχω καθυστερημένα αντικείμενα;',
+                        'ar-SA': 'هل لدي أي عناصر متأخرة؟',
+                        'mk-MK': 'Дали имам задоцнети предмети?',
+                        'es-ES': '¿Tengo algún artículo vencido?',
+                        'it-IT': 'Ho articoli scaduti?',
+                        'id-ID': 'Apakah saya memiliki item yang terlambat?'
+                    }
+                },
+                {
+                    id: '48',
+                    english: 'How much are the late fees?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '逾期费用是多少？',
+                        'zh-HK': '逾期費用是多少？',
+                        'ne-NP': 'ओभरड्यु शुल्क कति छ?',
+                        'el-GR': 'Πόσο είναι τα πρόστιμα καθυστέρησης;',
+                        'ar-SA': 'كم هي رسوم التأخير؟',
+                        'mk-MK': 'Колку се казните за доцнење?',
+                        'es-ES': '¿Cuánto son las multas por retraso?',
+                        'it-IT': 'Quanto sono le multe per ritardo?',
+                        'id-ID': 'Berapa biaya keterlambatan?'
+                    }
+                },
+
             ];
+
+            // Save state to localStorage
+            const saveState = (key, value) => {
+                try {
+                    localStorage.setItem(`babelFish_${key}`, JSON.stringify(value));
+                } catch (error) {
+                    console.warn(`Error saving state for ${key}:`, error);
+                }
+            };
+
+            // Save state whenever it changes
+            useEffect(() => {
+                saveState('currentMode', currentMode);
+            }, [currentMode]);
+
+            useEffect(() => {
+                saveState('staffLanguage', staffLanguage);
+            }, [staffLanguage]);
+
+            useEffect(() => {
+                saveState('customerLanguage', customerLanguage);
+            }, [customerLanguage]);
+
+            useEffect(() => {
+                saveState('staffSubcategoryFilter', staffSubcategoryFilter);
+            }, [staffSubcategoryFilter]);
+
+            useEffect(() => {
+                saveState('customerSubcategoryFilter', customerSubcategoryFilter);
+            }, [customerSubcategoryFilter]);
 
             useEffect(() => {
                 // Simulate loading phrases
@@ -588,6 +1361,59 @@
             // Get category names for filtering
             const staffCategories = [...new Set(phrases.filter(p => p.type === 'staff').map(p => p.category))];
             const customerCategories = [...new Set(phrases.filter(p => p.type === 'customer').map(p => p.category))];
+
+            // Function to get native language name for category
+            const getCategoryNativeName = (categoryName, currentLanguage) => {
+                const categoryTranslations = {
+                    'General Enquiries': {
+                        'zh-CN': '一般查询',
+                        'zh-HK': '一般查詢',
+                        'ne-NP': 'सामान्य जानकारी',
+                        'el-GR': 'Γενικές Ερωτήσεις',
+                        'ar-SA': 'استفسارات عامة',
+                        'mk-MK': 'Општи прашања',
+                        'es-ES': 'Consultas Generales',
+                        'it-IT': 'Richieste Generali',
+                        'id-ID': 'Pertanyaan Umum'
+                    },
+                    'Digital Services': {
+                        'zh-CN': '数字服务',
+                        'zh-HK': '數位服務',
+                        'ne-NP': 'डिजिटल सेवाहरू',
+                        'el-GR': 'Ψηφιακές Υπηρεσίες',
+                        'ar-SA': 'الخدمات الرقمية',
+                        'mk-MK': 'Дигитални услуги',
+                        'es-ES': 'Servicios Digitales',
+                        'it-IT': 'Servizi Digitali',
+                        'id-ID': 'Layanan Digital'
+                    },
+                    'Transactional': {
+                        'zh-CN': '交易服务',
+                        'zh-HK': '交易服務',
+                        'ne-NP': 'लेनदेन सेवाहरू',
+                        'el-GR': 'Συναλλακτικές Υπηρεσίες',
+                        'ar-SA': 'الخدمات المعاملاتية',
+                        'mk-MK': 'Трансакциски услуги',
+                        'es-ES': 'Servicios Transaccionales',
+                        'it-IT': 'Servizi Transazionali',
+                        'id-ID': 'Layanan Transaksional'
+                    },
+                    'General Assistance': {
+                        'zh-CN': '一般协助',
+                        'zh-HK': '一般協助',
+                        'ne-NP': 'सामान्य सहयोग',
+                        'el-GR': 'Γενική Βοήθεια',
+                        'ar-SA': 'المساعدة العامة',
+                        'mk-MK': 'Општа помош',
+                        'es-ES': 'Asistencia General',
+                        'it-IT': 'Assistenza Generale',
+                        'id-ID': 'Bantuan Umum'
+                    }
+                };
+                
+                const currentLangCode = LANGUAGE_CODES[currentLanguage].code;
+                return categoryTranslations[categoryName]?.[currentLangCode] || categoryName;
+            };
 
             return (
                 <div className="min-h-screen" style={{ backgroundColor: brandColors.lightGreyBackground }}>
@@ -697,43 +1523,43 @@
                                             onClick={() => setCustomerLanguage('Mandarin')}
                                             className={`language-button ${customerLanguage === 'Mandarin' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Mandarin
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>普通话</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Mandarin</span>
                                         </button>
                                         <button
                                             onClick={() => setCustomerLanguage('Cantonese')}
                                             className={`language-button ${customerLanguage === 'Cantonese' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Cantonese
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>粤语</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Cantonese</span>
                                         </button>
                                         <button
                                             onClick={() => setCustomerLanguage('Nepali')}
                                             className={`language-button ${customerLanguage === 'Nepali' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Nepali
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>नेपाली</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Nepali</span>
                                         </button>
                                         <button
                                             onClick={() => setCustomerLanguage('Greek')}
                                             className={`language-button ${customerLanguage === 'Greek' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Greek
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Ελληνικά</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Greek</span>
                                         </button>
                                         <button
                                             onClick={() => setCustomerLanguage('Arabic')}
                                             className={`language-button ${customerLanguage === 'Arabic' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Arabic
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>العربية</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Arabic</span>
                                         </button>
                                         <button
                                             onClick={() => setCustomerLanguage('Macedonian')}
                                             className={`language-button ${customerLanguage === 'Macedonian' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Macedonian
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Македонски</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Macedonian</span>
                                         </button>
                                         <button
                                             onClick={() => setCustomerLanguage('Spanish')}
                                             className={`language-button ${customerLanguage === 'Spanish' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Spanish
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Español</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Spanish</span>
                                         </button>
                                     </div>
                                     <div className="language-buttons-row">
@@ -741,13 +1567,13 @@
                                             onClick={() => setCustomerLanguage('Italian')}
                                             className={`language-button ${customerLanguage === 'Italian' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Italian
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Italiano</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Italian</span>
                                         </button>
                                         <button
                                             onClick={() => setCustomerLanguage('Indonesian')}
                                             className={`language-button ${customerLanguage === 'Indonesian' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Indonesian
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Bahasa Indonesia</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Indonesian</span>
                                         </button>
                                     </div>
                                 </>
@@ -789,20 +1615,82 @@
                                             : 'language-button-inactive'
                                         }`}
                                     >
-                                        All
+                                        <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>
+                                            {(() => {
+                                                const allTranslations = {
+                                                    'zh-CN': '全部',
+                                                    'zh-HK': '全部',
+                                                    'ne-NP': 'सबै',
+                                                    'el-GR': 'Όλα',
+                                                    'ar-SA': 'الكل',
+                                                    'mk-MK': 'Сите',
+                                                    'es-ES': 'Todo',
+                                                    'it-IT': 'Tutto',
+                                                    'id-ID': 'Semua'
+                                                };
+                                                const currentLanguage = customerLanguage;
+                                                const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                return allTranslations[langCode] || 'All';
+                                            })()}
+                                        </span><br />
+                                        <span style={{fontSize: '0.75rem', opacity: 0.8}}>All</span>
                                     </button>
-                                    {customerCategories.map((actualCategoryName) => (
-                                        <button
-                                            key={actualCategoryName}
-                                            onClick={() => setCustomerSubcategoryFilter(actualCategoryName)}
-                                            className={`language-button ${customerSubcategoryFilter === actualCategoryName
-                                                ? 'language-button-active'
-                                                : 'language-button-inactive'
-                                            }`}
-                                        >
-                                            {actualCategoryName}
-                                        </button>
-                                    ))}
+                                    {customerCategories.map((actualCategoryName) => {
+                                        // Define translations for category names
+                                        const categoryTranslations = {
+                                            'General Assistance': {
+                                                'zh-CN': '一般协助',
+                                                'zh-HK': '一般協助',
+                                                'ne-NP': 'सामान्य सहयोग',
+                                                'el-GR': 'Γενική Βοήθεια',
+                                                'ar-SA': 'المساعدة العامة',
+                                                'mk-MK': 'Општа помош',
+                                                'es-ES': 'Asistencia General',
+                                                'it-IT': 'Assistenza Generale',
+                                                'id-ID': 'Bantuan Umum'
+                                            },
+                                            'Digital Services': {
+                                                'zh-CN': '数字服务',
+                                                'zh-HK': '數位服務',
+                                                'ne-NP': 'डिजिटल सेवाहरू',
+                                                'el-GR': 'Ψηφιακές Υπηρεσίες',
+                                                'ar-SA': 'الخدمات الرقمية',
+                                                'mk-MK': 'Дигитални услуги',
+                                                'es-ES': 'Servicios Digitales',
+                                                'it-IT': 'Servizi Digitali',
+                                                'id-ID': 'Layanan Digital'
+                                            },
+                                            'Transactional': {
+                                                'zh-CN': '交易服务',
+                                                'zh-HK': '交易服務',
+                                                'ne-NP': 'लेनदेन सेवाहरू',
+                                                'el-GR': 'Συναλλακτικές Υπηρεσίες',
+                                                'ar-SA': 'الخدمات المعاملاتية',
+                                                'mk-MK': 'Трансакциски услуги',
+                                                'es-ES': 'Servicios Transaccionales',
+                                                'it-IT': 'Servizi Transazionali',
+                                                'id-ID': 'Layanan Transaksional'
+                                            }
+                                        };
+                                        
+                                        const currentLanguage = customerLanguage;
+                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                        const translation = categoryTranslations[actualCategoryName]?.[langCode] || actualCategoryName;
+                                        
+                                        return (
+                                            <button
+                                                key={actualCategoryName}
+                                                onClick={() => setCustomerSubcategoryFilter(actualCategoryName)}
+                                                className={`language-button ${customerSubcategoryFilter === actualCategoryName
+                                                    ? 'language-button-active'
+                                                    : 'language-button-inactive'
+                                                }`}
+                                            >
+                                                <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>{translation}</span><br />
+                                                <span style={{fontSize: '0.75rem', opacity: 0.8}}>{actualCategoryName}</span>
+                                            </button>
+                                        );
+                                    })}
                                 </>
                             )}
                         </div>
@@ -816,8 +1704,13 @@
 
                         {Object.keys(groupedPhrases).map((category) => (
                             <div key={category} className="mb-8 category-section">
-                                <h2 className="text-2xl md:text-3xl font-bold mb-4 pb-2 border-b-2" style={{ color: brandColors.darkTeal, borderColor: brandColors.primaryTeal }}>
-                                    {category}
+                                <h2 className="text-2xl md:text-3xl font-bold mb-4 pb-2 border-b-2" style={{ color: brandColors.darkTeal, borderColor: brandColors.primaryTeal, marginLeft: '0', paddingLeft: '0' }}>
+                                    <div className="text-center">
+                                        <div className="text-xl font-bold mb-1" style={{ color: brandColors.darkTeal }}>
+                                            {getCategoryNativeName(category, currentMode === 'staff' ? staffLanguage : customerLanguage)}
+                                        </div>
+                                        <div className="text-lg font-medium" style={{ color: brandColors.mediumGrey }}>{category}</div>
+                                    </div>
                                 </h2>
                                 <ul className="phrase-list-grid">
                                     {groupedPhrases[category].map((phrase) => (
@@ -826,50 +1719,59 @@
                                             className="phrase-card cursor-pointer"
                                             onClick={() => {
                                                 if (phrase.english === 'How do I get to Centrelink?' && currentMode === 'customer') {
+                                                    setQrPopupType('centrelink');
                                                     setShowQrPopup(true);
-                                                } else {
-                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
-                                                    const langCode = LANGUAGE_CODES[currentLanguage].code;
-                                                    const translatedText = phrase.translations?.[langCode] || phrase.english;
-                                                    speakPhrase(translatedText, langCode);
+                                                } else if (phrase.english === 'Where are the computers?' && currentMode === 'customer') {
+                                                    setQrPopupType('computers');
+                                                    setShowQrPopup(true);
                                                 }
                                             }}
                                         >
-                                            {currentMode === 'staff' ? (
-                                                <>
-                                                    <p className="text-base font-medium mb-1" style={{ color: brandColors.darkGreyText }}>{phrase.english}</p>
-                                                    <p className="text-lg font-semibold" style={{ color: brandColors.darkTeal }}>
-                                                        {phrase.translations?.[LANGUAGE_CODES[staffLanguage].code] || phrase.english}
-                                                    </p>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <p className="text-lg font-semibold mb-1" style={{ color: brandColors.darkTeal }}>
-                                                        {phrase.translations?.[LANGUAGE_CODES[customerLanguage].code] || phrase.english}
-                                                    </p>
-                                                    <p className="text-base font-medium" style={{ color: brandColors.darkGreyText }}>
-                                                        {phrase.english}
-                                                        {phrase.english === 'How do I get to Centrelink?' && (
-                                                            <>
-                                                                <br />
-                                                                <span className="text-sm ml-0 italic" style={{color: brandColors.mediumGrey}}>
-                                                                    Click on me for a map
-                                                                </span>
-                                                            </>
-                                                        )}
-                                                    </p>
-                                                </>
-                                            )}
+                                            <div className="flex-1 text-left mb-4">
+                                                {currentMode === 'staff' ? (
+                                                    <>
+                                                        <p className="text-base font-medium mb-1" style={{ color: brandColors.darkGreyText }}>{phrase.english}</p>
+                                                        <p className="text-lg font-semibold" style={{ color: brandColors.darkTeal }}>
+                                                            {phrase.translations?.[LANGUAGE_CODES[staffLanguage].code] || phrase.english}
+                                                        </p>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <p className="text-lg font-semibold mb-1" style={{ color: brandColors.darkTeal }}>
+                                                            {phrase.translations?.[LANGUAGE_CODES[customerLanguage].code] || phrase.english}
+                                                        </p>
+                                                        <p className="text-base font-medium" style={{ color: brandColors.darkGreyText }}>
+                                                            {phrase.english}
+                                                            {(phrase.english === 'How do I get to Centrelink?' || phrase.english === 'Where are the computers?') && (
+                                                                <>
+                                                                    <br />
+                                                                    <span className="text-sm ml-0 italic" style={{color: brandColors.mediumGrey}}>
+                                                                        {phrase.english === 'How do I get to Centrelink?' ? 'Click on me for a map' : 'Click on me for computer locations'}
+                                                                    </span>
+                                                                </>
+                                                            )}
+                                                        </p>
+                                                    </>
+                                                )}
+                                            </div>
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
-                                                    const langCode = LANGUAGE_CODES[currentLanguage].code;
-                                                    const translatedText = phrase.translations?.[langCode] || phrase.english;
-                                                    speakPhrase(translatedText, langCode);
+                                                    if (phrase.english === 'How do I get to Centrelink?' && currentMode === 'customer') {
+                                                        setQrPopupType('centrelink');
+                                                        setShowQrPopup(true);
+                                                    } else if (phrase.english === 'Where are the computers?' && currentMode === 'customer') {
+                                                        setQrPopupType('computers');
+                                                        setShowQrPopup(true);
+                                                    } else {
+                                                        const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                        const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                        speakPhrase(translatedText, langCode);
+                                                    }
                                                 }}
                                                 className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
-                                                style={{ backgroundColor: currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed, color: 'white' }}
+                                                style={{ backgroundColor: currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed, color: 'white', focusRingColor: brandColors.primaryTeal, border: 'none' }}
                                                 title="Play audio"
                                             >
                                                 {speakerIcon}
@@ -880,16 +1782,7 @@
                             </div>
                         ))}
 
-                        {/* QR Code Button */}
-                        <div className="text-center mt-8">
-                            <button
-                                onClick={() => setShowQrPopup(true)}
-                                className="button-base button-primary-active"
-                                style={{ backgroundColor: brandColors.primaryTeal }}
-                            >
-                                Get Directions to Centrelink
-                            </button>
-                        </div>
+
                     </div>
 
                     {/* QR Code Pop-up Modal */}
@@ -899,31 +1792,68 @@
                                 <button className="popup-close" onClick={() => setShowQrPopup(false)}>
                                     &times;
                                 </button>
-                                <h3 className="text-2xl font-bold text-teal-800 mb-4">Directions to Centrelink</h3>
-                                <p className="text-lg text-gray-700 mb-4">Scan this QR code for Google Maps directions (in Mandarin):</p>
-                                
-                                {/* Google Map iframe */}
-                                <iframe
-                                    src="https://www.google.com/maps/embed/v1/directions?key=&origin=Hurstville+Library,+12-16+MacMahon+St,+Hurstville+NSW+2220,+Australia&destination=Centrelink+Hurstville,+125+Forest+Rd,+Hurstville+NSW+2220,+Australia&mode=driving&language=zh-CN"
-                                    width="100%"
-                                    height="300"
-                                    style={{ border: 0, borderRadius: '0.5rem', marginBottom: '1rem' }}
-                                    allowFullScreen=""
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    title="Directions to Centrelink Hurstville"
-                                ></iframe>
-                                
-                                <img
-                                    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.google.com/maps/dir/?api=1&origin=12-16%20MacMahon%20St,%20Hurstville%20NSW%202220,%20Australia&destination=125%20Forest%20Rd,%20Hurstville%20NSW%202220,%20Australia&travelmode=driving&hl=zh-CN"
-                                    alt="QR Code for Centrelink Directions"
-                                    className="w-48 h-48 object-contain mx-auto rounded-md"
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = "https://placehold.co/192x192/cccccc/333333?text=QR+Error";
-                                    }}
-                                />
-                                <p className="text-sm text-gray-500 mt-4">Opens in Google Maps app or browser.</p>
+                                {qrPopupType === 'centrelink' ? (
+                                    <>
+                                        <h3 className="text-2xl font-bold text-teal-800 mb-4">Directions to Centrelink</h3>
+                                        <p className="text-lg text-gray-700 mb-4">Scan this QR code for Google Maps directions (in Mandarin):</p>
+                                        
+                                        {/* Google Map iframe */}
+                                        <iframe
+                                            src="https://www.google.com/maps/embed/v1/directions?key=&origin=Hurstville+Library,+12-16+MacMahon+St,+Hurstville+NSW+2220,+Australia&destination=Centrelink+Hurstville,+125+Forest+Rd,+Hurstville+NSW+2220,+Australia&mode=driving&language=zh-CN"
+                                            width="100%"
+                                            height="300"
+                                            style={{ border: 0, borderRadius: '0.5rem', marginBottom: '1rem' }}
+                                            allowFullScreen=""
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            title="Directions to Centrelink Hurstville"
+                                        ></iframe>
+                                        
+                                        <img
+                                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.google.com/maps/dir/?api=1&origin=12-16%20MacMahon%20St,%20Hurstville%20NSW%202220,%20Australia&destination=125%20Forest%20Rd,%20Hurstville%20NSW%202220,%20Australia&travelmode=driving&hl=zh-CN"
+                                            alt="QR Code for Centrelink Directions"
+                                            className="w-48 h-48 object-contain mx-auto rounded-md"
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = "https://placehold.co/192x192/cccccc/333333?text=QR+Error";
+                                            }}
+                                        />
+                                        <p className="text-sm text-gray-500 mt-4">Opens in Google Maps app or browser.</p>
+                                    </>
+                                ) : qrPopupType === 'computers' ? (
+                                    <>
+                                        <h3 className="text-2xl font-bold text-teal-800 mb-4">Computer Locations</h3>
+                                        <p className="text-lg text-gray-700 mb-4">Public computers are available in the following areas:</p>
+                                        
+                                        <div className="text-left mb-4">
+                                            <h4 className="font-semibold text-lg mb-2" style={{ color: brandColors.darkTeal }}>Computer Stations:</h4>
+                                            <ul className="list-disc list-inside space-y-1 text-gray-700">
+                                                <li>Ground Floor - Main Computer Lab (8 computers)</li>
+                                                <li>Ground Floor - Quick Access Terminals (4 computers)</li>
+                                                <li>First Floor - Study Area (6 computers)</li>
+                                                <li>Children's Section - Educational Computers (2 computers)</li>
+                                            </ul>
+                                            
+                                            <h4 className="font-semibold text-lg mb-2 mt-4" style={{ color: brandColors.darkTeal }}>Wi-Fi Information:</h4>
+                                            <ul className="list-disc list-inside space-y-1 text-gray-700">
+                                                <li>Network: "GeorgesRiver_Library"</li>
+                                                <li>Password: "Library2024"</li>
+                                                <li>Free unlimited access</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <img
+                                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Network:GeorgesRiver_Library%0APassword:Library2024%0A%0AConnect to library Wi-Fi for free internet access."
+                                            alt="QR Code for Wi-Fi Information"
+                                            className="w-48 h-48 object-contain mx-auto rounded-md"
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = "https://placehold.co/192x192/cccccc/333333?text=QR+Error";
+                                            }}
+                                        />
+                                        <p className="text-sm text-gray-500 mt-4">Scan to get Wi-Fi connection details.</p>
+                                    </>
+                                ) : null}
                             </div>
                         </div>
                     )}
