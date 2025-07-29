@@ -2,6 +2,7 @@
   "name": "babel-fish-app",
   "version": "1.0.0",
   "description": "A React app for library staff and customer assistance",
+  "homepage": "https://cwrigh13.github.io/babel-fish",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
