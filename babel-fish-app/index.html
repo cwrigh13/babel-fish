@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Babel Fish - Library Translation Tool</title>
+    <title>Georges River Libraries Babel Fish</title>
     <style>
         * {
             margin: 0;
@@ -13,133 +13,415 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header-banner {
+            background-color: #20B2AA;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .fish-icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .main-title {
+            background-color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .main-title h1 {
+            color: #006400;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        /* User Selection */
+        .user-selection {
+            background-color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .toggle-container {
             display: flex;
             justify-content: center;
-            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .toggle-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+        }
+        
+        .toggle-button.active {
+            background-color: #20B2AA;
             color: white;
         }
         
-        .container {
-            text-align: center;
-            max-width: 600px;
+        .toggle-button.inactive {
+            background-color: #E0E0E0;
+            color: #666666;
+        }
+        
+        .user-id {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        /* Language Selection */
+        .language-selection {
+            background-color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .selection-bar {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .selection-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .selection-button.active {
+            background-color: #20B2AA;
+            color: white;
+        }
+        
+        .selection-button.inactive {
+            background-color: #E0E0E0;
+            color: #666666;
+        }
+        
+        .selection-button.blue-active {
+            background-color: #4A90E2;
+            color: white;
+        }
+        
+        /* Content Sections */
+        .content-section {
+            background-color: white;
+            margin: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background-color: #20B2AA;
+            color: white;
+            padding: 1rem 2rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .phrases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
             padding: 2rem;
         }
         
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-        
-        .description {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            opacity: 0.8;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-        
-        .feature {
-            background: rgba(255,255,255,0.1);
-            padding: 1rem;
+        .phrase-card {
+            background-color: white;
+            border: 1px solid #e0e0e0;
             border-radius: 10px;
-            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         
-        .feature h3 {
+        .phrase-english {
+            font-weight: bold;
             margin-bottom: 0.5rem;
-            color: #ffd700;
+            color: #333;
         }
         
-        .status {
-            background: rgba(255,255,255,0.2);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 2rem;
-            border-left: 4px solid #4CAF50;
+        .phrase-chinese {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.4;
         }
         
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+        .audio-button {
+            background-color: #20B2AA;
+            color: white;
+            border: none;
             border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            transition: all 0.3s ease;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .audio-button:hover {
+            background-color: #1a9a94;
+            transform: scale(1.1);
+        }
+        
+        .audio-icon {
+            font-size: 1.2rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .phrases-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .selection-bar {
+                justify-content: flex-start;
+            }
+            
+            .main-title h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🐠 Babel Fish</h1>
-        <div class="subtitle">Library Translation Tool</div>
-        
-        <div class="description">
-            A powerful tool designed to help libraries and cultural institutions 
-            translate and localize their content for diverse communities.
+    <!-- Header Banner -->
+    <div class="header-banner">
+        <div class="logo">
+            <span class="fish-icon">🐠</span>
+            GEORGES RIVER LIBRARIES
         </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>🌍 Multi-Language Support</h3>
-                <p>Translate content into multiple languages with ease</p>
+    </div>
+    
+    <!-- Main Title -->
+    <div class="main-title">
+        <h1>Georges River Libraries Babel Fish</h1>
+    </div>
+    
+    <!-- User Selection -->
+    <div class="user-selection">
+        <div class="toggle-container">
+            <button class="toggle-button active" onclick="toggleUser(this, 'staff')">For Staff</button>
+            <button class="toggle-button inactive" onclick="toggleUser(this, 'customers')">For Customers</button>
+        </div>
+        <div class="user-id">Your User ID: tdelaware@gmail.com</div>
+    </div>
+    
+    <!-- Language Selection -->
+    <div class="language-selection">
+        <div class="selection-bar">
+            <button class="selection-button active" onclick="toggleLanguage(this, 'mandarin')">Mandarin</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'cantonese')">Cantonese</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'nepali')">Nepali</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'greek')">Greek</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'arabic')">Arabic</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'macedonian')">Macedonian</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'spanish')">Spanish</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'italian')">Italian</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'indonesian')">Indonesian</button>
+            <button class="selection-button inactive" onclick="toggleLanguage(this, 'ai')">Suggested Phrases (AI)</button>
+        </div>
+    </div>
+    
+    <!-- Category Selection -->
+    <div class="language-selection">
+        <div class="selection-bar">
+            <button class="selection-button blue-active" onclick="toggleCategory(this, 'all')">All</button>
+            <button class="selection-button inactive" onclick="toggleCategory(this, 'general')">General Assistance</button>
+            <button class="selection-button inactive" onclick="toggleCategory(this, 'transactional')">Transactional</button>
+            <button class="selection-button inactive" onclick="toggleCategory(this, 'digital')">Digital Services</button>
+        </div>
+    </div>
+    
+    <!-- General Enquiries Section -->
+    <div class="content-section">
+        <div class="section-header">General Enquiries</div>
+        <div class="phrases-grid">
+            <div class="phrase-card">
+                <div class="phrase-english">Do you prefer to speak Mandarin or Cantonese?</div>
+                <div class="phrase-chinese">您更喜欢说普通话还是粤语?</div>
+                <div class="phrase-english" style="font-size: 0.9rem; color: #888;">Click for options (点击获取选项)</div>
+                <button class="audio-button" onclick="playAudio('phrase1')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
             </div>
-            <div class="feature">
-                <h3>📚 Library Integration</h3>
-                <p>Seamlessly integrate with existing library systems</p>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">I understand.</div>
+                <div class="phrase-chinese">我明白了。</div>
+                <button class="audio-button" onclick="playAudio('phrase2')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
             </div>
-            <div class="feature">
-                <h3>🎯 Cultural Sensitivity</h3>
-                <p>Respectful and culturally appropriate translations</p>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">Please follow me.</div>
+                <div class="phrase-chinese">请跟我来。</div>
+                <button class="audio-button" onclick="playAudio('phrase3')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">Please wait one moment</div>
+                <div class="phrase-chinese">请稍等片刻。</div>
+                <button class="audio-button" onclick="playAudio('phrase4')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">Thank you.</div>
+                <div class="phrase-chinese">谢谢您。</div>
+                <button class="audio-button" onclick="playAudio('phrase5')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">You are welcome.</div>
+                <div class="phrase-chinese">不客气。</div>
+                <button class="audio-button" onclick="playAudio('phrase6')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
             </div>
         </div>
-        
-        <div class="status">
-            <div class="loading"></div>
-            <strong>Status:</strong> Application is being deployed to GitHub Pages
-        </div>
-        
-        <div style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
-            <p>This is a placeholder page while the full application is being deployed.</p>
-            <p>Check back soon for the complete Babel Fish experience!</p>
+    </div>
+    
+    <!-- Transactional Section -->
+    <div class="content-section">
+        <div class="section-header">Transactional</div>
+        <div class="phrases-grid">
+            <div class="phrase-card">
+                <div class="phrase-english">May I see your photo ID to confirm details? If no photo ID, a passport plus a bank statement or phone bill copy is needed.</div>
+                <div class="phrase-chinese">请出示您的带照片的身份证明以确认信息。如果没有带照片的身份证明,需要护照以及银行账单或电话账单的复印件。</div>
+                <button class="audio-button" onclick="playAudio('phrase7')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">Please show me your library card</div>
+                <div class="phrase-chinese">请出示您的借书证</div>
+                <button class="audio-button" onclick="playAudio('phrase8')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">The due date is listed on the library receipt.</div>
+                <div class="phrase-chinese">还书日期在图书馆收据上列明。</div>
+                <button class="audio-button" onclick="playAudio('phrase9')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">There is a fee for late and lost items.</div>
+                <div class="phrase-chinese">逾期或遗失物品需支付费用。</div>
+                <button class="audio-button" onclick="playAudio('phrase10')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">Would you like to borrow these items?</div>
+                <div class="phrase-chinese">您想借阅这些物品吗?</div>
+                <button class="audio-button" onclick="playAudio('phrase11')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
+            
+            <div class="phrase-card">
+                <div class="phrase-english">Would you like to create a library card? It is free of charge.</div>
+                <div class="phrase-chinese">您想办一张借书证吗?这是免费的。</div>
+                <button class="audio-button" onclick="playAudio('phrase12')">
+                    <span class="audio-icon">⏯️</span>
+                </button>
+            </div>
         </div>
     </div>
     
     <script>
-        // Simple interaction
-        document.addEventListener('DOMContentLoaded', function() {
-            const features = document.querySelectorAll('.feature');
-            features.forEach(feature => {
-                feature.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.05)';
-                    this.style.transition = 'transform 0.3s ease';
-                });
-                
-                feature.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1)';
-                });
+        // Toggle user selection
+        function toggleUser(clickedButton, type) {
+            const buttons = document.querySelectorAll('.toggle-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                button.classList.add('inactive');
             });
-        });
+            clickedButton.classList.remove('inactive');
+            clickedButton.classList.add('active');
+            console.log('User type selected:', type);
+        }
+        
+        // Toggle language selection
+        function toggleLanguage(clickedButton, language) {
+            const buttons = document.querySelectorAll('.language-selection .selection-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                button.classList.add('inactive');
+            });
+            clickedButton.classList.remove('inactive');
+            clickedButton.classList.add('active');
+            console.log('Language selected:', language);
+        }
+        
+        // Toggle category selection
+        function toggleCategory(clickedButton, category) {
+            const buttons = document.querySelectorAll('.language-selection:last-child .selection-button');
+            buttons.forEach(button => {
+                button.classList.remove('blue-active');
+                button.classList.add('inactive');
+            });
+            clickedButton.classList.remove('inactive');
+            clickedButton.classList.add('blue-active');
+            console.log('Category selected:', category);
+        }
+        
+        // Audio playback function
+        function playAudio(phraseId) {
+            console.log('Playing audio for phrase:', phraseId);
+            // Here you would integrate with actual audio files
+            // For now, just show a console message
+        }
     </script>
 </body>
 </html>
