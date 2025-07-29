@@ -1,43 +1,49 @@
-# 🐠 Babel Fish - Library Translation Tool
+# Babel Fish App
 
-A powerful tool designed to help libraries and cultural institutions translate and localize their content for diverse communities.
+A React application for library staff and customer assistance.
 
-## 🌟 Features
+## 🚀 Deployment Status
 
-- **Multi-Language Support**: Translate content into multiple languages with ease
-- **Library Integration**: Seamlessly integrate with existing library systems  
-- **Cultural Sensitivity**: Respectful and culturally appropriate translations
-- **Modern Interface**: Beautiful, responsive design that works on all devices
+This project is configured for automatic deployment to GitHub Pages.
 
-## 🚀 Live Demo
+### GitHub Pages Setup
 
-Visit the live application: [https://cwrigh13.github.io/babel-fish/](https://cwrigh13.github.io/babel-fish/)
+1. **Repository Settings**: Go to your GitHub repository settings
+2. **Pages Section**: Navigate to "Pages" in the left sidebar
+3. **Source**: Select "GitHub Actions" as the source
+4. **Branch**: The deployment will automatically use the `gh-pages` branch created by the GitHub Actions workflow
 
-## 📋 Project Status
+### Automatic Deployment
 
-This project is currently in development. The landing page is live and the full application is being built.
+The app is automatically deployed to GitHub Pages whenever you push changes to the `main` branch. The deployment process:
 
-## 🛠️ Development
+1. Builds the React app using `npm run build`
+2. Deploys the built files to the `gh-pages` branch
+3. Makes the site available at: https://cwrigh13.github.io/babel-fish
 
-### Prerequisites
-- Node.js (for development)
-- Git
+### Local Development
 
-### Setup
-1. Clone the repository
-2. Navigate to the app directory: `cd babel-fish-app`
-3. Install dependencies: `npm install`
-4. Run development server: `npm run dev`
+To run the app locally:
 
-## 📄 Documentation
+```bash
+cd babel-fish-app
+npm install
+npm start
+```
 
-- [MVP Deployment Checklist](babel-fish-app/MVP_DEPLOYMENT_CHECKLIST.md)
-- [Product Requirements Document](babel-fish-app/PRD.md)
+The app will be available at http://localhost:3000
 
-## 🤝 Contributing
+### Project Structure
 
-This project is under active development. More information about contributing will be available soon.
+- `babel-fish-app/` - Main React application
+  - `src/` - Source code
+  - `public/` - Static assets
+  - `build/` - Production build (generated)
+- `.github/workflows/` - GitHub Actions deployment configuration
 
-## 📄 License
+### Technologies Used
 
-This project is licensed under the ISC License. 
+- React 18
+- Firebase
+- GitHub Actions for CI/CD
+- GitHub Pages for hosting 
