@@ -173,8 +173,9 @@
         }
         .phrase-list-grid { /* New class for grid layout */ 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(calc(50% - 1rem), 1fr)); /* Two columns, considering gap */ 
+            grid-template-columns: repeat(2, 1fr); /* Fixed two columns */
             gap: 1rem; /* Gap between cards */ 
+            padding: 0 1rem; /* Add equal padding on left and right */
         }
         @media (max-width: 640px) { 
             .phrase-list-grid { 
@@ -183,7 +184,7 @@
         }
         .category-section { 
             background-color: #E0F2F1; 
-            padding: 1.5rem; 
+            padding: 1.5rem 2rem; 
             border-radius: 0.75rem; 
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
         }
@@ -677,138 +678,189 @@
                 },
                 {
                     id: '9',
-                    english: 'How do I access the internet on your computers?',
+                    english: 'You do not need to be a member to print, photocopy or scan.',
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '您可以在我们的电脑上访问互联网。',
-                        'zh-HK': '您可以在我們的電腦上訪問互聯網。',
-                        'ne-NP': 'तपाईं हाम्रो कम्प्युटरहरूमा इन्टरनेट एक्सेस गर्न सक्नुहुन्छ।',
-                        'el-GR': 'Μπορείτε να αποκτήσετε πρόσβαση στο διαδίκτυο στους υπολογιστές μας.',
-                        'ar-SA': 'يمكنك الوصول إلى الإنترنت على أجهزة الكمبيوتر لدينا.',
-                        'mk-MK': 'Можете да пристапите до интернет на нашите компјутери.',
-                        'es-ES': 'Puede acceder a Internet en nuestras computadoras.',
-                        'it-IT': 'Può accedere a Internet sui nostri computer.',
-                        'id-ID': 'Anda dapat mengakses internet di komputer kami.'
+                        'zh-CN': '您不需要成为会员就可以打印、复印或扫描。',
+                        'zh-HK': '您不需要成為會員就可以打印、複印或掃描。',
+                        'ne-NP': 'तपाईं प्रिन्ट, फोटोकपी वा स्क्यान गर्न सदस्य हुनु पर्दैन।',
+                        'el-GR': 'Δεν χρειάζεται να είστε μέλος για να εκτυπώσετε, φωτοτυπήσετε ή σκανάρετε.',
+                        'ar-SA': 'لا تحتاج إلى أن تكون عضواً للطباعة أو النسخ أو المسح الضوئي.',
+                        'mk-MK': 'Не мора да бидете член за печатење, фотокопирање или скенирање.',
+                        'es-ES': 'No necesita ser miembro para imprimir, fotocopiar o escanear.',
+                        'it-IT': 'Non è necessario essere membro per stampare, fotocopiare o scansionare.',
+                        'id-ID': 'Anda tidak perlu menjadi anggota untuk mencetak, fotokopi atau memindai.'
                     }
                 },
                 {
                     id: '10',
-                    english: 'Can I print documents here?',
+                    english: 'You do not need to be a member to use a computer.',
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '您可以在这里打印文件。',
-                        'zh-HK': '您可以在這裡打印文件。',
-                        'ne-NP': 'तपाईं यहाँ कागजातहरू प्रिन्ट गर्न सक्नुहुन्छ।',
-                        'el-GR': 'Μπορείτε να εκτυπώσετε έγγραφα εδώ.',
-                        'ar-SA': 'يمكنك طباعة المستندات هنا.',
-                        'mk-MK': 'Можете да печатате документи овде.',
-                        'es-ES': 'Puede imprimir documentos aquí.',
-                        'it-IT': 'Può stampare documenti qui.',
-                        'id-ID': 'Anda dapat mencetak dokumen di sini.'
+                        'zh-CN': '您不需要成为会员就可以使用电脑。',
+                        'zh-HK': '您不需要成為會員就可以使用電腦。',
+                        'ne-NP': 'तपाईं कम्प्युटर प्रयोग गर्न सदस्य हुनु पर्दैन।',
+                        'el-GR': 'Δεν χρειάζεται να είστε μέλος για να χρησιμοποιήσετε υπολογιστή.',
+                        'ar-SA': 'لا تحتاج إلى أن تكون عضواً لاستخدام الكمبيوتر.',
+                        'mk-MK': 'Не мора да бидете член за користење компјутер.',
+                        'es-ES': 'No necesita ser miembro para usar una computadora.',
+                        'it-IT': 'Non è necessario essere membro per usare un computer.',
+                        'id-ID': 'Anda tidak perlu menjadi anggota untuk menggunakan komputer.'
                     }
                 },
                 {
                     id: '11',
-                    english: 'How much does it cost to print?',
+                    english: 'Do you need to print?',
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '打印费用是每页20分。',
-                        'zh-HK': '打印費用是每頁20分。',
-                        'ne-NP': 'प्रिन्ट गर्न प्रति पृष्ठ २० सेन्ट लाग्छ।',
-                        'el-GR': 'Η εκτύπωση κοστίζει 20 λεπτά ανά σελίδα.',
-                        'ar-SA': 'تكلفة الطباعة 20 سنت لكل صفحة.',
-                        'mk-MK': 'Печатењето чини 20 центи по страница.',
-                        'es-ES': 'La impresión cuesta 20 centavos por página.',
-                        'it-IT': 'La stampa costa 20 centesimi per pagina.',
-                        'id-ID': 'Biaya cetak adalah 20 sen per halaman.'
+                        'zh-CN': '您需要打印吗？',
+                        'zh-HK': '您需要打印嗎？',
+                        'ne-NP': 'तपाईंलाई प्रिन्ट चाहिन्छ?',
+                        'el-GR': 'Χρειάζεστε εκτύπωση;',
+                        'ar-SA': 'هل تحتاج إلى طباعة؟',
+                        'mk-MK': 'Дали треба да печатите?',
+                        'es-ES': '¿Necesita imprimir?',
+                        'it-IT': 'Ha bisogno di stampare?',
+                        'id-ID': 'Apakah Anda perlu mencetak?'
                     }
                 },
                 {
                     id: '12',
-                    english: 'Do you have scanning services?',
+                    english: 'How many copies?',
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我们有扫描服务。',
-                        'zh-HK': '我們有掃描服務。',
-                        'ne-NP': 'हामीसँग स्क्यानिङ सेवाहरू छन्।',
-                        'el-GR': 'Έχουμε υπηρεσίες σάρωσης.',
-                        'ar-SA': 'لدينا خدمات المسح الضوئي.',
-                        'mk-MK': 'Имаме услуги за скенирање.',
-                        'es-ES': 'Tenemos servicios de escaneo.',
-                        'it-IT': 'Abbiamo servizi di scansione.',
-                        'id-ID': 'Kami memiliki layanan pemindaian.'
+                        'zh-CN': '需要多少份？',
+                        'zh-HK': '需要多少份？',
+                        'ne-NP': 'कति प्रतिलिपिहरू?',
+                        'el-GR': 'Πόσες αντίγραφα;',
+                        'ar-SA': 'كم نسخة؟',
+                        'mk-MK': 'Колку копии?',
+                        'es-ES': '¿Cuántas copias?',
+                        'it-IT': 'Quante copie?',
+                        'id-ID': 'Berapa banyak salinan?'
                     }
                 },
                 {
                     id: '17',
-                    english: 'Can I use the photocopier?',
+                    english: 'Do you want black and white or colour?',
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '您可以使用复印机。',
-                        'zh-HK': '您可以使用複印機。',
-                        'ne-NP': 'तपाईं फोटोकपी मेसिन प्रयोग गर्न सक्नुहुन्छ।',
-                        'el-GR': 'Μπορείτε να χρησιμοποιήσετε τον φωτοτυπικό.',
-                        'ar-SA': 'يمكنك استخدام آلة النسخ.',
-                        'mk-MK': 'Можете да го користите фотокопирачот.',
-                        'es-ES': 'Puede usar la fotocopiadora.',
-                        'it-IT': 'Può usare la fotocopiatrice.',
-                        'id-ID': 'Anda dapat menggunakan mesin fotokopi.'
+                        'zh-CN': '您想要黑白还是彩色？',
+                        'zh-HK': '您想要黑白還是彩色？',
+                        'ne-NP': 'तपाईं कालो र सेतो चाहनुहुन्छ वा रंग?',
+                        'el-GR': 'Θέλετε ασπρόμαυρο ή έγχρωμο;',
+                        'ar-SA': 'هل تريد أبيض وأسود أم ملون؟',
+                        'mk-MK': 'Дали сакате црно-бело или во боја?',
+                        'es-ES': '¿Quiere blanco y negro o color?',
+                        'it-IT': 'Vuole bianco e nero o a colori?',
+                        'id-ID': 'Apakah Anda ingin hitam putih atau berwarna?'
                     }
                 },
                 {
                     id: '18',
-                    english: 'How do I connect to the library Wi-Fi?',
+                    english: 'Do you want to scan?',
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '您可以连接到图书馆Wi-Fi。',
-                        'zh-HK': '您可以連接到圖書館Wi-Fi。',
-                        'ne-NP': 'तपाईं पुस्तकालय Wi-Fi मा जडान गर्न सक्नुहुन्छ।',
-                        'el-GR': 'Μπορείτε να συνδεθείτε στο Wi-Fi της βιβλιοθήκης.',
-                        'ar-SA': 'يمكنك الاتصال بواي فاي المكتبة.',
-                        'mk-MK': 'Можете да се поврзете со Wi-Fi на библиотеката.',
-                        'es-ES': 'Puede conectarse al Wi-Fi de la biblioteca.',
-                        'it-IT': 'Può connettersi al Wi-Fi della biblioteca.',
-                        'id-ID': 'Anda dapat terhubung ke Wi-Fi perpustakaan.'
+                        'zh-CN': '您想要扫描吗？',
+                        'zh-HK': '您想要掃描嗎？',
+                        'ne-NP': 'तपाईं स्क्यान गर्न चाहनुहुन्छ?',
+                        'el-GR': 'Θέλετε να σκανάρετε;',
+                        'ar-SA': 'هل تريد المسح الضوئي؟',
+                        'mk-MK': 'Дали сакате да скенирате?',
+                        'es-ES': '¿Quiere escanear?',
+                        'it-IT': 'Vuole scansionare?',
+                        'id-ID': 'Apakah Anda ingin memindai?'
                     }
                 },
                 {
                     id: '19',
-                    english: 'Do you have computer training classes?',
+                    english: 'Do you have a USB disc?',
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我们有电脑培训课程。',
-                        'zh-HK': '我們有電腦培訓課程。',
-                        'ne-NP': 'हामीसँग कम्प्युटर प्रशिक्षण कक्षाहरू छन्।',
-                        'el-GR': 'Έχουμε μαθήματα εκπαίδευσης υπολογιστών.',
-                        'ar-SA': 'لدينا دروس تدريب على الكمبيوتر.',
-                        'mk-MK': 'Имаме часови за обука на компјутер.',
-                        'es-ES': 'Tenemos clases de capacitación en computación.',
-                        'it-IT': 'Abbiamo corsi di formazione informatica.',
-                        'id-ID': 'Kami memiliki kelas pelatihan komputer.'
+                        'zh-CN': '您有USB磁盘吗？',
+                        'zh-HK': '您有USB磁碟嗎？',
+                        'ne-NP': 'तपाईंसँग USB डिस्क छ?',
+                        'el-GR': 'Έχετε δίσκο USB;',
+                        'ar-SA': 'هل لديك قرص USB؟',
+                        'mk-MK': 'Дали имате USB диск?',
+                        'es-ES': '¿Tiene un disco USB?',
+                        'it-IT': 'Ha un disco USB?',
+                        'id-ID': 'Apakah Anda memiliki disk USB?'
                     }
                 },
                 {
                     id: '20',
-                    english: 'Can I use the library\'s online resources?',
+                    english: 'Do you want to photocopy?',
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '您可以使用图书馆的在线资源。',
-                        'zh-HK': '您可以使用圖書館的線上資源。',
-                        'ne-NP': 'तपाईं पुस्तकालयको अनलाइन स्रोतहरू प्रयोग गर्न सक्नुहुन्छ।',
-                        'el-GR': 'Μπορείτε να χρησιμοποιήσετε τους διαδικτυακούς πόρους της βιβλιοθήκης.',
-                        'ar-SA': 'يمكنك استخدام الموارد الإلكترونية للمكتبة.',
-                        'mk-MK': 'Можете да ги користите онлајн ресурсите на библиотеката.',
-                        'es-ES': 'Puede usar los recursos en línea de la biblioteca.',
-                        'it-IT': 'Può usare le risorse online della biblioteca.',
-                        'id-ID': 'Anda dapat menggunakan sumber daya online perpustakaan.'
+                        'zh-CN': '您想要复印吗？',
+                        'zh-HK': '您想要複印嗎？',
+                        'ne-NP': 'तपाईं फोटोकपी गर्न चाहनुहुन्छ?',
+                        'el-GR': 'Θέλετε να φωτοτυπήσετε;',
+                        'ar-SA': 'هل تريد النسخ؟',
+                        'mk-MK': 'Дали сакате да фотокопирате?',
+                        'es-ES': '¿Quiere fotocopiar?',
+                        'it-IT': 'Vuole fotocopiare?',
+                        'id-ID': 'Apakah Anda ingin fotokopi?'
+                    }
+                },
+                {
+                    id: '21',
+                    english: 'You can pay by cash or by credit card',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您可以用现金或信用卡支付。',
+                        'zh-HK': '您可以用現金或信用卡支付。',
+                        'ne-NP': 'तपाईं नगद वा क्रेडिट कार्डले तिर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να πληρώσετε με μετρητά ή με πιστωτική κάρτα.',
+                        'ar-SA': 'يمكنك الدفع نقداً أو ببطاقة الائتمان.',
+                        'mk-MK': 'Можете да платите со готовина или со кредитна картичка.',
+                        'es-ES': 'Puede pagar en efectivo o con tarjeta de crédito.',
+                        'it-IT': 'Può pagare in contanti o con carta di credito.',
+                        'id-ID': 'Anda dapat membayar dengan tunai atau kartu kredit.'
+                    }
+                },
+                {
+                    id: '22',
+                    english: 'Do you know the PIN/password for your library card?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您知道您的借书证的PIN/密码吗？',
+                        'zh-HK': '您知道您的借書證的PIN/密碼嗎？',
+                        'ne-NP': 'तपाईं आफ्नो पुस्तकालय कार्डको PIN/पासवर्ड जान्नुहुन्छ?',
+                        'el-GR': 'Ξέρετε τον PIN/κωδικό πρόσβασης της κάρτας βιβλιοθήκης σας;',
+                        'ar-SA': 'هل تعرف رمز PIN/كلمة المرور لبطاقة المكتبة الخاصة بك؟',
+                        'mk-MK': 'Дали ја знаете PIN/лозинката за вашата библиотекарска картичка?',
+                        'es-ES': '¿Sabe el PIN/contraseña de su tarjeta de biblioteca?',
+                        'it-IT': 'Conosce il PIN/password della sua tessera della biblioteca?',
+                        'id-ID': 'Apakah Anda tahu PIN/password untuk kartu perpustakaan Anda?'
+                    }
+                },
+                {
+                    id: '23',
+                    english: 'I will reset your PIN/password.',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我将重置您的PIN/密码。',
+                        'zh-HK': '我將重置您的PIN/密碼。',
+                        'ne-NP': 'म तपाईंको PIN/पासवर्ड रिसेट गर्नेछु।',
+                        'el-GR': 'Θα επαναφέρω τον PIN/κωδικό πρόσβασής σας.',
+                        'ar-SA': 'سأعيد تعيين رمز PIN/كلمة المرور الخاصة بك.',
+                        'mk-MK': 'Ќе ја ресетирам вашата PIN/лозинка.',
+                        'es-ES': 'Restableceré su PIN/contraseña.',
+                        'it-IT': 'Reimposterò il suo PIN/password.',
+                        'id-ID': 'Saya akan mengatur ulang PIN/password Anda.'
                     }
                 },
                 {
@@ -830,159 +882,193 @@
                 },
                 {
                     id: '21',
-                    english: 'Would you like to renew your library card?',
+                    english: 'May I have your library card?',
                     type: 'staff',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '您想续借您的借书证吗？',
-                        'zh-HK': '您想續借您的借書證嗎？',
-                        'ne-NP': 'तपाईं आफ्नो पुस्तकालय कार्ड नवीनीकरण गर्न चाहनुहुन्छ?',
-                        'el-GR': 'Θα θέλατε να ανανεώσετε την κάρτα βιβλιοθήκης σας;',
-                        'ar-SA': 'هل تريد تجديد بطاقة المكتبة الخاصة بك؟',
-                        'mk-MK': 'Дали би сакале да ја обновите вашата библиотекарска картичка?',
-                        'es-ES': '¿Le gustaría renovar su tarjeta de biblioteca?',
-                        'it-IT': 'Vorrebbe rinnovare la sua tessera della biblioteca?',
-                        'id-ID': 'Apakah Anda ingin memperbarui kartu perpustakaan Anda?'
+                        'zh-CN': '我可以看看您的借书证吗？',
+                        'zh-HK': '我可以看看您的借書證嗎？',
+                        'ne-NP': 'म तपाईंको पुस्तकालय कार्ड हेर्न सक्छु?',
+                        'el-GR': 'Μπορώ να δω την κάρτα βιβλιοθήκης σας;',
+                        'ar-SA': 'هل يمكنني رؤية بطاقة المكتبة الخاصة بك؟',
+                        'mk-MK': 'Можам ли да ја видам вашата библиотекарска картичка?',
+                        'es-ES': '¿Puedo ver su tarjeta de biblioteca?',
+                        'it-IT': 'Posso vedere la sua tessera della biblioteca?',
+                        'id-ID': 'Bolehkah saya melihat kartu perpustakaan Anda?'
                     }
                 },
                 {
                     id: '22',
-                    english: 'How many items can I borrow?',
+                    english: 'You have overdue items on your account',
                     type: 'staff',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '您可以借20件物品。',
-                        'zh-HK': '您可以借20件物品。',
-                        'ne-NP': 'तपाईं २० वस्तुहरू सापटी लिन सक्नुहुन्छ।',
-                        'el-GR': 'Μπορείτε να δανειστείτε 20 αντικείμενα.',
-                        'ar-SA': 'يمكنك استعارة 20 عنصر.',
-                        'mk-MK': 'Можете да позајмите 20 предмети.',
-                        'es-ES': 'Puede pedir prestados 20 artículos.',
-                        'it-IT': 'Può prendere in prestito 20 articoli.',
-                        'id-ID': 'Anda dapat meminjam 20 item.'
+                        'zh-CN': '您的账户上有逾期物品。',
+                        'zh-HK': '您的賬戶上有逾期物品。',
+                        'ne-NP': 'तपाईंको खातामा ओभरड्यु आइटमहरू छन्।',
+                        'el-GR': 'Έχετε καθυστερημένα αντικείμενα στον λογαριασμό σας.',
+                        'ar-SA': 'لديك عناصر متأخرة في حسابك.',
+                        'mk-MK': 'Имате задоцнети предмети на вашата сметка.',
+                        'es-ES': 'Tiene artículos vencidos en su cuenta.',
+                        'it-IT': 'Ha articoli scaduti nel suo account.',
+                        'id-ID': 'Anda memiliki item yang terlambat di akun Anda.'
                     }
                 },
                 {
                     id: '23',
-                    english: 'What is the loan period for books?',
+                    english: 'You can return library items to libraries at Hurstville, Kogarah, Penshurst, Oately or South Hurstville.',
                     type: 'staff',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '图书的借阅期限是3周。',
-                        'zh-HK': '圖書的借閱期限是3週。',
-                        'ne-NP': 'किताबहरूको सापटी अवधि ३ हप्ता छ।',
-                        'el-GR': 'Η περίοδος δανεισμού για τα βιβλία είναι 3 εβδομάδες.',
-                        'ar-SA': 'مدة الاستعارة للكتب هي 3 أسابيع.',
-                        'mk-MK': 'Рокот на позајмување за книги е 3 недели.',
-                        'es-ES': 'El período de préstamo para los libros es de 3 semanas.',
-                        'it-IT': 'Il periodo di prestito per i libri è di 3 settimane.',
-                        'id-ID': 'Masa pinjaman untuk buku adalah 3 minggu.'
+                        'zh-CN': '您可以将图书馆物品归还到Hurstville、Kogarah、Penshurst、Oately或South Hurstville的图书馆。',
+                        'zh-HK': '您可以將圖書館物品歸還到Hurstville、Kogarah、Penshurst、Oately或South Hurstville的圖書館。',
+                        'ne-NP': 'तपाईं पुस्तकालय वस्तुहरू Hurstville, Kogarah, Penshurst, Oately वा South Hurstville मा फिर्ता गर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να επιστρέψετε αντικείμενα βιβλιοθήκης σε βιβλιοθήκες στο Hurstville, Kogarah, Penshurst, Oately ή South Hurstville.',
+                        'ar-SA': 'يمكنك إرجاع عناصر المكتبة إلى المكتبات في Hurstville أو Kogarah أو Penshurst أو Oately أو South Hurstville.',
+                        'mk-MK': 'Можете да вратите библиотекарски предмети во библиотеки во Hurstville, Kogarah, Penshurst, Oately или South Hurstville.',
+                        'es-ES': 'Puede devolver artículos de la biblioteca a las bibliotecas en Hurstville, Kogarah, Penshurst, Oately o South Hurstville.',
+                        'it-IT': 'Può restituire articoli della biblioteca alle biblioteche di Hurstville, Kogarah, Penshurst, Oately o South Hurstville.',
+                        'id-ID': 'Anda dapat mengembalikan item perpustakaan ke perpustakaan di Hurstville, Kogarah, Penshurst, Oately atau South Hurstville.'
                     }
                 },
                 {
                     id: '24',
-                    english: 'Can I place a hold on a book?',
+                    english: 'Your library card has expired. I need to see identification to renew your card',
                     type: 'staff',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '您可以预约一本书。',
-                        'zh-HK': '您可以預約一本書。',
-                        'ne-NP': 'तपाईं एउटा किताबमा होल्ड राख्न सक्नुहुन्छ।',
-                        'el-GR': 'Μπορείτε να κλείσετε κράτηση για ένα βιβλίο.',
-                        'ar-SA': 'يمكنك حجز كتاب.',
-                        'mk-MK': 'Можете да ставате резервација за книга.',
-                        'es-ES': 'Puede reservar un libro.',
-                        'it-IT': 'Può prenotare un libro.',
-                        'id-ID': 'Anda dapat memesan buku.'
-                    }
-                },
-                {
-                    id: '25',
-                    english: 'Do you have any overdue items?',
-                    type: 'staff',
-                    category: 'Transactional',
-                    translations: {
-                        'zh-CN': '您有任何逾期物品吗？',
-                        'zh-HK': '您有任何逾期物品嗎？',
-                        'ne-NP': 'तपाईंसँग कुनै ओभरड्यु आइटम छन्?',
-                        'el-GR': 'Έχετε καθυστερημένα αντικείμενα;',
-                        'ar-SA': 'هل لديك أي عناصر متأخرة؟',
-                        'mk-MK': 'Дали имате задоцнети предмети?',
-                        'es-ES': '¿Tiene algún artículo vencido?',
-                        'it-IT': 'Ha articoli scaduti?',
-                        'id-ID': 'Apakah Anda memiliki item yang terlambat?'
-                    }
-                },
-                {
-                    id: '26',
-                    english: 'Would you like to pay your fines?',
-                    type: 'staff',
-                    category: 'Transactional',
-                    translations: {
-                        'zh-CN': '您想支付您的罚款吗？',
-                        'zh-HK': '您想支付您的罰款嗎？',
-                        'ne-NP': 'तपाईं आफ्नो जरिवाना तिर्न चाहनुहुन्छ?',
-                        'el-GR': 'Θα θέλατε να πληρώσετε τα πρόστιμά σας;',
-                        'ar-SA': 'هل تريد دفع الغرامات الخاصة بك؟',
-                        'mk-MK': 'Дали би сакале да ги платите вашите казни?',
-                        'es-ES': '¿Le gustaría pagar sus multas?',
-                        'it-IT': 'Vorrebbe pagare le sue multe?',
-                        'id-ID': 'Apakah Anda ingin membayar denda Anda?'
-                    }
-                },
-                {
-                    id: '27',
-                    english: 'Can I return books at any branch?',
-                    type: 'staff',
-                    category: 'Transactional',
-                    translations: {
-                        'zh-CN': '您可以在任何分馆还书。',
-                        'zh-HK': '您可以在任何分館還書。',
-                        'ne-NP': 'तपाईं कुनै पनि शाखामा किताबहरू फिर्ता गर्न सक्नुहुन्छ।',
-                        'el-GR': 'Μπορείτε να επιστρέψετε βιβλία σε οποιοδήποτε υποκατάστημα.',
-                        'ar-SA': 'يمكنك إرجاع الكتب في أي فرع.',
-                        'mk-MK': 'Можете да вратите книги во која било филијала.',
-                        'es-ES': 'Puede devolver libros en cualquier sucursal.',
-                        'it-IT': 'Può restituire i libri in qualsiasi filiale.',
-                        'id-ID': 'Anda dapat mengembalikan buku di cabang mana pun.'
+                        'zh-CN': '您的借书证已过期。我需要查看身份证明来续借您的卡。',
+                        'zh-HK': '您的借書證已過期。我需要查看身份證明來續借您的卡。',
+                        'ne-NP': 'तपाईंको पुस्तकालय कार्ड म्याद सकिएको छ। मलाई तपाईंको कार्ड नवीनीकरण गर्न पहिचान हेर्नु पर्छ।',
+                        'el-GR': 'Η κάρτα βιβλιοθήκης σας έχει λήξει. Χρειάζομαι να δω ταυτότητα για να ανανεώσω την κάρτα σας.',
+                        'ar-SA': 'بطاقة المكتبة الخاصة بك منتهية الصلاحية. أحتاج إلى رؤية الهوية لتجديد بطاقتك.',
+                        'mk-MK': 'Вашата библиотекарска картичка е истечена. Треба да вида документ за идентификација за да ја обновам вашата картичка.',
+                        'es-ES': 'Su tarjeta de biblioteca ha expirado. Necesito ver identificación para renovar su tarjeta.',
+                        'it-IT': 'La sua tessera della biblioteca è scaduta. Devo vedere un documento d\'identità per rinnovare la sua tessera.',
+                        'id-ID': 'Kartu perpustakaan Anda telah kedaluwarsa. Saya perlu melihat identifikasi untuk memperbarui kartu Anda.'
                     }
                 },
                 {
                     id: '3',
-                    english: 'I need help finding a book.',
+                    english: 'I need help finding a book',
                     type: 'customer',
                     category: 'General Assistance',
                     translations: {
-                        'zh-CN': '我需要帮助找一本书。',
-                        'zh-HK': '我需要幫助找一本書。',
-                        'ne-NP': 'मलाई एउटा किताब भेट्न मद्दत चाहिन्छ।',
-                        'el-GR': 'Χρειάζομαι βοήθεια για να βρω ένα βιβλίο.',
-                        'ar-SA': 'أحتاج مساعدة في العثور على كتاب.',
-                        'mk-MK': 'Ми треба помош за да најдам книга.',
-                        'es-ES': 'Necesito ayuda para encontrar un libro.',
-                        'it-IT': 'Ho bisogno di aiuto per trovare un libro.',
-                        'id-ID': 'Saya perlu bantuan untuk menemukan buku.'
+                        'zh-CN': '我需要帮助找一本书',
+                        'zh-HK': '我需要幫助找一本書',
+                        'ne-NP': 'मलाई एउटा किताब भेट्न मद्दत चाहिन्छ',
+                        'el-GR': 'Χρειάζομαι βοήθεια για να βρω ένα βιβλίο',
+                        'ar-SA': 'أحتاج مساعدة في العثور على كتاب',
+                        'mk-MK': 'Ми треба помош за да најдам книга',
+                        'es-ES': 'Necesito ayuda para encontrar un libro',
+                        'it-IT': 'Ho bisogno di aiuto per trovare un libro',
+                        'id-ID': 'Saya perlu bantuan untuk menemukan buku'
                     }
                 },
                 {
                     id: '4',
-                    english: 'Where are the computers?',
+                    english: 'I would like to borrow these items',
                     type: 'customer',
-                    category: 'Digital Services',
+                    category: 'General Assistance',
                     translations: {
-                        'zh-CN': '电脑在哪里？',
-                        'zh-HK': '電腦在哪裡？',
-                        'ne-NP': 'कम्प्युटरहरू कहाँ छन्?',
-                        'el-GR': 'Πού είναι οι υπολογιστές;',
-                        'ar-SA': 'أين أجهزة الكمبيوتر؟',
-                        'mk-MK': 'Каде се компјутерите?',
-                        'es-ES': '¿Dónde están las computadoras?',
-                        'it-IT': 'Dove sono i computer?',
-                        'id-ID': 'Di mana komputer-komputer itu?'
+                        'zh-CN': '我想借这些物品',
+                        'zh-HK': '我想借這些物品',
+                        'ne-NP': 'म यी वस्तुहरू सापटी लिन चाहन्छु',
+                        'el-GR': 'Θα ήθελα να δανειστώ αυτά τα αντικείμενα',
+                        'ar-SA': 'أود استعارة هذه العناصر',
+                        'mk-MK': 'Би сакав да ги позајмам овие предмети',
+                        'es-ES': 'Me gustaría pedir prestados estos artículos',
+                        'it-IT': 'Vorrei prendere in prestito questi articoli',
+                        'id-ID': 'Saya ingin meminjam item-item ini'
                     }
                 },
                 {
                     id: '5',
+                    english: 'I would like to return my item',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我想还我的物品',
+                        'zh-HK': '我想還我的物品',
+                        'ne-NP': 'म मेरो वस्तु फिर्ता गर्न चाहन्छु',
+                        'el-GR': 'Θα ήθελα να επιστρέψω το αντικείμενό μου',
+                        'ar-SA': 'أود إرجاع العنصر الخاص بي',
+                        'mk-MK': 'Би сакав да го вратам мојот предмет',
+                        'es-ES': 'Me gustaría devolver mi artículo',
+                        'it-IT': 'Vorrei restituire il mio articolo',
+                        'id-ID': 'Saya ingin mengembalikan item saya'
+                    }
+                },
+                {
+                    id: '6',
+                    english: 'I would like to renew my items',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我想续借我的物品',
+                        'zh-HK': '我想續借我的物品',
+                        'ne-NP': 'म मेरा वस्तुहरू नवीनीकरण गर्न चाहन्छु',
+                        'el-GR': 'Θα ήθελα να ανανεώσω τα αντικείμενά μου',
+                        'ar-SA': 'أود تجديد العناصر الخاصة بي',
+                        'mk-MK': 'Би сакав да ги обновам моите предмети',
+                        'es-ES': 'Me gustaría renovar mis artículos',
+                        'it-IT': 'Vorrei rinnovare i miei articoli',
+                        'id-ID': 'Saya ingin memperbarui item-item saya'
+                    }
+                },
+                {
+                    id: '7',
+                    english: 'What time are the opening hours of this library?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '这个图书馆的开放时间是什么时候？',
+                        'zh-HK': '這個圖書館的開放時間是什麼時候？',
+                        'ne-NP': 'यो पुस्तकालयको खुला समय कति बजे हो?',
+                        'el-GR': 'Ποια ώρα είναι οι ώρες λειτουργίας αυτής της βιβλιοθήκης;',
+                        'ar-SA': 'ما هو وقت ساعات العمل في هذه المكتبة؟',
+                        'mk-MK': 'Која е времето на работното време на оваа библиотека?',
+                        'es-ES': '¿A qué hora son los horarios de apertura de esta biblioteca?',
+                        'it-IT': 'A che ora sono gli orari di apertura di questa biblioteca?',
+                        'id-ID': 'Jam berapa jam buka perpustakaan ini?'
+                    }
+                },
+                {
+                    id: '8',
+                    english: 'Where are the bathrooms?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '洗手间在哪里？',
+                        'zh-HK': '洗手間在哪裡？',
+                        'ne-NP': 'स्नानघरहरू कहाँ छन्?',
+                        'el-GR': 'Πού είναι οι τουαλέτες;',
+                        'ar-SA': 'أين الحمامات؟',
+                        'mk-MK': 'Каде се тоалетите?',
+                        'es-ES': '¿Dónde están los baños?',
+                        'it-IT': 'Dove sono i bagni?',
+                        'id-ID': 'Di mana kamar mandi?'
+                    }
+                },
+                {
+                    id: '9',
+                    english: 'Is there a Justice of the Peace here today?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '今天这里有太平绅士吗？',
+                        'zh-HK': '今天這裡有太平紳士嗎？',
+                        'ne-NP': 'आज यहाँ शान्ति न्यायाधीश छ?',
+                        'el-GR': 'Υπάρχει Δικαστής Ειρήνης εδώ σήμερα;',
+                        'ar-SA': 'هل هناك قاضي صلح هنا اليوم؟',
+                        'mk-MK': 'Дали има мировен судија тука денес?',
+                        'es-ES': '¿Hay un Juez de Paz aquí hoy?',
+                        'it-IT': 'C\'è un Giudice di Pace qui oggi?',
+                        'id-ID': 'Apakah ada Hakim Perdamaian di sini hari ini?'
+                    }
+                },
+                {
+                    id: '10',
                     english: 'How do I get to Centrelink?',
                     type: 'customer',
                     category: 'General Assistance',
@@ -999,228 +1085,41 @@
                     }
                 },
                 {
-                    id: '28',
-                    english: 'I would like to sign up for a library card.',
-                    type: 'customer',
-                    category: 'Transactional',
-                    translations: {
-                        'zh-CN': '我想申请一张借书证。',
-                        'zh-HK': '我想申請一張借書證。',
-                        'ne-NP': 'म पुस्तकालय कार्डको लागि साइन अप गर्न चाहन्छु।',
-                        'el-GR': 'Θα ήθελα να εγγραφώ για κάρτα βιβλιοθήκης.',
-                        'ar-SA': 'أود التسجيل للحصول على بطاقة مكتبة.',
-                        'mk-MK': 'Би сакав да се регистрирам за библиотекарска картичка.',
-                        'es-ES': 'Me gustaría registrarme para una tarjeta de biblioteca.',
-                        'it-IT': 'Vorrei iscrivermi per una tessera della biblioteca.',
-                        'id-ID': 'Saya ingin mendaftar untuk kartu perpustakaan.'
-                    }
-                },
-                {
-                    id: '29',
-                    english: 'How much does it cost to join the library?',
-                    type: 'customer',
-                    category: 'Transactional',
-                    translations: {
-                        'zh-CN': '加入图书馆要多少钱？',
-                        'zh-HK': '加入圖書館要多少錢？',
-                        'ne-NP': 'पुस्तकालयमा सामेल हुन कति लाग्छ?',
-                        'el-GR': 'Πόσο κοστίζει η ένταξη στη βιβλιοθήκη;',
-                        'ar-SA': 'كم تكلفة الانضمام إلى المكتبة؟',
-                        'mk-MK': 'Колку чини да се приклучиш во библиотеката?',
-                        'es-ES': '¿Cuánto cuesta unirse a la biblioteca?',
-                        'it-IT': 'Quanto costa iscriversi alla biblioteca?',
-                        'id-ID': 'Berapa biaya untuk bergabung dengan perpustakaan?'
-                    }
-                },
-                {
-                    id: '30',
-                    english: 'I do not have a library card.',
-                    type: 'customer',
-                    category: 'Transactional',
-                    translations: {
-                        'zh-CN': '我没有借书证。',
-                        'zh-HK': '我沒有借書證。',
-                        'ne-NP': 'मसँग पुस्तकालय कार्ड छैन।',
-                        'el-GR': 'Δεν έχω κάρτα βιβλιοθήκης.',
-                        'ar-SA': 'ليس لدي بطاقة مكتبة.',
-                        'mk-MK': 'Немам библиотекарска картичка.',
-                        'es-ES': 'No tengo tarjeta de biblioteca.',
-                        'it-IT': 'Non ho una tessera della biblioteca.',
-                        'id-ID': 'Saya tidak memiliki kartu perpustakaan.'
-                    }
-                },
-                {
-                    id: '31',
-                    english: 'Can you help me find a specific book?',
-                    type: 'customer',
-                    category: 'General Assistance',
-                    translations: {
-                        'zh-CN': '您能帮我找一本特定的书吗？',
-                        'zh-HK': '您能幫我找一本特定的書嗎？',
-                        'ne-NP': 'तपाईं मलाई एउटा विशेष किताब भेट्न मद्दत गर्न सक्नुहुन्छ?',
-                        'el-GR': 'Μπορείτε να με βοηθήσετε να βρω ένα συγκεκριμένο βιβλίο;',
-                        'ar-SA': 'هل يمكنك مساعدتي في العثور على كتاب معين؟',
-                        'mk-MK': 'Можете ли да ми помогнете да најдам одредена книга?',
-                        'es-ES': '¿Puede ayudarme a encontrar un libro específico?',
-                        'it-IT': 'Può aiutarmi a trovare un libro specifico?',
-                        'id-ID': 'Bisakah Anda membantu saya menemukan buku tertentu?'
-                    }
-                },
-                {
-                    id: '32',
-                    english: 'Where can I find the latest magazines?',
-                    type: 'customer',
-                    category: 'General Assistance',
-                    translations: {
-                        'zh-CN': '我在哪里可以找到最新的杂志？',
-                        'zh-HK': '我在哪裡可以找到最新的雜誌？',
-                        'ne-NP': 'म नयाँ पत्रिकाहरू कहाँ भेट्न सक्छु?',
-                        'el-GR': 'Πού μπορώ να βρω τα τελευταία περιοδικά;',
-                        'ar-SA': 'أين يمكنني العثور على أحدث المجلات؟',
-                        'mk-MK': 'Каде можам да најдам најнови списанија?',
-                        'es-ES': '¿Dónde puedo encontrar las revistas más recientes?',
-                        'it-IT': 'Dove posso trovare le riviste più recenti?',
-                        'id-ID': 'Di mana saya bisa menemukan majalah terbaru?'
-                    }
-                },
-                {
-                    id: '33',
-                    english: 'Do you have any study rooms available?',
-                    type: 'customer',
-                    category: 'General Assistance',
-                    translations: {
-                        'zh-CN': '你们有任何可用的学习室吗？',
-                        'zh-HK': '你們有任何可用的學習室嗎？',
-                        'ne-NP': 'तपाईंसँग कुनै अध्ययन कोठाहरू उपलब्ध छन्?',
-                        'el-GR': 'Έχετε διαθέσιμες αίθουσες μελέτης;',
-                        'ar-SA': 'هل لديكم غرف دراسة متاحة؟',
-                        'mk-MK': 'Дали имате достапни студиски простори?',
-                        'es-ES': '¿Tienen salas de estudio disponibles?',
-                        'it-IT': 'Avete sale di studio disponibili?',
-                        'id-ID': 'Apakah Anda memiliki ruang belajar yang tersedia?'
-                    }
-                },
-                {
-                    id: '34',
-                    english: 'How do I reserve a book online?',
-                    type: 'customer',
-                    category: 'General Assistance',
-                    translations: {
-                        'zh-CN': '我如何在线预约一本书？',
-                        'zh-HK': '我如何在線預約一本書？',
-                        'ne-NP': 'म अनलाइन एउटा किताब कसरी रिजर्भ गर्न सक्छु?',
-                        'el-GR': 'Πώς μπορώ να κλείσω κράτηση βιβλίου διαδικτυακά;',
-                        'ar-SA': 'كيف يمكنني حجز كتاب عبر الإنترنت؟',
-                        'mk-MK': 'Како можам да резервирам книга онлајн?',
-                        'es-ES': '¿Cómo puedo reservar un libro en línea?',
-                        'it-IT': 'Come posso prenotare un libro online?',
-                        'id-ID': 'Bagaimana saya bisa memesan buku secara online?'
-                    }
-                },
-                {
-                    id: '35',
-                    english: 'What are your opening hours today?',
-                    type: 'customer',
-                    category: 'General Assistance',
-                    translations: {
-                        'zh-CN': '你们今天什么时候开门？',
-                        'zh-HK': '你們今天什麼時候開門？',
-                        'ne-NP': 'तपाईंको आजको खुला समय के हो?',
-                        'el-GR': 'Ποιες είναι οι ώρες λειτουργίας σας σήμερα;',
-                        'ar-SA': 'ما هي ساعات العمل لديكم اليوم؟',
-                        'mk-MK': 'Кои се вашите работни часови денес?',
-                        'es-ES': '¿Cuáles son sus horarios de apertura hoy?',
-                        'it-IT': 'Quali sono i vostri orari di apertura oggi?',
-                        'id-ID': 'Apa jam buka Anda hari ini?'
-                    }
-                },
-                {
-                    id: '36',
-                    english: 'Can I bring my laptop to the library?',
-                    type: 'customer',
-                    category: 'General Assistance',
-                    translations: {
-                        'zh-CN': '我可以带笔记本电脑到图书馆吗？',
-                        'zh-HK': '我可以帶筆記本電腦到圖書館嗎？',
-                        'ne-NP': 'म पुस्तकालयमा मेरो ल्यापटप ल्याउन सक्छु?',
-                        'el-GR': 'Μπορώ να φέρω τον φορητό υπολογιστή μου στη βιβλιοθήκη;',
-                        'ar-SA': 'هل يمكنني إحضار جهاز الكمبيوتر المحمول إلى المكتبة؟',
-                        'mk-MK': 'Можам ли да го донесам мојот лаптоп во библиотеката?',
-                        'es-ES': '¿Puedo traer mi computadora portátil a la biblioteca?',
-                        'it-IT': 'Posso portare il mio laptop in biblioteca?',
-                        'id-ID': 'Bisakah saya membawa laptop ke perpustakaan?'
-                    }
-                },
-                {
-                    id: '37',
-                    english: 'How can I connect to the Wi-Fi?',
+                    id: '11',
+                    english: 'Do you have computers?',
                     type: 'customer',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我如何连接Wi-Fi？',
-                        'zh-HK': '我如何連接Wi-Fi？',
-                        'ne-NP': 'म Wi-Fi मा कसरी जडान गर्न सक्छु?',
-                        'el-GR': 'Πώς μπορώ να συνδεθώ στο Wi-Fi;',
-                        'ar-SA': 'كيف يمكنني الاتصال بالواي فاي؟',
-                        'mk-MK': 'Како да се поврзам со Wi-Fi?',
-                        'es-ES': '¿Cómo puedo conectarme al Wi-Fi?',
-                        'it-IT': 'Come posso connettermi al Wi-Fi?',
-                        'id-ID': 'Bagaimana saya bisa terhubung ke Wi-Fi?'
+                        'zh-CN': '你们有电脑吗？',
+                        'zh-HK': '你們有電腦嗎？',
+                        'ne-NP': 'तपाईंसँग कम्प्युटरहरू छन्?',
+                        'el-GR': 'Έχετε υπολογιστές;',
+                        'ar-SA': 'هل لديكم أجهزة كمبيوتر؟',
+                        'mk-MK': 'Дали имате компјутери?',
+                        'es-ES': '¿Tienen computadoras?',
+                        'it-IT': 'Avete computer?',
+                        'id-ID': 'Apakah Anda memiliki komputer?'
                     }
                 },
                 {
-                    id: '38',
-                    english: 'Are there public computers available?',
+                    id: '12',
+                    english: 'I need help using a computer',
                     type: 'customer',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '有公共电脑可用吗？',
-                        'zh-HK': '有公共電腦可用嗎？',
-                        'ne-NP': 'सार्वजनिक कम्प्युटरहरू उपलब्ध छन्?',
-                        'el-GR': 'Υπάρχουν διαθέσιμοι δημόσιοι υπολογιστές;',
-                        'ar-SA': 'هل هناك أجهزة كمبيوتر عامة متاحة؟',
-                        'mk-MK': 'Дали има достапни јавни компјутери?',
-                        'es-ES': '¿Hay computadoras públicas disponibles?',
-                        'it-IT': 'Ci sono computer pubblici disponibili?',
-                        'id-ID': 'Apakah ada komputer publik yang tersedia?'
+                        'zh-CN': '我需要帮助使用电脑',
+                        'zh-HK': '我需要幫助使用電腦',
+                        'ne-NP': 'मलाई कम्प्युटर प्रयोग गर्न मद्दत चाहिन्छ',
+                        'el-GR': 'Χρειάζομαι βοήθεια για τη χρήση υπολογιστή',
+                        'ar-SA': 'أحتاج مساعدة في استخدام الكمبيوتر',
+                        'mk-MK': 'Ми треба помош за користење компјутер',
+                        'es-ES': 'Necesito ayuda para usar una computadora',
+                        'it-IT': 'Ho bisogno di aiuto per usare un computer',
+                        'id-ID': 'Saya perlu bantuan menggunakan komputer'
                     }
                 },
                 {
-                    id: '39',
-                    english: 'I need help using a computer.',
-                    type: 'customer',
-                    category: 'Digital Services',
-                    translations: {
-                        'zh-CN': '我需要帮助使用电脑。',
-                        'zh-HK': '我需要幫助使用電腦。',
-                        'ne-NP': 'मलाई कम्प्युटर प्रयोग गर्न मद्दत चाहिन्छ।',
-                        'el-GR': 'Χρειάζομαι βοήθεια για τη χρήση υπολογιστή.',
-                        'ar-SA': 'أحتاج مساعدة في استخدام الكمبيوتر.',
-                        'mk-MK': 'Ми треба помош за користење компјутер.',
-                        'es-ES': 'Necesito ayuda para usar una computadora.',
-                        'it-IT': 'Ho bisogno di aiuto per usare un computer.',
-                        'id-ID': 'Saya perlu bantuan menggunakan komputer.'
-                    }
-                },
-                {
-                    id: '40',
-                    english: 'I need help using the internet.',
-                    type: 'customer',
-                    category: 'Digital Services',
-                    translations: {
-                        'zh-CN': '我需要帮助使用互联网。',
-                        'zh-HK': '我需要幫助使用互聯網。',
-                        'ne-NP': 'मलाई इन्टरनेट प्रयोग गर्न मद्दत चाहिन्छ।',
-                        'el-GR': 'Χρειάζομαι βοήθεια για τη χρήση του διαδικτύου.',
-                        'ar-SA': 'أحتاج مساعدة في استخدام الإنترنت.',
-                        'mk-MK': 'Ми треба помош за користење интернет.',
-                        'es-ES': 'Necesito ayuda para usar Internet.',
-                        'it-IT': 'Ho bisogno di aiuto per usare Internet.',
-                        'id-ID': 'Saya perlu bantuan menggunakan internet.'
-                    }
-                },
-                {
-                    id: '41',
+                    id: '13',
                     english: 'Are there printers available?',
                     type: 'customer',
                     category: 'Digital Services',
@@ -1237,92 +1136,228 @@
                     }
                 },
                 {
-                    id: '42',
-                    english: 'I need help using a printer.',
+                    id: '14',
+                    english: 'How much does printing cost?',
                     type: 'customer',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我需要帮助使用打印机。',
-                        'zh-HK': '我需要幫助使用打印機。',
-                        'ne-NP': 'मलाई प्रिन्टर प्रयोग गर्न मद्दत चाहिन्छ।',
-                        'el-GR': 'Χρειάζομαι βοήθεια για τη χρήση εκτυπωτή.',
-                        'ar-SA': 'أحتاج مساعدة في استخدام الطابعة.',
-                        'mk-MK': 'Ми треба помош за користење печатач.',
-                        'es-ES': 'Necesito ayuda para usar una impresora.',
-                        'it-IT': 'Ho bisogno di aiuto per usare una stampante.',
-                        'id-ID': 'Saya perlu bantuan menggunakan printer.'
+                        'zh-CN': '打印要多少钱？',
+                        'zh-HK': '打印要多少錢？',
+                        'ne-NP': 'प्रिन्टिङ कति लाग्छ?',
+                        'el-GR': 'Πόσο κοστίζει η εκτύπωση;',
+                        'ar-SA': 'كم تكلفة الطباعة؟',
+                        'mk-MK': 'Колку чини печатењето?',
+                        'es-ES': '¿Cuánto cuesta imprimir?',
+                        'it-IT': 'Quanto costa stampare?',
+                        'id-ID': 'Berapa biaya mencetak?'
                     }
                 },
                 {
-                    id: '43',
-                    english: 'Are there scanners available?',
+                    id: '15',
+                    english: 'I need help printing.',
                     type: 'customer',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '有扫描仪可用吗？',
-                        'zh-HK': '有掃描儀可用嗎？',
-                        'ne-NP': 'स्क्यानरहरू उपलब्ध छन्?',
-                        'el-GR': 'Υπάρχουν διαθέσιμα σκάνερ;',
-                        'ar-SA': 'هل هناك ماسحات ضوئية متاحة؟',
-                        'mk-MK': 'Дали има достапни скенери?',
-                        'es-ES': '¿Hay escáneres disponibles?',
-                        'it-IT': 'Ci sono scanner disponibili?',
-                        'id-ID': 'Apakah ada scanner yang tersedia?'
+                        'zh-CN': '我需要帮助打印。',
+                        'zh-HK': '我需要幫助打印。',
+                        'ne-NP': 'मलाई प्रिन्टिङ गर्न मद्दत चाहिन्छ।',
+                        'el-GR': 'Χρειάζομαι βοήθεια για την εκτύπωση.',
+                        'ar-SA': 'أحتاج مساعدة في الطباعة.',
+                        'mk-MK': 'Ми треба помош за печатење.',
+                        'es-ES': 'Necesito ayuda para imprimir.',
+                        'it-IT': 'Ho bisogno di aiuto per stampare.',
+                        'id-ID': 'Saya perlu bantuan untuk mencetak.'
                     }
                 },
                 {
-                    id: '44',
-                    english: 'How many books can I borrow?',
+                    id: '16',
+                    english: 'I need to scan a document.',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要扫描一份文件。',
+                        'zh-HK': '我需要掃描一份文件。',
+                        'ne-NP': 'मलाई एउटा कागजात स्क्यान गर्नु पर्छ।',
+                        'el-GR': 'Χρειάζομαι να σκανάρω ένα έγγραφο.',
+                        'ar-SA': 'أحتاج إلى مسح ضوئي لمستند.',
+                        'mk-MK': 'Треба да скенирам документ.',
+                        'es-ES': 'Necesito escanear un documento.',
+                        'it-IT': 'Devo scansionare un documento.',
+                        'id-ID': 'Saya perlu memindai dokumen.'
+                    }
+                },
+                {
+                    id: '17',
+                    english: 'How much does scanning cost?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '扫描要多少钱？',
+                        'zh-HK': '掃描要多少錢？',
+                        'ne-NP': 'स्क्यानिङ कति लाग्छ?',
+                        'el-GR': 'Πόσο κοστίζει η σάρωση;',
+                        'ar-SA': 'كم تكلفة المسح الضوئي؟',
+                        'mk-MK': 'Колку чини скенирањето?',
+                        'es-ES': '¿Cuánto cuesta escanear?',
+                        'it-IT': 'Quanto costa scansionare?',
+                        'id-ID': 'Berapa biaya memindai?'
+                    }
+                },
+                {
+                    id: '18',
+                    english: 'I need help with scanning a document',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助扫描文件',
+                        'zh-HK': '我需要幫助掃描文件',
+                        'ne-NP': 'मलाई कागजात स्क्यान गर्न मद्दत चाहिन्छ',
+                        'el-GR': 'Χρειάζομαι βοήθεια για τη σάρωση εγγράφου',
+                        'ar-SA': 'أحتاج مساعدة في مسح ضوئي لمستند',
+                        'mk-MK': 'Ми треба помош за скенирање документ',
+                        'es-ES': 'Necesito ayuda para escanear un documento',
+                        'it-IT': 'Ho bisogno di aiuto per scansionare un documento',
+                        'id-ID': 'Saya perlu bantuan untuk memindai dokumen'
+                    }
+                },
+                {
+                    id: '19',
+                    english: 'Can I photocopy a document in this library?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我可以在这个图书馆复印文件吗？',
+                        'zh-HK': '我可以在這個圖書館複印文件嗎？',
+                        'ne-NP': 'म यो पुस्तकालयमा कागजात फोटोकपी गर्न सक्छु?',
+                        'el-GR': 'Μπορώ να φωτοτυπήσω ένα έγγραφο σε αυτή τη βιβλιοθήκη;',
+                        'ar-SA': 'هل يمكنني نسخ مستند في هذه المكتبة؟',
+                        'mk-MK': 'Можам ли да фотокопирам документ во оваа библиотека?',
+                        'es-ES': '¿Puedo fotocopiar un documento en esta biblioteca?',
+                        'it-IT': 'Posso fotocopiare un documento in questa biblioteca?',
+                        'id-ID': 'Bisakah saya fotokopi dokumen di perpustakaan ini?'
+                    }
+                },
+                {
+                    id: '20',
+                    english: 'How much does photocopying cost?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '复印要多少钱？',
+                        'zh-HK': '複印要多少錢？',
+                        'ne-NP': 'फोटोकपी कति लाग्छ?',
+                        'el-GR': 'Πόσο κοστίζει η φωτοτυπία;',
+                        'ar-SA': 'كم تكلفة النسخ؟',
+                        'mk-MK': 'Колку чини фотокопирањето?',
+                        'es-ES': '¿Cuánto cuesta fotocopiar?',
+                        'it-IT': 'Quanto costa fotocopiare?',
+                        'id-ID': 'Berapa biaya fotokopi?'
+                    }
+                },
+                {
+                    id: '21',
+                    english: 'I need help with the photocopier.',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助使用复印机。',
+                        'zh-HK': '我需要幫助使用複印機。',
+                        'ne-NP': 'मलाई फोटोकपी मशीन प्रयोग गर्न मद्दत चाहिन्छ।',
+                        'el-GR': 'Χρειάζομαι βοήθεια με τη φωτοτυπική μηχανή.',
+                        'ar-SA': 'أحتاج مساعدة في استخدام آلة النسخ.',
+                        'mk-MK': 'Ми треба помош со фотокопирачот.',
+                        'es-ES': 'Necesito ayuda con la fotocopiadora.',
+                        'it-IT': 'Ho bisogno di aiuto con la fotocopiatrice.',
+                        'id-ID': 'Saya perlu bantuan dengan mesin fotokopi.'
+                    }
+                },
+                {
+                    id: '22',
+                    english: 'Can you help me connect to the wifi?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您能帮我连接Wi-Fi吗？',
+                        'zh-HK': '您能幫我連接Wi-Fi嗎？',
+                        'ne-NP': 'तपाईं मलाई Wi-Fi मा जडान गर्न मद्दत गर्न सक्नुहुन्छ?',
+                        'el-GR': 'Μπορείτε να με βοηθήσετε να συνδεθώ στο wifi;',
+                        'ar-SA': 'هل يمكنك مساعدتي في الاتصال بالواي فاي؟',
+                        'mk-MK': 'Можете ли да ми помогнете да се поврзам со wifi?',
+                        'es-ES': '¿Puede ayudarme a conectarme al wifi?',
+                        'it-IT': 'Può aiutarmi a connettermi al wifi?',
+                        'id-ID': 'Bisakah Anda membantu saya terhubung ke wifi?'
+                    }
+                },
+                {
+                    id: '23',
+                    english: 'I do not have a library card',
                     type: 'customer',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '我可以借多少本书？',
-                        'zh-HK': '我可以借多少本書？',
-                        'ne-NP': 'म कति किताबहरू सापटी लिन सक्छु?',
-                        'el-GR': 'Πόσα βιβλία μπορώ να δανειστώ;',
-                        'ar-SA': 'كم عدد الكتب التي يمكنني استعارتها؟',
-                        'mk-MK': 'Колку книги можам да позајмам?',
-                        'es-ES': '¿Cuántos libros puedo pedir prestados?',
-                        'it-IT': 'Quanti libri posso prendere in prestito?',
-                        'id-ID': 'Berapa banyak buku yang bisa saya pinjam?'
+                        'zh-CN': '我没有借书证',
+                        'zh-HK': '我沒有借書證',
+                        'ne-NP': 'मसँग पुस्तकालय कार्ड छैन',
+                        'el-GR': 'Δεν έχω κάρτα βιβλιοθήκης',
+                        'ar-SA': 'ليس لدي بطاقة مكتبة',
+                        'mk-MK': 'Немам библиотекарска картичка',
+                        'es-ES': 'No tengo tarjeta de biblioteca',
+                        'it-IT': 'Non ho una tessera della biblioteca',
+                        'id-ID': 'Saya tidak memiliki kartu perpustakaan'
                     }
                 },
                 {
-                    id: '45',
-                    english: 'What is the loan period for books?',
+                    id: '24',
+                    english: 'I would like to sign up for a library card',
                     type: 'customer',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '图书的借阅期限是多久？',
-                        'zh-HK': '圖書的借閱期限是多久？',
-                        'ne-NP': 'किताबहरूको सापटी अवधि कति छ?',
-                        'el-GR': 'Ποια είναι η περίοδος δανεισμού για τα βιβλία;',
-                        'ar-SA': 'ما هي مدة الاستعارة للكتب؟',
-                        'mk-MK': 'Која е рокот на позајмување за книги?',
-                        'es-ES': '¿Cuál es el período de préstamo para los libros?',
-                        'it-IT': 'Qual è il periodo di prestito per i libri?',
-                        'id-ID': 'Berapa lama masa pinjaman untuk buku?'
+                        'zh-CN': '我想申请一张借书证',
+                        'zh-HK': '我想申請一張借書證',
+                        'ne-NP': 'म पुस्तकालय कार्डको लागि साइन अप गर्न चाहन्छु',
+                        'el-GR': 'Θα ήθελα να εγγραφώ για κάρτα βιβλιοθήκης',
+                        'ar-SA': 'أود التسجيل للحصول على بطاقة مكتبة',
+                        'mk-MK': 'Би сакав да се регистрирам за библиотекарска картичка',
+                        'es-ES': 'Me gustaría registrarme para una tarjeta de biblioteca',
+                        'it-IT': 'Vorrei iscrivermi per una tessera della biblioteca',
+                        'id-ID': 'Saya ingin mendaftar untuk kartu perpustakaan'
                     }
                 },
                 {
-                    id: '46',
-                    english: 'Can I place a hold on a book?',
+                    id: '25',
+                    english: 'How many items can I borrow?',
                     type: 'customer',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '我可以预约一本书吗？',
-                        'zh-HK': '我可以預約一本書嗎？',
-                        'ne-NP': 'म एउटा किताबमा होल्ड राख्न सक्छु?',
-                        'el-GR': 'Μπορώ να κλείσω κράτηση για ένα βιβλίο;',
-                        'ar-SA': 'هل يمكنني حجز كتاب؟',
-                        'mk-MK': 'Можам ли да ставам резервација за книга?',
-                        'es-ES': '¿Puedo reservar un libro?',
-                        'it-IT': 'Posso prenotare un libro?',
-                        'id-ID': 'Bisakah saya memesan buku?'
+                        'zh-CN': '我可以借多少件物品？',
+                        'zh-HK': '我可以借多少件物品？',
+                        'ne-NP': 'म कति वस्तुहरू सापटी लिन सक्छु?',
+                        'el-GR': 'Πόσα αντικείμενα μπορώ να δανειστώ;',
+                        'ar-SA': 'كم عدد العناصر التي يمكنني استعارتها؟',
+                        'mk-MK': 'Колку предмети можам да позајмам?',
+                        'es-ES': '¿Cuántos artículos puedo pedir prestados?',
+                        'it-IT': 'Quanti articoli posso prendere in prestito?',
+                        'id-ID': 'Berapa banyak item yang bisa saya pinjam?'
                     }
                 },
                 {
-                    id: '47',
+                    id: '26',
+                    english: 'How long can I borrow these items?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我可以借这些物品多长时间？',
+                        'zh-HK': '我可以借這些物品多長時間？',
+                        'ne-NP': 'म यी वस्तुहरू कति लामो समय सापटी लिन सक्छु?',
+                        'el-GR': 'Πόσο καιρό μπορώ να δανειστώ αυτά τα αντικείμενα;',
+                        'ar-SA': 'كم من الوقت يمكنني استعارة هذه العناصر؟',
+                        'mk-MK': 'Колку долго можам да ги позајмам овие предмети?',
+                        'es-ES': '¿Por cuánto tiempo puedo pedir prestados estos artículos?',
+                        'it-IT': 'Per quanto tempo posso prendere in prestito questi articoli?',
+                        'id-ID': 'Berapa lama saya bisa meminjam item-item ini?'
+                    }
+                },
+                {
+                    id: '27',
                     english: 'Do I have any overdue items?',
                     type: 'customer',
                     category: 'Transactional',
@@ -1339,20 +1374,20 @@
                     }
                 },
                 {
-                    id: '48',
-                    english: 'How much are the late fees?',
+                    id: '28',
+                    english: 'Do I have any late fees?',
                     type: 'customer',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '逾期费用是多少？',
-                        'zh-HK': '逾期費用是多少？',
-                        'ne-NP': 'ओभरड्यु शुल्क कति छ?',
-                        'el-GR': 'Πόσο είναι τα πρόστιμα καθυστέρησης;',
-                        'ar-SA': 'كم هي رسوم التأخير؟',
-                        'mk-MK': 'Колку се казните за доцнење?',
-                        'es-ES': '¿Cuánto son las multas por retraso?',
-                        'it-IT': 'Quanto sono le multe per ritardo?',
-                        'id-ID': 'Berapa biaya keterlambatan?'
+                        'zh-CN': '我有任何逾期费用吗？',
+                        'zh-HK': '我有任何逾期費用嗎？',
+                        'ne-NP': 'मसँग कुनै ओभरड्यु शुल्क छन्?',
+                        'el-GR': 'Έχω πρόστιμα καθυστέρησης;',
+                        'ar-SA': 'هل لدي أي رسوم تأخير؟',
+                        'mk-MK': 'Дали имам казни за доцнење?',
+                        'es-ES': '¿Tengo alguna multa por retraso?',
+                        'it-IT': 'Ho multe per ritardo?',
+                        'id-ID': 'Apakah saya memiliki biaya keterlambatan?'
                     }
                 },
 
@@ -1584,7 +1619,12 @@
                             <img
                                 src="https://georgesriver.spydus.com/api/maintenance/1.0/imagebrowser/image?blobName=a31cf63f-7e24-41d5-b1f8-c206bde45ce6.png"
                                 alt="Georges River Libraries Logo"
-                                className="h-1 md:h-2 object-contain rounded-md"
+                                style={{ 
+                                    maxWidth: '200px', 
+                                    height: 'auto', 
+                                    objectFit: 'contain',
+                                    borderRadius: '0.375rem'
+                                }}
                                 onError={(e) => {
                                     e.target.onerror = null;
                                     e.target.src = "https://placehold.co/300x80/007A70/ffffff?text=Georges+River+Libraries";
