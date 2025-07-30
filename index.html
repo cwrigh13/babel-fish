@@ -392,6 +392,18 @@
         .no-referrer-when-downgrade { 
             referrerpolicy: no-referrer-when-downgrade; 
         }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
         @media (min-width: 768px) {
             .md\:p-8 { 
                 padding: 2rem; 
@@ -471,143 +483,196 @@
             const [userId, setUserId] = useState('Loading...');
             const [isAuthReady, setIsAuthReady] = useState(false);
             const [phrases, setPhrases] = useState([]);
+            const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+            const [currentPlayingText, setCurrentPlayingText] = useState('');
 
             // Sample phrases data (simplified version of the full database)
             const samplePhrases = [
                 {
                     id: '1',
-                    english: 'Hello, how can I help you today?',
+                    english: 'Do you need help with printing, scanning or photocopying?',
                     type: 'staff',
                     category: 'General Enquiries',
                     translations: {
-                        'zh-CN': '你好，今天我能为您做些什么？',
-                        'zh-HK': '你好，今天我能為您做些什麼？',
-                        'ne-NP': 'नमस्ते, आज म तपाईंलाई कसरी मद्दत गर्न सक्छु?',
-                        'el-GR': 'Γεια σας, πώς μπορώ να σας βοηθήσω σήμερα;',
-                        'ar-SA': 'مرحباً، كيف يمكنني مساعدتك اليوم؟',
-                        'mk-MK': 'Здраво, како можам да ви помогнам денес?',
-                        'es-ES': 'Hola, ¿cómo puedo ayudarte hoy?',
-                        'it-IT': 'Ciao, come posso aiutarti oggi?',
-                        'id-ID': 'Halo, bagaimana saya bisa membantu Anda hari ini?'
+                        'zh-CN': '您需要帮助打印、扫描或复印吗？',
+                        'zh-HK': '您需要幫助打印、掃描或複印嗎？',
+                        'ne-NP': 'तपाईंलाई प्रिन्टिङ, स्क्यानिङ वा फोटोकपी गर्न मद्दत चाहिन्छ?',
+                        'el-GR': 'Χρειάζεστε βοήθεια με την εκτύπωση, σάρωση ή φωτοτυπία;',
+                        'ar-SA': 'هل تحتاج مساعدة في الطباعة أو المسح الضوئي أو النسخ؟',
+                        'mk-MK': 'Дали ви треба помош со печатење, скенирање или фотокопирање?',
+                        'es-ES': '¿Necesita ayuda con impresión, escaneo o fotocopiado?',
+                        'it-IT': 'Ha bisogno di aiuto con stampa, scansione o fotocopiatura?',
+                        'id-ID': 'Apakah Anda memerlukan bantuan dengan pencetakan, pemindaian atau fotokopi?'
                     }
                 },
                 {
                     id: '6',
-                    english: 'What are your opening hours?',
+                    english: 'Is this for return?',
                     type: 'staff',
                     category: 'General Enquiries',
                     translations: {
-                        'zh-CN': '你们的营业时间是什么？',
-                        'zh-HK': '你們的營業時間是什麼？',
-                        'ne-NP': 'तपाईंको खुला समय के हो?',
-                        'el-GR': 'Ποιες είναι οι ώρες λειτουργίας σας;',
-                        'ar-SA': 'ما هي ساعات العمل لديكم؟',
-                        'mk-MK': 'Кои се вашите работни часови?',
-                        'es-ES': '¿Cuáles son sus horarios de apertura?',
-                        'it-IT': 'Quali sono i vostri orari di apertura?',
-                        'id-ID': 'Apa jam buka Anda?'
+                        'zh-CN': '这是要还的吗？',
+                        'zh-HK': '這是要還的嗎？',
+                        'ne-NP': 'यो फिर्ता गर्नको लागि हो?',
+                        'el-GR': 'Είναι αυτό για επιστροφή;',
+                        'ar-SA': 'هل هذا للإرجاع؟',
+                        'mk-MK': 'Дали ова е за враќање?',
+                        'es-ES': '¿Es esto para devolver?',
+                        'it-IT': 'Questo è per la restituzione?',
+                        'id-ID': 'Apakah ini untuk dikembalikan?'
                     }
                 },
                 {
                     id: '7',
-                    english: 'Where is the nearest bathroom?',
+                    english: 'Would you like to renew these items?',
                     type: 'staff',
                     category: 'General Enquiries',
                     translations: {
-                        'zh-CN': '最近的洗手间在哪里？',
-                        'zh-HK': '最近的洗手間在哪裡？',
-                        'ne-NP': 'नजिकैको बाथरूम कहाँ छ?',
-                        'el-GR': 'Πού είναι η πλησιέστερη τουαλέτα;',
-                        'ar-SA': 'أين أقرب حمام؟',
-                        'mk-MK': 'Каде е најблиската тоалетна?',
-                        'es-ES': '¿Dónde está el baño más cercano?',
-                        'it-IT': 'Dove si trova il bagno più vicino?',
-                        'id-ID': 'Di mana kamar mandi terdekat?'
+                        'zh-CN': '您想续借这些物品吗？',
+                        'zh-HK': '您想續借這些物品嗎？',
+                        'ne-NP': 'तपाईं यी वस्तुहरू नवीनीकरण गर्न चाहनुहुन्छ?',
+                        'el-GR': 'Θα θέλατε να ανανεώσετε αυτά τα αντικείμενα;',
+                        'ar-SA': 'هل تريد تجديد هذه العناصر؟',
+                        'mk-MK': 'Дали би сакале да ги обновите овие предмети?',
+                        'es-ES': '¿Le gustaría renovar estos artículos?',
+                        'it-IT': 'Vorrebbe rinnovare questi articoli?',
+                        'id-ID': 'Apakah Anda ingin memperbarui item-item ini?'
                     }
                 },
                 {
                     id: '8',
-                    english: 'Do you have free Wi-Fi?',
+                    english: 'I will find someone to help translate',
                     type: 'staff',
                     category: 'General Enquiries',
                     translations: {
-                        'zh-CN': '你们有免费Wi-Fi吗？',
-                        'zh-HK': '你們有免費Wi-Fi嗎？',
-                        'ne-NP': 'तपाईंसँग निःशुल्क Wi-Fi छ?',
-                        'el-GR': 'Έχετε δωρεάν Wi-Fi;',
-                        'ar-SA': 'هل لديكم واي فاي مجاني؟',
-                        'mk-MK': 'Дали имате бесплатен Wi-Fi?',
-                        'es-ES': '¿Tienen Wi-Fi gratuito?',
-                        'it-IT': 'Avete Wi-Fi gratuito?',
-                        'id-ID': 'Apakah Anda memiliki Wi-Fi gratis?'
+                        'zh-CN': '我会找人帮您翻译。',
+                        'zh-HK': '我會找人幫您翻譯。',
+                        'ne-NP': 'म अनुवाद गर्न मद्दत गर्न कसैलाई भेटाउनेछु।',
+                        'el-GR': 'Θα βρω κάποιον να βοηθήσει με τη μετάφραση.',
+                        'ar-SA': 'سأجد شخصاً للمساعدة في الترجمة.',
+                        'mk-MK': 'Ќе најдам некој да помогне со превод.',
+                        'es-ES': 'Encontraré a alguien para ayudar con la traducción.',
+                        'it-IT': 'Troverò qualcuno per aiutare con la traduzione.',
+                        'id-ID': 'Saya akan mencari seseorang untuk membantu menerjemahkan.'
                     }
                 },
                 {
                     id: '13',
-                    english: 'Where can I find the children\'s section?',
+                    english: 'Follow me please',
                     type: 'staff',
                     category: 'General Enquiries',
                     translations: {
-                        'zh-CN': '儿童区在哪里？',
-                        'zh-HK': '兒童區在哪裡？',
-                        'ne-NP': 'बच्चाहरूको खण्ड कहाँ छ?',
-                        'el-GR': 'Πού μπορώ να βρω την παιδική ενότητα;',
-                        'ar-SA': 'أين يمكنني العثور على قسم الأطفال؟',
-                        'mk-MK': 'Каде можам да најдам детска секција?',
-                        'es-ES': '¿Dónde puedo encontrar la sección infantil?',
-                        'it-IT': 'Dove posso trovare la sezione per bambini?',
-                        'id-ID': 'Di mana saya bisa menemukan bagian anak-anak?'
+                        'zh-CN': '请跟我来。',
+                        'zh-HK': '請跟我來。',
+                        'ne-NP': 'कृपया मलाई पछ्याउनुहोस्।',
+                        'el-GR': 'Παρακαλώ ακολουθήστε με.',
+                        'ar-SA': 'يرجى اتباعي.',
+                        'mk-MK': 'Ве молиме следете ме.',
+                        'es-ES': 'Por favor sígame.',
+                        'it-IT': 'Per favore seguitemi.',
+                        'id-ID': 'Silakan ikuti saya.'
                     }
                 },
                 {
                     id: '14',
-                    english: 'Do you have study rooms available?',
+                    english: 'Please wait here',
                     type: 'staff',
                     category: 'General Enquiries',
                     translations: {
-                        'zh-CN': '你们有学习室可用吗？',
-                        'zh-HK': '你們有學習室可用嗎？',
-                        'ne-NP': 'तपाईंसँग अध्ययन कोठाहरू उपलब्ध छन्?',
-                        'el-GR': 'Έχετε διαθέσιμες αίθουσες μελέτης;',
-                        'ar-SA': 'هل لديكم غرف دراسة متاحة؟',
-                        'mk-MK': 'Дали имате достапни студиски простори?',
-                        'es-ES': '¿Tienen salas de estudio disponibles?',
-                        'it-IT': 'Avete sale di studio disponibili?',
-                        'id-ID': 'Apakah Anda memiliki ruang belajar yang tersedia?'
+                        'zh-CN': '请在这里等。',
+                        'zh-HK': '請在這裡等。',
+                        'ne-NP': 'कृपया यहाँ प्रतीक्षा गर्नुहोस्।',
+                        'el-GR': 'Παρακαλώ περιμένετε εδώ.',
+                        'ar-SA': 'يرجى الانتظار هنا.',
+                        'mk-MK': 'Ве молиме почекајте тука.',
+                        'es-ES': 'Por favor espere aquí.',
+                        'it-IT': 'Per favore aspetti qui.',
+                        'id-ID': 'Silakan tunggu di sini.'
                     }
                 },
                 {
                     id: '15',
-                    english: 'Can I bring food and drinks into the library?',
+                    english: 'Is this your first time to this library?',
                     type: 'staff',
                     category: 'General Enquiries',
                     translations: {
-                        'zh-CN': '我可以带食物和饮料进图书馆吗？',
-                        'zh-HK': '我可以帶食物和飲料進圖書館嗎？',
-                        'ne-NP': 'म पुस्तकालयमा खाना र पेय ल्याउन सक्छु?',
-                        'el-GR': 'Μπορώ να φέρω φαγητό και ποτά στη βιβλιοθήκη;',
-                        'ar-SA': 'هل يمكنني إحضار الطعام والشراب إلى المكتبة؟',
-                        'mk-MK': 'Можам ли да донесам храна и пијалаци во библиотеката?',
-                        'es-ES': '¿Puedo traer comida y bebidas a la biblioteca?',
-                        'it-IT': 'Posso portare cibo e bevande in biblioteca?',
-                        'id-ID': 'Bisakah saya membawa makanan dan minuman ke perpustakaan?'
+                        'zh-CN': '这是您第一次来这个图书馆吗？',
+                        'zh-HK': '這是您第一次來這個圖書館嗎？',
+                        'ne-NP': 'यो तपाईंको यो पुस्तकालयमा पहिलो पटक हो?',
+                        'el-GR': 'Είναι αυτή η πρώτη σας επίσκεψη σε αυτή τη βιβλιοθήκη;',
+                        'ar-SA': 'هل هذه أول مرة لك في هذه المكتبة؟',
+                        'mk-MK': 'Дали ова е прв пат во оваа библиотека?',
+                        'es-ES': '¿Es la primera vez que viene a esta biblioteca?',
+                        'it-IT': 'È la sua prima volta in questa biblioteca?',
+                        'id-ID': 'Apakah ini pertama kalinya Anda ke perpustakaan ini?'
                     }
                 },
                 {
                     id: '16',
-                    english: 'Is there a quiet area for reading?',
+                    english: 'Do you understand?',
                     type: 'staff',
                     category: 'General Enquiries',
                     translations: {
-                        'zh-CN': '有安静阅读区吗？',
-                        'zh-HK': '有安靜閱讀區嗎？',
-                        'ne-NP': 'पढ्नको लागि शान्त क्षेत्र छ?',
-                        'el-GR': 'Υπάρχει ήσυχη περιοχή για ανάγνωση;',
-                        'ar-SA': 'هل هناك منطقة هادئة للقراءة؟',
-                        'mk-MK': 'Дали има тивка област за читање?',
-                        'es-ES': '¿Hay un área tranquila para leer?',
-                        'it-IT': 'C\'è un\'area tranquilla per la lettura?',
-                        'id-ID': 'Apakah ada area tenang untuk membaca?'
+                        'zh-CN': '您明白吗？',
+                        'zh-HK': '您明白嗎？',
+                        'ne-NP': 'तपाईं बुझ्नुहुन्छ?',
+                        'el-GR': 'Καταλαβαίνετε;',
+                        'ar-SA': 'هل تفهم؟',
+                        'mk-MK': 'Дали разбирате?',
+                        'es-ES': '¿Entiende?',
+                        'it-IT': 'Capisce?',
+                        'id-ID': 'Apakah Anda mengerti?'
+                    }
+                },
+                {
+                    id: '17',
+                    english: 'Is this correct?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '这是正确的吗？',
+                        'zh-HK': '這是正確的嗎？',
+                        'ne-NP': 'यो सही छ?',
+                        'el-GR': 'Είναι αυτό σωστό;',
+                        'ar-SA': 'هل هذا صحيح؟',
+                        'mk-MK': 'Дали ова е точно?',
+                        'es-ES': '¿Es esto correcto?',
+                        'it-IT': 'È corretto?',
+                        'id-ID': 'Apakah ini benar?'
+                    }
+                },
+                {
+                    id: '18',
+                    english: 'Is this yours?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '这是您的吗？',
+                        'zh-HK': '這是您的嗎？',
+                        'ne-NP': 'यो तपाईंको हो?',
+                        'el-GR': 'Είναι αυτό δικό σας;',
+                        'ar-SA': 'هل هذا لك؟',
+                        'mk-MK': 'Дали ова е ваше?',
+                        'es-ES': '¿Es esto suyo?',
+                        'it-IT': 'È questo suo?',
+                        'id-ID': 'Apakah ini milik Anda?'
+                    }
+                },
+                {
+                    id: '19',
+                    english: 'Would you like to join this library?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您想加入这个图书馆吗？',
+                        'zh-HK': '您想加入這個圖書館嗎？',
+                        'ne-NP': 'तपाईं यो पुस्तकालयमा सामेल हुन चाहनुहुन्छ?',
+                        'el-GR': 'Θα θέλατε να εγγραφείτε σε αυτή τη βιβλιοθήκη;',
+                        'ar-SA': 'هل تريد الانضمام إلى هذه المكتبة؟',
+                        'mk-MK': 'Дали би сакале да се приклучите во оваа библиотека?',
+                        'es-ES': '¿Le gustaría unirse a esta biblioteca?',
+                        'it-IT': 'Vorrebbe iscriversi a questa biblioteca?',
+                        'id-ID': 'Apakah Anda ingin bergabung dengan perpustakaan ini?'
                     }
                 },
                 {
@@ -616,15 +681,15 @@
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我如何在你们的电脑上访问互联网？',
-                        'zh-HK': '我如何在你們的電腦上訪問互聯網？',
-                        'ne-NP': 'म तपाईंको कम्प्युटरहरूमा इन्टरनेट कसरी एक्सेस गर्न सक्छु?',
-                        'el-GR': 'Πώς μπορώ να αποκτήσω πρόσβαση στο διαδίκτυο στους υπολογιστές σας;',
-                        'ar-SA': 'كيف يمكنني الوصول إلى الإنترنت على أجهزة الكمبيوتر لديكم؟',
-                        'mk-MK': 'Како можам да пристапам до интернет на вашите компјутери?',
-                        'es-ES': '¿Cómo accedo a Internet en sus computadoras?',
-                        'it-IT': 'Come posso accedere a Internet sui vostri computer?',
-                        'id-ID': 'Bagaimana saya bisa mengakses internet di komputer Anda?'
+                        'zh-CN': '您可以在我们的电脑上访问互联网。',
+                        'zh-HK': '您可以在我們的電腦上訪問互聯網。',
+                        'ne-NP': 'तपाईं हाम्रो कम्प्युटरहरूमा इन्टरनेट एक्सेस गर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να αποκτήσετε πρόσβαση στο διαδίκτυο στους υπολογιστές μας.',
+                        'ar-SA': 'يمكنك الوصول إلى الإنترنت على أجهزة الكمبيوتر لدينا.',
+                        'mk-MK': 'Можете да пристапите до интернет на нашите компјутери.',
+                        'es-ES': 'Puede acceder a Internet en nuestras computadoras.',
+                        'it-IT': 'Può accedere a Internet sui nostri computer.',
+                        'id-ID': 'Anda dapat mengakses internet di komputer kami.'
                     }
                 },
                 {
@@ -633,15 +698,15 @@
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我可以在这里打印文件吗？',
-                        'zh-HK': '我可以在這裡打印文件嗎？',
-                        'ne-NP': 'म यहाँ कागजातहरू प्रिन्ट गर्न सक्छु?',
-                        'el-GR': 'Μπορώ να εκτυπώσω έγγραφα εδώ;',
-                        'ar-SA': 'هل يمكنني طباعة المستندات هنا؟',
-                        'mk-MK': 'Можам ли да печатам документи овде?',
-                        'es-ES': '¿Puedo imprimir documentos aquí?',
-                        'it-IT': 'Posso stampare documenti qui?',
-                        'id-ID': 'Bisakah saya mencetak dokumen di sini?'
+                        'zh-CN': '您可以在这里打印文件。',
+                        'zh-HK': '您可以在這裡打印文件。',
+                        'ne-NP': 'तपाईं यहाँ कागजातहरू प्रिन्ट गर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να εκτυπώσετε έγγραφα εδώ.',
+                        'ar-SA': 'يمكنك طباعة المستندات هنا.',
+                        'mk-MK': 'Можете да печатате документи овде.',
+                        'es-ES': 'Puede imprimir documentos aquí.',
+                        'it-IT': 'Può stampare documenti qui.',
+                        'id-ID': 'Anda dapat mencetak dokumen di sini.'
                     }
                 },
                 {
@@ -650,15 +715,15 @@
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '打印要多少钱？',
-                        'zh-HK': '打印要多少錢？',
-                        'ne-NP': 'प्रिन्ट गर्न कति लाग्छ?',
-                        'el-GR': 'Πόσο κοστίζει η εκτύπωση;',
-                        'ar-SA': 'كم تكلفة الطباعة؟',
-                        'mk-MK': 'Колку чини печатењето?',
-                        'es-ES': '¿Cuánto cuesta imprimir?',
-                        'it-IT': 'Quanto costa stampare?',
-                        'id-ID': 'Berapa biaya untuk mencetak?'
+                        'zh-CN': '打印费用是每页20分。',
+                        'zh-HK': '打印費用是每頁20分。',
+                        'ne-NP': 'प्रिन्ट गर्न प्रति पृष्ठ २० सेन्ट लाग्छ।',
+                        'el-GR': 'Η εκτύπωση κοστίζει 20 λεπτά ανά σελίδα.',
+                        'ar-SA': 'تكلفة الطباعة 20 سنت لكل صفحة.',
+                        'mk-MK': 'Печатењето чини 20 центи по страница.',
+                        'es-ES': 'La impresión cuesta 20 centavos por página.',
+                        'it-IT': 'La stampa costa 20 centesimi per pagina.',
+                        'id-ID': 'Biaya cetak adalah 20 sen per halaman.'
                     }
                 },
                 {
@@ -667,15 +732,15 @@
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '你们有扫描服务吗？',
-                        'zh-HK': '你們有掃描服務嗎？',
-                        'ne-NP': 'तपाईंसँग स्क्यानिङ सेवाहरू छन्?',
-                        'el-GR': 'Έχετε υπηρεσίες σάρωσης;',
-                        'ar-SA': 'هل لديكم خدمات المسح الضوئي؟',
-                        'mk-MK': 'Дали имате услуги за скенирање?',
-                        'es-ES': '¿Tienen servicios de escaneo?',
-                        'it-IT': 'Avete servizi di scansione?',
-                        'id-ID': 'Apakah Anda memiliki layanan pemindaian?'
+                        'zh-CN': '我们有扫描服务。',
+                        'zh-HK': '我們有掃描服務。',
+                        'ne-NP': 'हामीसँग स्क्यानिङ सेवाहरू छन्।',
+                        'el-GR': 'Έχουμε υπηρεσίες σάρωσης.',
+                        'ar-SA': 'لدينا خدمات المسح الضوئي.',
+                        'mk-MK': 'Имаме услуги за скенирање.',
+                        'es-ES': 'Tenemos servicios de escaneo.',
+                        'it-IT': 'Abbiamo servizi di scansione.',
+                        'id-ID': 'Kami memiliki layanan pemindaian.'
                     }
                 },
                 {
@@ -684,15 +749,15 @@
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我可以使用复印机吗？',
-                        'zh-HK': '我可以使用複印機嗎？',
-                        'ne-NP': 'म फोटोकपी मेसिन प्रयोग गर्न सक्छु?',
-                        'el-GR': 'Μπορώ να χρησιμοποιήσω τον φωτοτυπικό;',
-                        'ar-SA': 'هل يمكنني استخدام آلة النسخ؟',
-                        'mk-MK': 'Можам ли да го користам фотокопирачот?',
-                        'es-ES': '¿Puedo usar la fotocopiadora?',
-                        'it-IT': 'Posso usare la fotocopiatrice?',
-                        'id-ID': 'Bisakah saya menggunakan mesin fotokopi?'
+                        'zh-CN': '您可以使用复印机。',
+                        'zh-HK': '您可以使用複印機。',
+                        'ne-NP': 'तपाईं फोटोकपी मेसिन प्रयोग गर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να χρησιμοποιήσετε τον φωτοτυπικό.',
+                        'ar-SA': 'يمكنك استخدام آلة النسخ.',
+                        'mk-MK': 'Можете да го користите фотокопирачот.',
+                        'es-ES': 'Puede usar la fotocopiadora.',
+                        'it-IT': 'Può usare la fotocopiatrice.',
+                        'id-ID': 'Anda dapat menggunakan mesin fotokopi.'
                     }
                 },
                 {
@@ -701,15 +766,15 @@
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我如何连接到图书馆Wi-Fi？',
-                        'zh-HK': '我如何連接到圖書館Wi-Fi？',
-                        'ne-NP': 'म पुस्तकालय Wi-Fi मा कसरी जडान गर्न सक्छु?',
-                        'el-GR': 'Πώς μπορώ να συνδεθώ στο Wi-Fi της βιβλιοθήκης;',
-                        'ar-SA': 'كيف يمكنني الاتصال بواي فاي المكتبة؟',
-                        'mk-MK': 'Како да се поврзам со Wi-Fi на библиотеката?',
-                        'es-ES': '¿Cómo me conecto al Wi-Fi de la biblioteca?',
-                        'it-IT': 'Come mi connetto al Wi-Fi della biblioteca?',
-                        'id-ID': 'Bagaimana saya bisa terhubung ke Wi-Fi perpustakaan?'
+                        'zh-CN': '您可以连接到图书馆Wi-Fi。',
+                        'zh-HK': '您可以連接到圖書館Wi-Fi。',
+                        'ne-NP': 'तपाईं पुस्तकालय Wi-Fi मा जडान गर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να συνδεθείτε στο Wi-Fi της βιβλιοθήκης.',
+                        'ar-SA': 'يمكنك الاتصال بواي فاي المكتبة.',
+                        'mk-MK': 'Можете да се поврзете со Wi-Fi на библиотеката.',
+                        'es-ES': 'Puede conectarse al Wi-Fi de la biblioteca.',
+                        'it-IT': 'Può connettersi al Wi-Fi della biblioteca.',
+                        'id-ID': 'Anda dapat terhubung ke Wi-Fi perpustakaan.'
                     }
                 },
                 {
@@ -718,15 +783,15 @@
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '你们有电脑培训课程吗？',
-                        'zh-HK': '你們有電腦培訓課程嗎？',
-                        'ne-NP': 'तपाईंसँग कम्प्युटर प्रशिक्षण कक्षाहरू छन्?',
-                        'el-GR': 'Έχετε μαθήματα εκπαίδευσης υπολογιστών;',
-                        'ar-SA': 'هل لديكم دروس تدريب على الكمبيوتر؟',
-                        'mk-MK': 'Дали имате часови за обука на компјутер?',
-                        'es-ES': '¿Tienen clases de capacitación en computación?',
-                        'it-IT': 'Avete corsi di formazione informatica?',
-                        'id-ID': 'Apakah Anda memiliki kelas pelatihan komputer?'
+                        'zh-CN': '我们有电脑培训课程。',
+                        'zh-HK': '我們有電腦培訓課程。',
+                        'ne-NP': 'हामीसँग कम्प्युटर प्रशिक्षण कक्षाहरू छन्।',
+                        'el-GR': 'Έχουμε μαθήματα εκπαίδευσης υπολογιστών.',
+                        'ar-SA': 'لدينا دروس تدريب على الكمبيوتر.',
+                        'mk-MK': 'Имаме часови за обука на компјутер.',
+                        'es-ES': 'Tenemos clases de capacitación en computación.',
+                        'it-IT': 'Abbiamo corsi di formazione informatica.',
+                        'id-ID': 'Kami memiliki kelas pelatihan komputer.'
                     }
                 },
                 {
@@ -735,15 +800,15 @@
                     type: 'staff',
                     category: 'Digital Services',
                     translations: {
-                        'zh-CN': '我可以使用图书馆的在线资源吗？',
-                        'zh-HK': '我可以使用圖書館的線上資源嗎？',
-                        'ne-NP': 'म पुस्तकालयको अनलाइन स्रोतहरू प्रयोग गर्न सक्छु?',
-                        'el-GR': 'Μπορώ να χρησιμοποιήσω τους διαδικτυακούς πόρους της βιβλιοθήκης;',
-                        'ar-SA': 'هل يمكنني استخدام الموارد الإلكترونية للمكتبة؟',
-                        'mk-MK': 'Можам ли да ги користам онлајн ресурсите на библиотеката?',
-                        'es-ES': '¿Puedo usar los recursos en línea de la biblioteca?',
-                        'it-IT': 'Posso usare le risorse online della biblioteca?',
-                        'id-ID': 'Bisakah saya menggunakan sumber daya online perpustakaan?'
+                        'zh-CN': '您可以使用图书馆的在线资源。',
+                        'zh-HK': '您可以使用圖書館的線上資源。',
+                        'ne-NP': 'तपाईं पुस्तकालयको अनलाइन स्रोतहरू प्रयोग गर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να χρησιμοποιήσετε τους διαδικτυακούς πόρους της βιβλιοθήκης.',
+                        'ar-SA': 'يمكنك استخدام الموارد الإلكترونية للمكتبة.',
+                        'mk-MK': 'Можете да ги користите онлајн ресурсите на библиотеката.',
+                        'es-ES': 'Puede usar los recursos en línea de la biblioteca.',
+                        'it-IT': 'Può usare le risorse online della biblioteca.',
+                        'id-ID': 'Anda dapat menggunakan sumber daya online perpustakaan.'
                     }
                 },
                 {
@@ -786,15 +851,15 @@
                     type: 'staff',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '我可以借多少件物品？',
-                        'zh-HK': '我可以借多少件物品？',
-                        'ne-NP': 'म कति वस्तुहरू सापटी लिन सक्छु?',
-                        'el-GR': 'Πόσα αντικείμενα μπορώ να δανειστώ;',
-                        'ar-SA': 'كم عدد العناصر التي يمكنني استعارتها؟',
-                        'mk-MK': 'Колку предмети можам да позајмам?',
-                        'es-ES': '¿Cuántos artículos puedo pedir prestados?',
-                        'it-IT': 'Quanti articoli posso prendere in prestito?',
-                        'id-ID': 'Berapa banyak item yang bisa saya pinjam?'
+                        'zh-CN': '您可以借20件物品。',
+                        'zh-HK': '您可以借20件物品。',
+                        'ne-NP': 'तपाईं २० वस्तुहरू सापटी लिन सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να δανειστείτε 20 αντικείμενα.',
+                        'ar-SA': 'يمكنك استعارة 20 عنصر.',
+                        'mk-MK': 'Можете да позајмите 20 предмети.',
+                        'es-ES': 'Puede pedir prestados 20 artículos.',
+                        'it-IT': 'Può prendere in prestito 20 articoli.',
+                        'id-ID': 'Anda dapat meminjam 20 item.'
                     }
                 },
                 {
@@ -803,15 +868,15 @@
                     type: 'staff',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '图书的借阅期限是多久？',
-                        'zh-HK': '圖書的借閱期限是多久？',
-                        'ne-NP': 'किताबहरूको सापटी अवधि कति छ?',
-                        'el-GR': 'Ποια είναι η περίοδος δανεισμού για τα βιβλία;',
-                        'ar-SA': 'ما هي مدة الاستعارة للكتب؟',
-                        'mk-MK': 'Која е рокот на позајмување за книги?',
-                        'es-ES': '¿Cuál es el período de préstamo para los libros?',
-                        'it-IT': 'Qual è il periodo di prestito per i libri?',
-                        'id-ID': 'Berapa lama masa pinjaman untuk buku?'
+                        'zh-CN': '图书的借阅期限是3周。',
+                        'zh-HK': '圖書的借閱期限是3週。',
+                        'ne-NP': 'किताबहरूको सापटी अवधि ३ हप्ता छ।',
+                        'el-GR': 'Η περίοδος δανεισμού για τα βιβλία είναι 3 εβδομάδες.',
+                        'ar-SA': 'مدة الاستعارة للكتب هي 3 أسابيع.',
+                        'mk-MK': 'Рокот на позајмување за книги е 3 недели.',
+                        'es-ES': 'El período de préstamo para los libros es de 3 semanas.',
+                        'it-IT': 'Il periodo di prestito per i libri è di 3 settimane.',
+                        'id-ID': 'Masa pinjaman untuk buku adalah 3 minggu.'
                     }
                 },
                 {
@@ -820,15 +885,15 @@
                     type: 'staff',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '我可以预约一本书吗？',
-                        'zh-HK': '我可以預約一本書嗎？',
-                        'ne-NP': 'म एउटा किताबमा होल्ड राख्न सक्छु?',
-                        'el-GR': 'Μπορώ να κλείσω κράτηση για ένα βιβλίο;',
-                        'ar-SA': 'هل يمكنني حجز كتاب؟',
-                        'mk-MK': 'Можам ли да ставам резервација за книга?',
-                        'es-ES': '¿Puedo reservar un libro?',
-                        'it-IT': 'Posso prenotare un libro?',
-                        'id-ID': 'Bisakah saya memesan buku?'
+                        'zh-CN': '您可以预约一本书。',
+                        'zh-HK': '您可以預約一本書。',
+                        'ne-NP': 'तपाईं एउटा किताबमा होल्ड राख्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να κλείσετε κράτηση για ένα βιβλίο.',
+                        'ar-SA': 'يمكنك حجز كتاب.',
+                        'mk-MK': 'Можете да ставате резервација за книга.',
+                        'es-ES': 'Puede reservar un libro.',
+                        'it-IT': 'Può prenotare un libro.',
+                        'id-ID': 'Anda dapat memesan buku.'
                     }
                 },
                 {
@@ -871,15 +936,15 @@
                     type: 'staff',
                     category: 'Transactional',
                     translations: {
-                        'zh-CN': '我可以在任何分馆还书吗？',
-                        'zh-HK': '我可以在任何分館還書嗎？',
-                        'ne-NP': 'म कुनै पनि शाखामा किताबहरू फिर्ता गर्न सक्छु?',
-                        'el-GR': 'Μπορώ να επιστρέψω βιβλία σε οποιοδήποτε υποκατάστημα;',
-                        'ar-SA': 'هل يمكنني إرجاع الكتب في أي فرع؟',
-                        'mk-MK': 'Можам ли да вратам книги во која било филијала?',
-                        'es-ES': '¿Puedo devolver libros en cualquier sucursal?',
-                        'it-IT': 'Posso restituire i libri in qualsiasi filiale?',
-                        'id-ID': 'Bisakah saya mengembalikan buku di cabang mana pun?'
+                        'zh-CN': '您可以在任何分馆还书。',
+                        'zh-HK': '您可以在任何分館還書。',
+                        'ne-NP': 'तपाईं कुनै पनि शाखामा किताबहरू फिर्ता गर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να επιστρέψετε βιβλία σε οποιοδήποτε υποκατάστημα.',
+                        'ar-SA': 'يمكنك إرجاع الكتب في أي فرع.',
+                        'mk-MK': 'Можете да вратите книги во која било филијала.',
+                        'es-ES': 'Puede devolver libros en cualquier sucursal.',
+                        'it-IT': 'Può restituire i libri in qualsiasi filiale.',
+                        'id-ID': 'Anda dapat mengembalikan buku di cabang mana pun.'
                     }
                 },
                 {
@@ -1334,12 +1399,108 @@
 
             const speakPhrase = (text, langCode) => {
                 if ('speechSynthesis' in window) {
+                    // Stop any currently playing speech
+                    speechSynthesis.cancel();
+                    
+                    // Set playing state
+                    setIsAudioPlaying(true);
+                    setCurrentPlayingText(text);
+                    
                     const utterance = new SpeechSynthesisUtterance(text);
                     utterance.lang = langCode;
                     utterance.rate = 0.8;
-                    speechSynthesis.speak(utterance);
+                    utterance.pitch = 1.0;
+                    utterance.volume = 1.0;
+                    
+                    // Try to select the best available voice for the language
+                    const voices = speechSynthesis.getVoices();
+                    const preferredVoice = voices.find(voice => 
+                        voice.lang.startsWith(langCode.split('-')[0]) && 
+                        voice.lang.includes(langCode.split('-')[1] || '')
+                    );
+                    
+                    if (preferredVoice) {
+                        utterance.voice = preferredVoice;
+                    }
+                    
+                    // Add event handlers for better user experience
+                    utterance.onstart = () => {
+                        console.log(`Started speaking: ${text}`);
+                        setIsAudioPlaying(true);
+                        setCurrentPlayingText(text);
+                    };
+                    
+                    utterance.onend = () => {
+                        console.log(`Finished speaking: ${text}`);
+                        setIsAudioPlaying(false);
+                        setCurrentPlayingText('');
+                    };
+                    
+                    utterance.onerror = (event) => {
+                        console.error('Speech synthesis error:', event.error);
+                        setIsAudioPlaying(false);
+                        setCurrentPlayingText('');
+                        
+                        // Fallback: try with a different voice or language code
+                        if (event.error === 'not-allowed') {
+                            // Try with a more generic language code
+                            const fallbackLangCode = langCode.split('-')[0];
+                            if (fallbackLangCode !== langCode) {
+                                utterance.lang = fallbackLangCode;
+                                speechSynthesis.speak(utterance);
+                            }
+                        }
+                    };
+                    
+                    // Add a small delay to ensure the previous speech is fully stopped
+                    setTimeout(() => {
+                        speechSynthesis.speak(utterance);
+                    }, 50);
+                } else {
+                    // Fallback for browsers without speech synthesis
+                    alert('Text-to-speech is not supported in this browser. Please try a different browser.');
                 }
             };
+
+            // Enhanced function to get available voices and log them for debugging
+            const logAvailableVoices = () => {
+                if ('speechSynthesis' in window) {
+                    const voices = speechSynthesis.getVoices();
+                    console.log('Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+                }
+            };
+
+            // Function to stop audio playback
+            const stopAudio = () => {
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.cancel();
+                    setIsAudioPlaying(false);
+                    setCurrentPlayingText('');
+                }
+            };
+
+            // Load voices when they become available
+            useEffect(() => {
+                if ('speechSynthesis' in window) {
+                    // Some browsers load voices asynchronously
+                    speechSynthesis.onvoiceschanged = logAvailableVoices;
+                    logAvailableVoices(); // Try immediately
+                }
+            }, []);
+
+            // Keyboard shortcut for stopping audio (Escape key)
+            useEffect(() => {
+                const handleKeyDown = (event) => {
+                    if (event.key === 'Escape' && isAudioPlaying) {
+                        stopAudio();
+                    }
+                };
+
+                document.addEventListener('keydown', handleKeyDown);
+                return () => {
+                    document.removeEventListener('keydown', handleKeyDown);
+                };
+            }, [isAudioPlaying]);
 
             // Filter phrases based on current mode and filters
             const filteredPhrases = phrases.filter(phrase => {
@@ -1695,6 +1856,8 @@
                             )}
                         </div>
 
+
+
                         {/* Phrase List Display */}
                         {Object.keys(groupedPhrases).length === 0 && (
                             <div className="text-center text-lg py-10" style={{ color: brandColors.mediumGrey }}>
@@ -1767,14 +1930,66 @@
                                                         const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
                                                         const langCode = LANGUAGE_CODES[currentLanguage].code;
                                                         const translatedText = phrase.translations?.[langCode] || phrase.english;
-                                                        speakPhrase(translatedText, langCode);
+                                                        
+                                                        // If this text is currently playing, stop it
+                                                        if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                            stopAudio();
+                                                        } else {
+                                                            speakPhrase(translatedText, langCode);
+                                                        }
                                                     }
                                                 }}
                                                 className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
-                                                style={{ backgroundColor: currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed, color: 'white', focusRingColor: brandColors.primaryTeal, border: 'none' }}
-                                                title="Play audio"
+                                                style={{ 
+                                                    backgroundColor: (() => {
+                                                        const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                        const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                        
+                                                        if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                            return '#004D40'; // Dark teal when playing
+                                                        }
+                                                        return currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed;
+                                                    })(),
+                                                    color: 'white', 
+                                                    focusRingColor: brandColors.primaryTeal, 
+                                                    border: 'none',
+                                                    animation: (() => {
+                                                        const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                        const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                        
+                                                        if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                            return 'pulse 1s infinite';
+                                                        }
+                                                        return 'none';
+                                                    })()
+                                                }}
+                                                title={(() => {
+                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                    const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                    const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                    
+                                                    if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                        return 'Stop audio';
+                                                    }
+                                                    return 'Play audio';
+                                                })()}
                                             >
-                                                {speakerIcon}
+                                                {(() => {
+                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                    const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                    const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                    
+                                                    if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                        return (
+                                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                                                            </svg>
+                                                        );
+                                                    }
+                                                    return speakerIcon;
+                                                })()}
                                             </button>
                                         </li>
                                     ))}
