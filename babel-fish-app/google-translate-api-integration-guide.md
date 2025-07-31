@@ -1,97 +1,4 @@
-# Babel Fish - Library Assistant App
-
-A React application for library staff and customer assistance with multi-language support and speech recognition.
-
-## Features
-
-- **Multi-language Support**: Supports 10 languages including Mandarin, Cantonese, Nepali, Greek, Arabic, and more
-- **Speech Recognition**: Real-time speech-to-text functionality
-- **Speech Synthesis**: Text-to-speech with language-specific voices
-- **Firebase Integration**: Conversation logging and user authentication
-- **Interactive UI**: Staff and customer-specific interfaces
-- **Directions Integration**: Google Maps integration for Centrelink directions
-
-## Setup
-
-1. **Install Dependencies**:
-   ```bash
-   cd babel-fish-app
-   npm install
-   ```
-
-2. **Configure Firebase**:
-   - Update the Firebase configuration in `src/index.js`
-   - Replace the placeholder values with your actual Firebase project credentials
-   - Enable Firestore in your Firebase console
-
-3. **Start the Development Server**:
-   ```bash
-   npm start
-   ```
-
-## Usage
-
-1. **Select Language**: Choose your preferred language from the dropdown
-2. **Choose User Type**: Select either "Staff" or "Customer"
-3. **Select Category**: Choose from available categories based on your user type
-4. **Use Speech Features**:
-   - Click "Start Listening" to begin speech recognition
-   - Click "Speak" to hear text-to-speech
-   - View transcriptions in real-time
-
-## Firebase Configuration
-
-Update the Firebase configuration in `src/index.js`:
-
-```javascript
-window.__firebase_config = JSON.stringify({
-  apiKey: "your-actual-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
-});
-```
-
-## Supported Languages
-
-- English (en-US)
-- Mandarin (zh-CN)
-- Cantonese (zh-HK)
-- Nepali (ne-NP)
-- Greek (el-GR)
-- Arabic (ar-SA)
-- Macedonian (mk-MK)
-- Spanish (es-ES)
-- Italian (it-IT)
-- Indonesian (id-ID)
-
-## Technologies Used
-
-- React 18
-- Firebase (Authentication & Firestore)
-- Web Speech API
-- Google Maps Embed API
-
-## Development
-
-- `npm start` - Start development server
-- `npm run build` - Build for production
-- `npm test` - Run tests
-
-## Browser Compatibility
-
-This app requires a modern browser with support for:
-- Web Speech API (SpeechRecognition & SpeechSynthesis)
-- ES6+ JavaScript features
-- React 18
-
-## License
-
-This project is for educational and demonstration purposes. 
-
-# Google Translate API Integration Guide
+# Google Translate API Integration Guide for Babel Fish App
 
 ## Overview
 
@@ -384,5 +291,27 @@ const translateWithFreeService = async (text, targetLang) => {
 2. Verify API key permissions in Google Cloud Console
 3. Test API calls using tools like Postman
 4. Monitor network tab in browser dev tools
+
+## Files Created for Reference
+
+1. **`google-translate-integration.js`** - Standalone JavaScript module with all functions
+2. **`test-translate-integration.html`** - Test file to verify the integration
+3. **`README.md`** - Updated with integration instructions
+
+## Example Usage
+
+```javascript
+// Import the translation functions
+import { fetchSuggestedPhrases } from './google-translate-integration.js';
+
+// Use in your React component
+const handleGetSuggestions = async () => {
+  const suggestions = await fetchSuggestedPhrases(
+    "customer needs help with computer", 
+    "Mandarin"
+  );
+  setSuggestedPhrases(suggestions);
+};
+```
 
 This integration will provide more accurate and reliable translations compared to the current Gemini API implementation, while maintaining the same user experience. 

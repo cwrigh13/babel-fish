@@ -475,8 +475,10 @@
 
             const [currentMode, setCurrentMode] = useState(() => getSavedState('currentMode', 'staff'));
             const [showQrPopup, setShowQrPopup] = useState(false);
-        const [qrPopupType, setQrPopupType] = useState('');
+            const [qrPopupType, setQrPopupType] = useState('');
             const [showLanguageChoicePopup, setShowLanguageChoicePopup] = useState(false);
+            const [showLanguagePreferencePopup, setShowLanguagePreferencePopup] = useState(false);
+            const [languagePreferencePopupType, setLanguagePreferencePopupType] = useState('mandarin');
             const [staffLanguage, setStaffLanguage] = useState(() => getSavedState('staffLanguage', 'Mandarin'));
             const [customerLanguage, setCustomerLanguage] = useState(() => getSavedState('customerLanguage', 'Mandarin'));
             const [staffSubcategoryFilter, setStaffSubcategoryFilter] = useState(() => getSavedState('staffSubcategoryFilter', 'All'));
@@ -489,6 +491,43 @@
 
             // Sample phrases data (simplified version of the full database)
             const samplePhrases = [
+
+                {
+                    id: '21',
+                    english: 'Do you prefer to speak Mandarin or Cantonese?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您更喜欢说普通话吗？',
+                        'zh-HK': '您更喜歡說普通話嗎？',
+                        'ne-NP': 'तपाईं मन्दारिन वा क्यान्टोनीज बोल्न रुचाउनुहुन्छ?',
+                        'el-GR': 'Προτιμάτε να μιλάτε Μανδαρινικά ή Καντονέζικα;',
+                        'ar-SA': 'هل تفضل التحدث بالماندرين أم الكانتونية؟',
+                        'mk-MK': 'Дали преферирате да зборувате мандарински или кантонски?',
+                        'es-ES': '¿Prefiere hablar mandarín o cantonés?',
+                        'it-IT': 'Preferisce parlare mandarino o cantonese?',
+                        'id-ID': 'Apakah Anda lebih suka berbicara Mandarin atau Kanton?'
+                    }
+                },
+                {
+                    id: '22',
+                    english: 'Do you prefer to speak Cantonese or Mandarin?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您更喜欢说粤语吗？',
+                        'zh-HK': '您更喜歡說粵語嗎？',
+                        'ne-NP': 'तपाईं क्यान्टोनीज वा मन्दारिन बोल्न रुचाउनुहुन्छ?',
+                        'el-GR': 'Προτιμάτε να μιλάτε Καντονέζικα ή Μανδαρινικά;',
+                        'ar-SA': 'هل تفضل التحدث بالكانتونية أم الماندرين؟',
+                        'mk-MK': 'Дали преферирате да зборувате кантонски или мандарински?',
+                        'es-ES': '¿Prefiere hablar cantonés o mandarín?',
+                        'it-IT': 'Preferisce parlare cantonese o mandarino?',
+                        'id-ID': 'Apakah Anda lebih suka berbicara Kanton atau Mandarin?'
+                    }
+                },
+
+
                 {
                     id: '1',
                     english: 'Do you need help with printing, scanning or photocopying?',
@@ -1135,23 +1174,7 @@
                         'id-ID': 'Apakah ada printer yang tersedia?'
                     }
                 },
-                {
-                    id: '14',
-                    english: 'How much does printing cost?',
-                    type: 'customer',
-                    category: 'Digital Services',
-                    translations: {
-                        'zh-CN': '打印要多少钱？',
-                        'zh-HK': '打印要多少錢？',
-                        'ne-NP': 'प्रिन्टिङ कति लाग्छ?',
-                        'el-GR': 'Πόσο κοστίζει η εκτύπωση;',
-                        'ar-SA': 'كم تكلفة الطباعة؟',
-                        'mk-MK': 'Колку чини печатењето?',
-                        'es-ES': '¿Cuánto cuesta imprimir?',
-                        'it-IT': 'Quanto costa stampare?',
-                        'id-ID': 'Berapa biaya mencetak?'
-                    }
-                },
+
                 {
                     id: '15',
                     english: 'I need help printing.',
@@ -1186,23 +1209,7 @@
                         'id-ID': 'Saya perlu memindai dokumen.'
                     }
                 },
-                {
-                    id: '17',
-                    english: 'How much does scanning cost?',
-                    type: 'customer',
-                    category: 'Digital Services',
-                    translations: {
-                        'zh-CN': '扫描要多少钱？',
-                        'zh-HK': '掃描要多少錢？',
-                        'ne-NP': 'स्क्यानिङ कति लाग्छ?',
-                        'el-GR': 'Πόσο κοστίζει η σάρωση;',
-                        'ar-SA': 'كم تكلفة المسح الضوئي؟',
-                        'mk-MK': 'Колку чини скенирањето?',
-                        'es-ES': '¿Cuánto cuesta escanear?',
-                        'it-IT': 'Quanto costa scansionare?',
-                        'id-ID': 'Berapa biaya memindai?'
-                    }
-                },
+
                 {
                     id: '18',
                     english: 'I need help with scanning a document',
@@ -1237,23 +1244,7 @@
                         'id-ID': 'Bisakah saya fotokopi dokumen di perpustakaan ini?'
                     }
                 },
-                {
-                    id: '20',
-                    english: 'How much does photocopying cost?',
-                    type: 'customer',
-                    category: 'Digital Services',
-                    translations: {
-                        'zh-CN': '复印要多少钱？',
-                        'zh-HK': '複印要多少錢？',
-                        'ne-NP': 'फोटोकपी कति लाग्छ?',
-                        'el-GR': 'Πόσο κοστίζει η φωτοτυπία;',
-                        'ar-SA': 'كم تكلفة النسخ؟',
-                        'mk-MK': 'Колку чини фотокопирањето?',
-                        'es-ES': '¿Cuánto cuesta fotocopiar?',
-                        'it-IT': 'Quanto costa fotocopiare?',
-                        'id-ID': 'Berapa biaya fotokopi?'
-                    }
-                },
+
                 {
                     id: '21',
                     english: 'I need help with the photocopier.',
@@ -1322,23 +1313,7 @@
                         'id-ID': 'Saya ingin mendaftar untuk kartu perpustakaan'
                     }
                 },
-                {
-                    id: '25',
-                    english: 'How many items can I borrow?',
-                    type: 'customer',
-                    category: 'Transactional',
-                    translations: {
-                        'zh-CN': '我可以借多少件物品？',
-                        'zh-HK': '我可以借多少件物品？',
-                        'ne-NP': 'म कति वस्तुहरू सापटी लिन सक्छु?',
-                        'el-GR': 'Πόσα αντικείμενα μπορώ να δανειστώ;',
-                        'ar-SA': 'كم عدد العناصر التي يمكنني استعارتها؟',
-                        'mk-MK': 'Колку предмети можам да позајмам?',
-                        'es-ES': '¿Cuántos artículos puedo pedir prestados?',
-                        'it-IT': 'Quanti articoli posso prendere in prestito?',
-                        'id-ID': 'Berapa banyak item yang bisa saya pinjam?'
-                    }
-                },
+
                 {
                     id: '26',
                     english: 'How long can I borrow these items?',
@@ -1542,6 +1517,10 @@
                 if (phrase.type !== currentMode) return false;
                 if (currentMode === 'staff' && staffSubcategoryFilter !== 'All' && phrase.category !== staffSubcategoryFilter) return false;
                 if (currentMode === 'customer' && customerSubcategoryFilter !== 'All' && phrase.category !== customerSubcategoryFilter) return false;
+                // Only show the Mandarin preference question when Mandarin is selected
+                if (currentMode === 'staff' && phrase.english === 'Do you prefer to speak Mandarin or Cantonese?' && staffLanguage !== 'Mandarin') return false;
+                // Only show the Cantonese preference question when Cantonese is selected
+                if (currentMode === 'staff' && phrase.english === 'Do you prefer to speak Cantonese or Mandarin?' && staffLanguage !== 'Cantonese') return false;
                 return true;
             });
 
@@ -1909,10 +1888,23 @@
                             <div key={category} className="mb-8 category-section">
                                 <h2 className="text-2xl md:text-3xl font-bold mb-4 pb-2 border-b-2" style={{ color: brandColors.darkTeal, borderColor: brandColors.primaryTeal, marginLeft: '0', paddingLeft: '0' }}>
                                     <div className="text-center">
-                                        <div className="text-xl font-bold mb-1" style={{ color: brandColors.darkTeal }}>
-                                            {getCategoryNativeName(category, currentMode === 'staff' ? staffLanguage : customerLanguage)}
-                                        </div>
-                                        <div className="text-lg font-medium" style={{ color: brandColors.mediumGrey }}>{category}</div>
+                                        {currentMode === 'staff' ? (
+                                            <>
+                                                <div className="text-xl font-bold mb-1" style={{ color: brandColors.darkTeal }}>
+                                                    {category}
+                                                </div>
+                                                <div className="text-lg font-medium" style={{ color: brandColors.mediumGrey }}>
+                                                    {getCategoryNativeName(category, currentMode === 'staff' ? staffLanguage : customerLanguage)}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="text-xl font-bold mb-1" style={{ color: brandColors.darkTeal }}>
+                                                    {getCategoryNativeName(category, currentMode === 'staff' ? staffLanguage : customerLanguage)}
+                                                </div>
+                                                <div className="text-lg font-medium" style={{ color: brandColors.mediumGrey }}>{category}</div>
+                                            </>
+                                        )}
                                     </div>
                                 </h2>
                                 <ul className="phrase-list-grid">
@@ -1933,10 +1925,69 @@
                                             <div className="flex-1 text-left mb-4">
                                                 {currentMode === 'staff' ? (
                                                     <>
-                                                        <p className="text-base font-medium mb-1" style={{ color: brandColors.darkGreyText }}>{phrase.english}</p>
-                                                        <p className="text-lg font-semibold" style={{ color: brandColors.darkTeal }}>
+                                                        {/* English heading first, then translation underneath */}
+                                                        <p className="text-lg font-semibold mb-1" style={{ color: brandColors.darkTeal }}>{phrase.english}</p>
+                                                        <p className="text-base font-medium" style={{ color: brandColors.darkGreyText }}>
                                                             {phrase.translations?.[LANGUAGE_CODES[staffLanguage].code] || phrase.english}
                                                         </p>
+                                                        {phrase.english === 'Do you prefer to speak Mandarin or Cantonese?' && staffLanguage === 'Mandarin' && (
+                                                            <div className="flex justify-center mt-2">
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setLanguagePreferencePopupType('mandarin');
+                                                                        setShowLanguagePreferencePopup(true);
+                                                                    }}
+                                                                    className="px-6 py-3 text-base font-bold rounded-full transition-colors"
+                                                                    style={{
+                                                                        backgroundColor: brandColors.lightTealBackground,
+                                                                        color: brandColors.darkTeal,
+                                                                        border: `1px solid ${brandColors.primaryTeal}`,
+                                                                        cursor: 'pointer',
+                                                                        minWidth: '140px'
+                                                                    }}
+                                                                    onMouseEnter={(e) => {
+                                                                        e.target.style.backgroundColor = brandColors.primaryTeal;
+                                                                        e.target.style.color = 'white';
+                                                                    }}
+                                                                    onMouseLeave={(e) => {
+                                                                        e.target.style.backgroundColor = brandColors.lightTealBackground;
+                                                                        e.target.style.color = brandColors.darkTeal;
+                                                                    }}
+                                                                >
+                                                                    点击选择选项
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                        {phrase.english === 'Do you prefer to speak Cantonese or Mandarin?' && staffLanguage === 'Cantonese' && (
+                                                            <div className="flex justify-center mt-2">
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setLanguagePreferencePopupType('cantonese');
+                                                                        setShowLanguagePreferencePopup(true);
+                                                                    }}
+                                                                    className="px-6 py-3 text-base font-bold rounded-full transition-colors"
+                                                                    style={{
+                                                                        backgroundColor: brandColors.lightTealBackground,
+                                                                        color: brandColors.darkTeal,
+                                                                        border: `1px solid ${brandColors.primaryTeal}`,
+                                                                        cursor: 'pointer',
+                                                                        minWidth: '140px'
+                                                                    }}
+                                                                    onMouseEnter={(e) => {
+                                                                        e.target.style.backgroundColor = brandColors.primaryTeal;
+                                                                        e.target.style.color = 'white';
+                                                                    }}
+                                                                    onMouseLeave={(e) => {
+                                                                        e.target.style.backgroundColor = brandColors.lightTealBackground;
+                                                                        e.target.style.color = brandColors.darkTeal;
+                                                                    }}
+                                                                >
+                                                                    點擊選擇選項
+                                                                </button>
+                                                            </div>
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <>
@@ -2109,6 +2160,165 @@
                                         <p className="text-sm text-gray-500 mt-4">Scan to get Wi-Fi connection details.</p>
                                     </>
                                 ) : null}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Language Preference Pop-up Modal */}
+                    {showLanguagePreferencePopup && (
+                        <div className="popup-overlay">
+                            <div style={{ 
+                                backgroundColor: brandColors.lightTealBackground, 
+                                padding: '2rem 3rem 3rem 3rem', 
+                                borderRadius: '1rem', 
+                                textAlign: 'center', 
+                                position: 'relative', 
+                                maxWidth: '95vw', 
+                                maxHeight: '95vh', 
+                                minWidth: '500px',
+                                display: 'flex', 
+                                flexDirection: 'column',
+                                border: 'none',
+                                boxShadow: 'none'
+                            }}>
+                                <button className="popup-close" onClick={() => setShowLanguagePreferencePopup(false)}>
+                                    &times;
+                                </button>
+                                <p className="text-2xl font-bold mb-6" style={{ color: brandColors.darkTeal }}>
+                                    {languagePreferencePopupType === 'mandarin' ? '请选择您偏好的语言：' : '請選擇您偏好的語言：'}
+                                </p>
+                                
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                    <button
+                                        onClick={() => {
+                                            setShowLanguagePreferencePopup(false);
+                                            // You can add any additional logic here for handling the selection
+                                        }}
+                                        className="w-full text-left rounded-lg"
+                                        style={{
+                                            backgroundColor: 'white',
+                                            color: brandColors.darkTeal,
+                                            border: 'none',
+                                            outline: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '1.5rem'
+                                        }}
+                                    >
+                                        <div>
+                                            <div className="font-semibold text-xl">
+                                                {languagePreferencePopupType === 'mandarin' ? '普通话' : '粵語'}
+                                            </div>
+                                            <div className="text-base text-gray-600 mt-1">
+                                                {languagePreferencePopupType === 'mandarin' ? 'Mandarin' : 'Cantonese'}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                speakPhrase(languagePreferencePopupType === 'mandarin' ? 'Mandarin' : 'Cantonese', 'en-US');
+                                            }}
+                                            className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+                                            style={{
+                                                backgroundColor: brandColors.primaryTeal,
+                                                color: 'white',
+                                                border: 'none',
+                                                minWidth: '120px',
+                                                minHeight: '50px'
+                                            }}
+                                            title="Play English audio"
+                                        >
+                                            {speakerIcon}
+                                        </button>
+                                    </button>
+                                    
+                                    <button
+                                        onClick={() => {
+                                            setShowLanguagePreferencePopup(false);
+                                            // You can add any additional logic here for handling the selection
+                                        }}
+                                        className="w-full text-left rounded-lg"
+                                        style={{
+                                            backgroundColor: 'white',
+                                            color: brandColors.darkTeal,
+                                            border: 'none',
+                                            outline: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '1.5rem'
+                                        }}
+                                    >
+                                        <div>
+                                            <div className="font-semibold text-xl">
+                                                {languagePreferencePopupType === 'mandarin' ? '粤语' : '普通話'}
+                                            </div>
+                                            <div className="text-base text-gray-600 mt-1">
+                                                {languagePreferencePopupType === 'mandarin' ? 'Cantonese' : 'Mandarin'}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                speakPhrase(languagePreferencePopupType === 'mandarin' ? 'Cantonese' : 'Mandarin', 'en-US');
+                                            }}
+                                            className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+                                            style={{
+                                                backgroundColor: brandColors.primaryTeal,
+                                                color: 'white',
+                                                border: 'none',
+                                                minWidth: '120px',
+                                                minHeight: '50px'
+                                            }}
+                                            title="Play English audio"
+                                        >
+                                            {speakerIcon}
+                                        </button>
+                                    </button>
+                                    
+                                    <button
+                                        onClick={() => {
+                                            setShowLanguagePreferencePopup(false);
+                                            // You can add any additional logic here for handling the selection
+                                        }}
+                                        className="w-full text-left rounded-lg"
+                                        style={{
+                                            backgroundColor: 'white',
+                                            color: brandColors.darkTeal,
+                                            border: 'none',
+                                            outline: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '1.5rem'
+                                        }}
+                                    >
+                                        <div>
+                                            <div className="font-semibold text-xl">
+                                                {languagePreferencePopupType === 'mandarin' ? '都可以' : '都可以'}
+                                            </div>
+                                            <div className="text-base text-gray-600 mt-1">Either</div>
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                speakPhrase('Either', 'en-US');
+                                            }}
+                                            className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+                                            style={{
+                                                backgroundColor: brandColors.primaryTeal,
+                                                color: 'white',
+                                                border: 'none',
+                                                minWidth: '120px',
+                                                minHeight: '50px'
+                                            }}
+                                            title="Play English audio"
+                                        >
+                                            {speakerIcon}
+                                        </button>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}

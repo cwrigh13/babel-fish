@@ -1163,8 +1163,8 @@ function App() {
                   <div className="flex-1 text-left mb-4">
                     {currentMode === 'staff' ? (
                       <>
-                        <p className="text-base font-medium mb-1" style={{ color: brandColors.darkGreyText }}>{phrase.english}</p>
-                        <p className="text-lg font-semibold" style={{ color: brandColors.darkTeal }}>
+                        <p className="text-lg font-semibold mb-1" style={{ color: brandColors.darkTeal }}>{phrase.english}</p>
+                        <p className="text-base font-medium" style={{ color: brandColors.darkGreyText }}>
                           {phrase.translations?.[LANGUAGE_CODES[staffLanguage].code] || phrase.english}
                         </p>
                       </>
