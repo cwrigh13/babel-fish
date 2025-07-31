@@ -19,16 +19,19 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
+        cache-dependency-path: 'babel-fish-app/package-lock.json'
         
     - name: Install dependencies
       run: npm ci
-      
+      working-directory: ./babel-fish-app
+        
     - name: Build project
       run: npm run build
-      
+      working-directory: ./babel-fish-app
+        
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist 
+        publish_dir: ./babel-fish-app/build 

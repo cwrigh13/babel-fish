@@ -526,6 +526,23 @@
                         'id-ID': 'Apakah Anda lebih suka berbicara Kanton atau Mandarin?'
                     }
                 },
+                {
+                    id: '23',
+                    english: 'Unfortunately we do not have any staff who speak Cantonese',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '很抱歉，我们没有会说粤语的员工',
+                        'zh-HK': '很抱歉，我們沒有會說粵語的員工',
+                        'ne-NP': 'दुर्भाग्यवश, हाम्रो यहाँ कुनै कर्मचारी क्यान्टोनीज बोल्न सक्दैनन्',
+                        'el-GR': 'Δυστυχώς, δεν έχουμε προσωπικό που μιλάει Καντονέζικα',
+                        'ar-SA': 'للأسف، ليس لدينا موظفون يتحدثون الكانتونية',
+                        'mk-MK': 'За жал, немаме персонал што зборува кантонски',
+                        'es-ES': 'Desafortunadamente, no tenemos personal que hable cantonés',
+                        'it-IT': 'Sfortunatamente, non abbiamo personale che parli cantonese',
+                        'id-ID': 'Sayangnya, kami tidak memiliki staf yang berbicara Kanton'
+                    }
+                },
 
 
                 {
@@ -1621,13 +1638,49 @@
                                 onClick={() => setCurrentMode('staff')}
                                 className={`button-base mt-2 ${currentMode === 'staff' ? 'button-primary-active' : 'button-primary-inactive'}`}
                             >
-                                For Staff
+                                <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>For Staff</span><br />
+                                <span style={{fontSize: '0.75rem', opacity: 0.8}}>
+                                    {(() => {
+                                        const staffTranslations = {
+                                            'zh-CN': '为员工',
+                                            'zh-HK': '為員工',
+                                            'ne-NP': 'कर्मचारीहरूको लागि',
+                                            'el-GR': 'Για το Προσωπικό',
+                                            'ar-SA': 'للموظفين',
+                                            'mk-MK': 'За персонал',
+                                            'es-ES': 'Para el Personal',
+                                            'it-IT': 'Per il Personale',
+                                            'id-ID': 'Untuk Staf'
+                                        };
+                                        const currentLanguage = staffLanguage;
+                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                        return staffTranslations[langCode] || 'For Staff';
+                                    })()}
+                                </span>
                             </button>
                             <button
                                 onClick={() => setCurrentMode('customer')}
                                 className={`button-base mt-2 ${currentMode === 'customer' ? 'button-accent-active' : 'button-accent-inactive'}`}
                             >
-                                For Customers
+                                <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>For Customers</span><br />
+                                <span style={{fontSize: '0.75rem', opacity: 0.8}}>
+                                    {(() => {
+                                        const customerTranslations = {
+                                            'zh-CN': '为顾客',
+                                            'zh-HK': '為顧客',
+                                            'ne-NP': 'ग्राहकहरूको लागि',
+                                            'el-GR': 'Για τους Πελάτες',
+                                            'ar-SA': 'للعملاء',
+                                            'mk-MK': 'За клиенти',
+                                            'es-ES': 'Para Clientes',
+                                            'it-IT': 'Per i Clienti',
+                                            'id-ID': 'Untuk Pelanggan'
+                                        };
+                                        const currentLanguage = customerLanguage;
+                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                        return customerTranslations[langCode] || 'For Customers';
+                                    })()}
+                                </span>
                             </button>
                         </div>
 
@@ -1642,43 +1695,43 @@
                                             onClick={() => setStaffLanguage('Mandarin')}
                                             className={`language-button ${staffLanguage === 'Mandarin' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Mandarin
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Mandarin</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>普通话</span>
                                         </button>
                                         <button
                                             onClick={() => setStaffLanguage('Cantonese')}
                                             className={`language-button ${staffLanguage === 'Cantonese' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Cantonese
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Cantonese</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>粤语</span>
                                         </button>
                                         <button
                                             onClick={() => setStaffLanguage('Nepali')}
                                             className={`language-button ${staffLanguage === 'Nepali' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Nepali
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Nepali</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>नेपाली</span>
                                         </button>
                                         <button
                                             onClick={() => setStaffLanguage('Greek')}
                                             className={`language-button ${staffLanguage === 'Greek' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Greek
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Greek</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Ελληνικά</span>
                                         </button>
                                         <button
                                             onClick={() => setStaffLanguage('Arabic')}
                                             className={`language-button ${staffLanguage === 'Arabic' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Arabic
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Arabic</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>العربية</span>
                                         </button>
                                         <button
                                             onClick={() => setStaffLanguage('Macedonian')}
                                             className={`language-button ${staffLanguage === 'Macedonian' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Macedonian
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Macedonian</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Македонски</span>
                                         </button>
                                         <button
                                             onClick={() => setStaffLanguage('Spanish')}
                                             className={`language-button ${staffLanguage === 'Spanish' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Spanish
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Spanish</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Español</span>
                                         </button>
                                     </div>
                                     <div className="language-buttons-row">
@@ -1686,13 +1739,13 @@
                                             onClick={() => setStaffLanguage('Italian')}
                                             className={`language-button ${staffLanguage === 'Italian' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Italian
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Italian</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Italiano</span>
                                         </button>
                                         <button
                                             onClick={() => setStaffLanguage('Indonesian')}
                                             className={`language-button ${staffLanguage === 'Indonesian' ? 'language-button-active' : 'language-button-inactive'}`}
                                         >
-                                            Indonesian
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Indonesian</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Bahasa Indonesia</span>
                                         </button>
                                     </div>
                                 </>
@@ -1771,20 +1824,82 @@
                                             : 'language-button-inactive'
                                         }`}
                                     >
-                                        All
+                                        <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>All</span><br />
+                                        <span style={{fontSize: '0.75rem', opacity: 0.8}}>
+                                            {(() => {
+                                                const allTranslations = {
+                                                    'zh-CN': '全部',
+                                                    'zh-HK': '全部',
+                                                    'ne-NP': 'सबै',
+                                                    'el-GR': 'Όλα',
+                                                    'ar-SA': 'الكل',
+                                                    'mk-MK': 'Сите',
+                                                    'es-ES': 'Todo',
+                                                    'it-IT': 'Tutto',
+                                                    'id-ID': 'Semua'
+                                                };
+                                                const currentLanguage = staffLanguage;
+                                                const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                return allTranslations[langCode] || 'All';
+                                            })()}
+                                        </span>
                                     </button>
-                                    {staffCategories.map((actualCategoryName) => (
-                                        <button
-                                            key={actualCategoryName}
-                                            onClick={() => setStaffSubcategoryFilter(actualCategoryName)}
-                                            className={`language-button ${staffSubcategoryFilter === actualCategoryName
-                                                ? 'language-button-active'
-                                                : 'language-button-inactive'
-                                            }`}
-                                        >
-                                            {actualCategoryName}
-                                        </button>
-                                    ))}
+                                    {staffCategories.map((actualCategoryName) => {
+                                        // Define translations for category names
+                                        const categoryTranslations = {
+                                            'General Enquiries': {
+                                                'zh-CN': '一般查询',
+                                                'zh-HK': '一般查詢',
+                                                'ne-NP': 'सामान्य जानकारी',
+                                                'el-GR': 'Γενικές Ερωτήσεις',
+                                                'ar-SA': 'استفسارات عامة',
+                                                'mk-MK': 'Општи прашања',
+                                                'es-ES': 'Consultas Generales',
+                                                'it-IT': 'Richieste Generali',
+                                                'id-ID': 'Pertanyaan Umum'
+                                            },
+                                            'Digital Services': {
+                                                'zh-CN': '数字服务',
+                                                'zh-HK': '數位服務',
+                                                'ne-NP': 'डिजिटल सेवाहरू',
+                                                'el-GR': 'Ψηφιακές Υπηρεσίες',
+                                                'ar-SA': 'الخدمات الرقمية',
+                                                'mk-MK': 'Дигитални услуги',
+                                                'es-ES': 'Servicios Digitales',
+                                                'it-IT': 'Servizi Digitali',
+                                                'id-ID': 'Layanan Digital'
+                                            },
+                                            'Transactional': {
+                                                'zh-CN': '交易服务',
+                                                'zh-HK': '交易服務',
+                                                'ne-NP': 'लेनदेन सेवाहरू',
+                                                'el-GR': 'Συναλλακτικές Υπηρεσίες',
+                                                'ar-SA': 'الخدمات المعاملاتية',
+                                                'mk-MK': 'Трансакциски услуги',
+                                                'es-ES': 'Servicios Transaccionales',
+                                                'it-IT': 'Servizi Transazionali',
+                                                'id-ID': 'Layanan Transaksional'
+                                            }
+                                        };
+                                        
+                                        const currentLanguage = staffLanguage;
+                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                        const translation = categoryTranslations[actualCategoryName]?.[langCode] || actualCategoryName;
+                                        
+                                        return (
+                                            <button
+                                                key={actualCategoryName}
+                                                onClick={() => setStaffSubcategoryFilter(actualCategoryName)}
+                                                className={`language-button ${staffSubcategoryFilter === actualCategoryName
+                                                    ? 'language-button-active'
+                                                    : 'language-button-inactive'
+                                                }`}
+                                            >
+                                                <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>{actualCategoryName}</span><br />
+                                                <span style={{fontSize: '0.75rem', opacity: 0.8}}>{translation}</span>
+                                            </button>
+                                        );
+                                    })}
                                 </>
                             ) : (
                                 <>
