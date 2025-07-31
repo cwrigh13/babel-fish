@@ -1538,6 +1538,8 @@
                 if (currentMode === 'staff' && phrase.english === 'Do you prefer to speak Mandarin or Cantonese?' && staffLanguage !== 'Mandarin') return false;
                 // Only show the Cantonese preference question when Cantonese is selected
                 if (currentMode === 'staff' && phrase.english === 'Do you prefer to speak Cantonese or Mandarin?' && staffLanguage !== 'Cantonese') return false;
+                // Only show the "no Cantonese staff" message when Cantonese is selected
+                if (currentMode === 'staff' && phrase.english === 'Unfortunately we do not have any staff who speak Cantonese' && staffLanguage !== 'Cantonese') return false;
                 return true;
             });
 
@@ -2132,27 +2134,42 @@
                                                     } else if (phrase.english === 'Where are the computers?' && currentMode === 'customer') {
                                                         setQrPopupType('computers');
                                                         setShowQrPopup(true);
-                                                    } else {
-                                                        const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                                                                    } else {
+                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                    let textToSpeak, langCodeToUse;
+                                                    
+                                                    if (currentMode === 'staff') {
+                                                        // For staff: speak the translation in the selected language
                                                         const langCode = LANGUAGE_CODES[currentLanguage].code;
-                                                        const translatedText = phrase.translations?.[langCode] || phrase.english;
-                                                        
-                                                        // If this text is currently playing, stop it
-                                                        if (isAudioPlaying && currentPlayingText === translatedText) {
-                                                            stopAudio();
-                                                        } else {
-                                                            speakPhrase(translatedText, langCode);
-                                                        }
+                                                        textToSpeak = phrase.translations?.[langCode] || phrase.english;
+                                                        langCodeToUse = langCode;
+                                                    } else {
+                                                        // For customers: always speak the English version
+                                                        textToSpeak = phrase.english;
+                                                        langCodeToUse = 'en-US';
                                                     }
+                                                    
+                                                    // If this text is currently playing, stop it
+                                                    if (isAudioPlaying && currentPlayingText === textToSpeak) {
+                                                        stopAudio();
+                                                    } else {
+                                                        speakPhrase(textToSpeak, langCodeToUse);
+                                                    }
+                                                }
                                                 }}
                                                 className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
                                                 style={{ 
                                                     backgroundColor: (() => {
-                                                        const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
-                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
-                                                        const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                        let textToCompare;
+                                                        if (currentMode === 'staff') {
+                                                            const currentLanguage = staffLanguage;
+                                                            const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                            textToCompare = phrase.translations?.[langCode] || phrase.english;
+                                                        } else {
+                                                            textToCompare = phrase.english;
+                                                        }
                                                         
-                                                        if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                        if (isAudioPlaying && currentPlayingText === textToCompare) {
                                                             return '#004D40'; // Dark teal when playing
                                                         }
                                                         return currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed;
@@ -2161,33 +2178,48 @@
                                                     focusRingColor: brandColors.primaryTeal, 
                                                     border: 'none',
                                                     animation: (() => {
-                                                        const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
-                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
-                                                        const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                        let textToCompare;
+                                                        if (currentMode === 'staff') {
+                                                            const currentLanguage = staffLanguage;
+                                                            const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                            textToCompare = phrase.translations?.[langCode] || phrase.english;
+                                                        } else {
+                                                            textToCompare = phrase.english;
+                                                        }
                                                         
-                                                        if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                        if (isAudioPlaying && currentPlayingText === textToCompare) {
                                                             return 'pulse 1s infinite';
                                                         }
                                                         return 'none';
                                                     })()
                                                 }}
                                                 title={(() => {
-                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
-                                                    const langCode = LANGUAGE_CODES[currentLanguage].code;
-                                                    const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                    let textToCompare;
+                                                    if (currentMode === 'staff') {
+                                                        const currentLanguage = staffLanguage;
+                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                        textToCompare = phrase.translations?.[langCode] || phrase.english;
+                                                    } else {
+                                                        textToCompare = phrase.english;
+                                                    }
                                                     
-                                                    if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                    if (isAudioPlaying && currentPlayingText === textToCompare) {
                                                         return 'Stop audio';
                                                     }
                                                     return 'Play audio';
                                                 })()}
                                             >
                                                 {(() => {
-                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
-                                                    const langCode = LANGUAGE_CODES[currentLanguage].code;
-                                                    const translatedText = phrase.translations?.[langCode] || phrase.english;
+                                                    let textToCompare;
+                                                    if (currentMode === 'staff') {
+                                                        const currentLanguage = staffLanguage;
+                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                        textToCompare = phrase.translations?.[langCode] || phrase.english;
+                                                    } else {
+                                                        textToCompare = phrase.english;
+                                                    }
                                                     
-                                                    if (isAudioPlaying && currentPlayingText === translatedText) {
+                                                    if (isAudioPlaying && currentPlayingText === textToCompare) {
                                                         return (
                                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                                                                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
