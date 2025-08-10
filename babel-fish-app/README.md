@@ -39,18 +39,59 @@ A React application for library staff and customer assistance with multi-languag
    - Click "Speak" to hear text-to-speech
    - View transcriptions in real-time
 
-## Firebase Configuration
+## Security Configuration
 
-Update the Firebase configuration in `src/index.js`:
+### Environment Variables
+
+1. Copy the example environment file:
+   ```bash
+   cp env.example .env
+   ```
+
+2. Update the `.env` file with your actual API keys and configuration:
+   ```bash
+   # Firebase Configuration
+   REACT_APP_FIREBASE_API_KEY=your_firebase_api_key_here
+   REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+   REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=123456789
+   REACT_APP_FIREBASE_APP_ID=your_app_id
+
+   # Google APIs
+   REACT_APP_GOOGLE_TRANSLATE_API_KEY=your_google_translate_api_key_here
+   REACT_APP_GEMINI_API_KEY=your_gemini_api_key_here
+   REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+
+   # Security Configuration
+   REACT_APP_MAX_REQUESTS_PER_MINUTE=60
+   REACT_APP_ENABLE_HTTPS_ENFORCEMENT=true
+   REACT_APP_ENABLE_RATE_LIMITING=true
+   ```
+
+### Security Features
+
+The app now includes the following security measures:
+
+- **Input Validation**: All user inputs are validated and sanitized
+- **Rate Limiting**: API calls are rate-limited to prevent abuse
+- **HTTPS Enforcement**: Automatic redirect to HTTPS in production
+- **XSS Protection**: Input sanitization prevents cross-site scripting
+- **API Security**: Payloads are sanitized before sending to external APIs
+- **Error Handling**: Secure error messages that don't leak sensitive information
+
+### Firebase Configuration
+
+The Firebase configuration is now managed through environment variables in `src/index.js`:
 
 ```javascript
 window.__firebase_config = JSON.stringify({
-  apiKey: "your-actual-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "",
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || "",
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: process.env.REACT_APP_FIREBASE_APP_ID || ""
 });
 ```
 

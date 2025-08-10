@@ -2,6 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, onSnapshot, addDoc, query, getDocs } from 'firebase/firestore';
+import { 
+  validateUserQuery, 
+  validateLanguage, 
+  RateLimiter, 
+  enforceHTTPS, 
+  validateAPIResponse,
+  sanitizeAPIPayload 
+} from './utils/security';
 
 // Ensure __app_id and __firebase_config are defined in the environment
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -547,6 +555,19 @@ function App() {
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [showQrPopup, setShowQrPopup] = useState(false); // State to control QR code pop-up visibility
   const [showLanguageChoicePopup, setShowLanguageChoicePopup] = useState(false); // New state for language choice popup
+  
+  // Security: Initialize rate limiter
+  const rateLimiter = useRef(new RateLimiter(
+    parseInt(process.env.REACT_APP_MAX_REQUESTS_PER_MINUTE) || 60,
+    60000
+  ));
+  
+  // Security: Enforce HTTPS in production
+  useEffect(() => {
+    if (process.env.REACT_APP_ENABLE_HTTPS_ENFORCEMENT === 'true') {
+      enforceHTTPS();
+    }
+  }, []);
 
 
   // Define Staff Subcategory Map for display names to actual category names
@@ -668,12 +689,28 @@ function App() {
   const fetchSuggestedPhrases = async () => {
     if (!staffQuery.trim()) return; // Don't fetch if query is empty
 
+    // Security: Validate and sanitize user input
+    const validation = validateUserQuery(staffQuery);
+    if (!validation.isValid) {
+      console.error('Invalid user query:', validation.error);
+      setSuggestedPhrases([{ english: 'Invalid input. Please try again.', chinese: '' }]);
+      return;
+    }
+
+    // Security: Rate limiting
+    const userIdentifier = userId || 'anonymous';
+    if (!rateLimiter.current.isAllowed(userIdentifier)) {
+      setSuggestedPhrases([{ english: 'Rate limit exceeded. Please wait before trying again.', chinese: '' }]);
+      return;
+    }
+
     setIsSuggesting(true);
     setSuggestedPhrases([]); // Clear previous suggestions
 
     try {
       let chatHistory = [];
-      const prompt = `Given the scenario: "${staffQuery}", what are some common library phrases a librarian might need to say? Provide up to 3 English phrases and their Simplified Chinese translations. Format the output as a JSON array of objects, where each object has "english" and "chinese" properties. Example: [{"english": "Hello", "chinese": "你好"}, {"chinese": "再见"}]`;
+      const sanitizedQuery = validation.sanitizedQuery;
+      const prompt = `Given the scenario: "${sanitizedQuery}", what are some common library phrases a librarian might need to say? Provide up to 3 English phrases and their Simplified Chinese translations. Format the output as a JSON array of objects, where each object has "english" and "chinese" properties. Example: [{"english": "Hello", "chinese": "你好"}, {"chinese": "再见"}]`;
       chatHistory.push({ role: "user", parts: [{ text: prompt }] });
 
       const payload = {
@@ -694,16 +731,27 @@ function App() {
         }
       };
 
-      const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+      // Security: Sanitize API payload
+      const sanitizedPayload = sanitizeAPIPayload(payload);
+
+      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || ""; // Get API key from environment variables
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(sanitizedPayload)
       });
 
       const result = await response.json();
+      
+      // Security: Validate API response
+      if (!validateAPIResponse(result)) {
+        console.error("Invalid API response detected");
+        setSuggestedPhrases([{ english: "Error processing response. Please try again.", chinese: "" }]);
+        return;
+      }
+      
       if (result.candidates && result.candidates.length > 0 &&
           result.candidates[0].content && result.candidates[0].content.parts &&
           result.candidates[0].content.parts.length > 0) {

@@ -2,7 +2,7 @@
 // This file demonstrates how to integrate Google Translate API to replace the Gemini API
 
 // Configuration
-const GOOGLE_TRANSLATE_API_KEY = process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY || 'YOUR_API_KEY_HERE';
+const GOOGLE_TRANSLATE_API_KEY = process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY || '';
 const GOOGLE_TRANSLATE_API_URL = 'https://translation.googleapis.com/language/translate/v2';
 
 // Language codes mapping (from the existing app)
@@ -51,6 +51,29 @@ const COMMON_LIBRARY_PHRASES = [
  * @returns {Promise<string>} - Translated text
  */
 async function translateText(text, targetLanguage, sourceLanguage = 'en') {
+  // Security: Validate inputs
+  if (!text || typeof text !== 'string') {
+    throw new Error('Invalid text input');
+  }
+  
+  if (!targetLanguage || typeof targetLanguage !== 'string') {
+    throw new Error('Invalid target language');
+  }
+  
+  // Security: Sanitize inputs
+  const sanitizedText = text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                           .replace(/javascript:/gi, '')
+                           .replace(/on\w+\s*=/gi, '')
+                           .trim();
+  
+  if (sanitizedText.length === 0) {
+    throw new Error('Text cannot be empty after sanitization');
+  }
+  
+  if (sanitizedText.length > 5000) {
+    throw new Error('Text too long for translation');
+  }
+  
   try {
     const response = await fetch(`${GOOGLE_TRANSLATE_API_URL}?key=${GOOGLE_TRANSLATE_API_KEY}`, {
       method: 'POST',
@@ -58,7 +81,7 @@ async function translateText(text, targetLanguage, sourceLanguage = 'en') {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        q: text,
+        q: sanitizedText,
         target: targetLanguage,
         source: sourceLanguage
       })
