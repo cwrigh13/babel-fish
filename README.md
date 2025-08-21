@@ -1,49 +1,27 @@
-# Babel Fish App
+# Georges River Libraries Babel Fish
 
-A React application for library staff and customer assistance.
+The Georges River Libraries Babel Fish is a full-stack web application designed to bridge communication gaps between library staff and customers from diverse linguistic backgrounds. It acts as a digital phrasebook, providing instant, accurate translations and audio playback of common library-related inquiries and responses.
 
-## 🚀 Deployment Status
+**Key Features**
 
-This project is configured for automatic deployment to GitHub Pages.
+* **Multilingual Phrasebook:** Provides essential phrases in multiple community languages, including Mandarin, Cantonese, Nepali, Greek, Arabic, Macedonian, Spanish, Italian, and Indonesian.
 
-### GitHub Pages Setup
+* **Dual-User Modes:** Features distinct interfaces for staff and customers, with tailored content and functionality for each role.
 
-1. **Repository Settings**: Go to your GitHub repository settings
-2. **Pages Section**: Navigate to "Pages" in the left sidebar
-3. **Source**: Select "GitHub Actions" as the source
-4. **Branch**: The deployment will automatically use the `gh-pages` branch created by the GitHub Actions workflow
+* **Text-to-Speech:** Staff can play audio of translated phrases for non-English speaking customers, ensuring clarity and correct pronunciation.
 
-### Automatic Deployment
+* **AI-Powered Suggestions:** An integrated AI feature helps staff generate appropriate phrases for unique situations, offering on-the-fly translations for enhanced service.
 
-The app is automatically deployed to GitHub Pages whenever you push changes to the `main` branch. The deployment process:
+* **Customer-Focused Information:** Provides quick access to key information, such as directions to Centrelink with an interactive map and scannable QR code.
 
-1. Builds the React app using `npm run build`
-2. Deploys the built files to the `gh-pages` branch
-3. Makes the site available at: https://cwrigh13.github.io/babel-fish
+* **Scalable Architecture:** Built on a modern full-stack framework with Firebase, allowing for easy expansion with more languages, features, and an administrative interface in the future.
 
-### Local Development
+**Technologies**
 
-To run the app locally:
+* **Frontend:** React, Tailwind CSS
 
-```bash
-cd babel-fish-app
-npm install
-npm start
-```
+* **Backend:** Node.js, Express
 
-The app will be available at http://localhost:3000
+* **Authentication:** Firebase Authentication (Anonymous and Custom Token)
 
-### Project Structure
-
-- `babel-fish-app/` - Main React application
-  - `src/` - Source code
-  - `public/` - Static assets
-  - `build/` - Production build (generated)
-- `.github/workflows/` - GitHub Actions deployment configuration
-
-### Technologies Used
-
-- React 18
-- Firebase
-- GitHub Actions for CI/CD
-- GitHub Pages for hosting 
+* **APIs:** Google Gemini API, Google Maps Embed API, QR Server API
