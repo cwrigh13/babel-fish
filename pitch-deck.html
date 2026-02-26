@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BABEL FISH — Pitch Deck</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ceefax-black: #000000;
+            --ceefax-white: #FFFFFF;
+            --ceefax-yellow: #FFFF00;
+            --ceefax-cyan: #00FFFF;
+            --ceefax-green: #00FF00;
+            --ceefax-magenta: #FF00FF;
+            --ceefax-red: #FF0000;
+            --ceefax-blue: #0000FF;
+            --ceefax-orange: #FF8800;
+            --ceefax-mid-blue: #0044CC;
+            --scanline-opacity: 0.04;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: var(--ceefax-black);
+            color: var(--ceefax-white);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Scanline overlay for CRT effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, var(--scanline-opacity)),
+                rgba(0, 0, 0, var(--scanline-opacity)) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+        }
+
+        /* Navigation bar */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--ceefax-blue);
+            padding: 8px 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            z-index: 1000;
+            border-top: 3px solid var(--ceefax-yellow);
+        }
+
+        .nav-bar a {
+            color: var(--ceefax-white);
+            text-decoration: none;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            background: var(--ceefax-mid-blue);
+            border: 1px solid var(--ceefax-cyan);
+            transition: background 0.15s;
+        }
+
+        .nav-bar a:hover,
+        .nav-bar a:focus {
+            background: var(--ceefax-cyan);
+            color: var(--ceefax-black);
+        }
+
+        /* Slide container */
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 24px 32px 80px 32px;
+            max-width: 960px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Teletext header strip */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            font-size: 0.75rem;
+        }
+
+        .slide-header .page-num {
+            color: var(--ceefax-yellow);
+            font-weight: bold;
+        }
+
+        .slide-header .section-label {
+            color: var(--ceefax-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .slide-header .timestamp {
+            color: var(--ceefax-green);
+        }
+
+        /* Title banner — coloured block style */
+        .banner {
+            padding: 10px 16px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .banner-blue {
+            background: var(--ceefax-blue);
+            color: var(--ceefax-white);
+        }
+
+        .banner-red {
+            background: var(--ceefax-red);
+            color: var(--ceefax-yellow);
+        }
+
+        .banner-green {
+            background: #006600;
+            color: var(--ceefax-green);
+        }
+
+        .banner-magenta {
+            background: #880088;
+            color: var(--ceefax-magenta);
+        }
+
+        .banner-cyan {
+            background: #006666;
+            color: var(--ceefax-cyan);
+        }
+
+        /* Content blocks */
+        .content-block {
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid;
+        }
+
+        .content-block.yellow-border {
+            border-color: var(--ceefax-yellow);
+        }
+
+        .content-block.cyan-border {
+            border-color: var(--ceefax-cyan);
+        }
+
+        .content-block.green-border {
+            border-color: var(--ceefax-green);
+        }
+
+        .content-block.magenta-border {
+            border-color: var(--ceefax-magenta);
+        }
+
+        .content-block.red-border {
+            border-color: var(--ceefax-red);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        p, li {
+            font-size: 0.85rem;
+            line-height: 1.65;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li::before {
+            content: '■ ';
+        }
+
+        ul li {
+            margin-bottom: 6px;
+        }
+
+        .text-yellow { color: var(--ceefax-yellow); }
+        .text-cyan { color: var(--ceefax-cyan); }
+        .text-green { color: var(--ceefax-green); }
+        .text-magenta { color: var(--ceefax-magenta); }
+        .text-red { color: var(--ceefax-red); }
+        .text-white { color: var(--ceefax-white); }
+        .text-orange { color: var(--ceefax-orange); }
+
+        .bg-blue { background: var(--ceefax-blue); }
+        .bg-red { background: var(--ceefax-red); }
+        .bg-green { background: #006600; }
+
+        /* Teletext-style separator */
+        .separator {
+            height: 3px;
+            margin: 16px 0;
+        }
+
+        .sep-yellow { background: var(--ceefax-yellow); }
+        .sep-cyan { background: var(--ceefax-cyan); }
+        .sep-green { background: var(--ceefax-green); }
+        .sep-magenta { background: var(--ceefax-magenta); }
+        .sep-red { background: var(--ceefax-red); }
+
+        /* Grid layout for side-by-side blocks */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* ASCII art container */
+        .ascii-art {
+            font-size: 0.65rem;
+            line-height: 1.15;
+            white-space: pre;
+            color: var(--ceefax-yellow);
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        /* Tag / badge */
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin: 2px 4px 2px 0;
+        }
+
+        /* Blocky data table */
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 12px;
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+        }
+
+        .data-row:nth-child(odd) {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Timeline */
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+        }
+
+        .timeline-marker {
+            min-width: 100px;
+            padding: 4px 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 4px 0;
+        }
+
+        /* Stat blocks */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 12px 8px;
+            border: 2px solid;
+        }
+
+        .stat-box .stat-num {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-box .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Slide 1 title card */
+        .title-card {
+            text-align: center;
+            padding-top: 60px;
+        }
+
+        .title-card h1 {
+            font-size: 3.5rem;
+            letter-spacing: 6px;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            margin-bottom: 24px;
+        }
+
+        /* Flashing effect for key elements */
+        @keyframes teletext-blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .blink {
+            animation: teletext-blink 1.2s step-end infinite;
+        }
+
+        /* Glow effect for headings */
+        .glow-yellow {
+            text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+        }
+
+        .glow-cyan {
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        .glow-green {
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+        }
+
+        .glow-magenta {
+            text-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
+        }
+
+        /* Language mosaic */
+        .lang-mosaic {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+
+        .lang-tile {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 680px) {
+            .slide {
+                padding: 16px 12px 80px 12px;
+            }
+
+            .title-card h1 {
+                font-size: 2rem;
+                letter-spacing: 3px;
+            }
+
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .ascii-art {
+                font-size: 0.45rem;
+            }
+
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.1rem; }
+            p, li { font-size: 0.8rem; }
+
+            .nav-bar a {
+                font-size: 0.6rem;
+                padding: 3px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SLIDE 1 — TITLE / WHO                                        -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-1">
+    <div class="slide-header">
+        <span class="page-num">P100</span>
+        <span class="section-label">Georges River Libraries</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="title-card">
+        <div class="ascii-art text-cyan">
+ ____    _    ____  _____ _       _____ ___ ____  _   _
+| __ )  / \  | __ )| ____| |     |  ___|_ _/ ___|| | | |
+|  _ \ / _ \ |  _ \|  _| | |     | |_   | |\___ \| |_| |
+| |_) / ___ \| |_) | |___| |___  |  _|  | | ___) |  _  |
+|____/_/   \_\____/|_____|_____| |_|   |___|____/|_| |_|
+        </div>
+
+        <h1 class="text-yellow glow-yellow">BABEL FISH</h1>
+
+        <div class="separator sep-cyan"></div>
+
+        <p class="subtitle text-cyan">UNIVERSAL TRANSLATION FOR PUBLIC LIBRARIES</p>
+
+        <div class="separator sep-yellow"></div>
+
+        <div style="margin-top: 24px;">
+            <span class="tag bg-blue text-white">GEORGES RIVER COUNCIL</span>
+            <span class="tag bg-red text-yellow">NSW AUSTRALIA</span>
+        </div>
+
+        <p class="text-green" style="margin-top: 32px; font-size: 0.8rem;">
+            "The Babel Fish is small, yellow, and leech-like — and<br>
+            probably the oddest thing in the Universe."<br>
+            <span class="text-magenta">— Douglas Adams, The Hitchhiker's Guide to the Galaxy</span>
+        </p>
+
+        <p class="text-white blink" style="margin-top: 40px; font-size: 0.75rem;">
+            ▼ PRESS REVEAL OR SCROLL DOWN ▼
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2 — WHO: CONTRIBUTORS & VISION                         -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-2">
+    <div class="slide-header">
+        <span class="page-num">P101</span>
+        <span class="section-label">WHO — Vision &amp; Contributors</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-blue">SLIDE 02 ■ WHO WE ARE &amp; WHY WE CARE</div>
+
+    <div class="content-block yellow-border">
+        <h2 class="text-yellow glow-yellow">THE VISION</h2>
+        <p class="text-white">
+            Every person who walks into a public library deserves to be understood.
+            Language should never be a barrier to knowledge, services, or belonging.
+        </p>
+        <p class="text-cyan" style="margin-top: 8px;">
+            Babel Fish was born from the daily reality at Georges River Libraries,
+            where staff serve one of the most linguistically diverse communities
+            in Australia. Our vision is simple yet transformative: <span class="text-yellow">eliminate
+            the communication gap between library staff and non-English speaking
+            patrons — instantly, accurately, and with dignity.</span>
+        </p>
+    </div>
+
+    <div class="separator sep-green"></div>
+
+    <div class="grid-2col">
+        <div class="content-block cyan-border">
+            <h3 class="text-cyan">CONTRIBUTORS</h3>
+            <ul>
+                <li class="text-white"><span class="text-yellow">Courtney Wright</span> — Lead Developer &amp; Project Architect</li>
+                <li class="text-white"><span class="text-yellow">Georges River Libraries</span> — Domain Expertise &amp; User Research</li>
+                <li class="text-white"><span class="text-yellow">Georges River Council</span> — Organisational Sponsor</li>
+            </ul>
+        </div>
+        <div class="content-block green-border">
+            <h3 class="text-green">GUIDING PRINCIPLES</h3>
+            <ul>
+                <li class="text-white"><span class="text-green">Inclusivity</span> — Every language matters equally</li>
+                <li class="text-white"><span class="text-green">Practicality</span> — Built for real library workflows</li>
+                <li class="text-white"><span class="text-green">Accessibility</span> — WCAG 2.1 AA compliant design</li>
+                <li class="text-white"><span class="text-green">Scalability</span> — Designed to grow with community needs</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="separator sep-yellow"></div>
+
+    <div class="content-block magenta-border">
+        <h3 class="text-magenta">COMMUNITY CONTEXT</h3>
+        <p class="text-white">
+            The Georges River Local Government Area in southern Sydney is home to
+            speakers of over 60 languages. Mandarin, Cantonese, Nepali, Greek,
+            Arabic, Macedonian, Spanish, Italian, and Indonesian represent the
+            most frequently encountered languages at the library service desk.
+            <span class="text-yellow">Babel Fish transforms this linguistic richness
+            from a challenge into a strength.</span>
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3 — WHAT: THE PRODUCT                                  -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-3">
+    <div class="slide-header">
+        <span class="page-num">P102</span>
+        <span class="section-label">WHAT — The Product</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-red">SLIDE 03 ■ WHAT BABEL FISH DOES</div>
+
+    <div class="content-block yellow-border">
+        <h2 class="text-yellow glow-yellow">A DIGITAL PHRASEBOOK — AND MORE</h2>
+        <p class="text-white">
+            Babel Fish is a full-stack web application that provides instant,
+            accurate translations and audio playback of common library-related
+            enquiries and responses. It bridges the communication gap between
+            staff and patrons from diverse linguistic backgrounds.
+        </p>
+    </div>
+
+    <div class="separator sep-cyan"></div>
+
+    <div class="grid-2col">
+        <div class="content-block cyan-border">
+            <h3 class="text-cyan">CORE FEATURES</h3>
+            <ul>
+                <li class="text-white"><span class="text-yellow">Multilingual Phrasebook</span> — Essential phrases in 9+ community languages</li>
+                <li class="text-white"><span class="text-yellow">Dual-User Modes</span> — Tailored interfaces for staff and customers</li>
+                <li class="text-white"><span class="text-yellow">Text-to-Speech</span> — Native audio playback with correct pronunciation</li>
+                <li class="text-white"><span class="text-yellow">AI Suggestions</span> — Gemini-powered contextual phrase generation</li>
+            </ul>
+        </div>
+        <div class="content-block green-border">
+            <h3 class="text-green">ADVANCED CAPABILITIES</h3>
+            <ul>
+                <li class="text-white"><span class="text-green">Speech Recognition</span> — Real-time voice input via Web Speech API</li>
+                <li class="text-white"><span class="text-green">Interactive Maps</span> — Google Maps directions to Centrelink</li>
+                <li class="text-white"><span class="text-green">QR Code Access</span> — Scannable codes for mobile directions</li>
+                <li class="text-white"><span class="text-green">Firebase Sync</span> — Real-time conversation logging</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="separator sep-magenta"></div>
+
+    <div class="lang-mosaic">
+        <span class="lang-tile bg-red text-white">普通话</span>
+        <span class="lang-tile bg-blue text-white">粤语</span>
+        <span class="lang-tile" style="background:#006600;color:#00FF00;">नेपाली</span>
+        <span class="lang-tile" style="background:#880088;color:#FF00FF;">Ελληνικά</span>
+        <span class="lang-tile" style="background:#006666;color:#00FFFF;">العربية</span>
+        <span class="lang-tile bg-red text-yellow">Македонски</span>
+        <span class="lang-tile bg-blue text-cyan">Español</span>
+        <span class="lang-tile" style="background:#006600;color:#FFFF00;">Italiano</span>
+        <span class="lang-tile" style="background:#880088;color:#FFFFFF;">Bahasa</span>
+        <span class="lang-tile" style="background:#333;color:#00FF00;">English</span>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4 — WHAT: TECHNICAL ARCHITECTURE                       -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-4">
+    <div class="slide-header">
+        <span class="page-num">P103</span>
+        <span class="section-label">WHAT — Architecture</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-red">SLIDE 04 ■ TECHNICAL ARCHITECTURE</div>
+
+    <div class="content-block yellow-border">
+        <h2 class="text-yellow glow-yellow">BUILT ON MODERN, SCALABLE FOUNDATIONS</h2>
+        <p class="text-white">
+            A modular full-stack architecture ensures reliability, maintainability,
+            and the capacity to grow alongside community needs.
+        </p>
+    </div>
+
+    <div class="separator sep-green"></div>
+
+    <div class="ascii-art text-green" style="font-size: 0.6rem;">
+┌─────────────────────────────────────────────────────┐
+│                    CLIENT LAYER                     │
+│  ┌───────────┐ ┌───────────┐ ┌───────────────────┐ │
+│  │  React 18  │ │  Vite 5   │ │  Web Speech API   │ │
+│  └─────┬─────┘ └─────┬─────┘ └────────┬──────────┘ │
+├────────┼─────────────┼────────────────┼─────────────┤
+│        │      SERVICE LAYER           │             │
+│  ┌─────┴─────────────┴────────────────┴───────────┐ │
+│  │            Node.js / Express                    │ │
+│  └───┬──────────┬──────────────┬──────────────┬───┘ │
+├──────┼──────────┼──────────────┼──────────────┼─────┤
+│      │    EXTERNAL SERVICES    │              │     │
+│  ┌───┴────┐ ┌───┴────┐ ┌──────┴─────┐ ┌─────┴───┐ │
+│  │Firebase│ │Gemini  │ │Google Maps │ │QR Server│ │
+│  │  Auth  │ │  API   │ │ Embed API  │ │   API   │ │
+│  └────────┘ └────────┘ └────────────┘ └─────────┘ │
+└─────────────────────────────────────────────────────┘
+    </div>
+
+    <div class="grid-2col">
+        <div class="content-block cyan-border">
+            <h3 class="text-cyan">FRONTEND STACK</h3>
+            <div class="data-row">
+                <span class="text-yellow">Framework</span>
+                <span class="text-white">React 18</span>
+            </div>
+            <div class="data-row">
+                <span class="text-yellow">Build Tool</span>
+                <span class="text-white">Vite 5.0</span>
+            </div>
+            <div class="data-row">
+                <span class="text-yellow">State</span>
+                <span class="text-white">React Hooks</span>
+            </div>
+            <div class="data-row">
+                <span class="text-yellow">Speech</span>
+                <span class="text-white">Web Speech API</span>
+            </div>
+        </div>
+        <div class="content-block green-border">
+            <h3 class="text-green">BACKEND &amp; SERVICES</h3>
+            <div class="data-row">
+                <span class="text-yellow">Runtime</span>
+                <span class="text-white">Node.js 18</span>
+            </div>
+            <div class="data-row">
+                <span class="text-yellow">Server</span>
+                <span class="text-white">Express 4.18</span>
+            </div>
+            <div class="data-row">
+                <span class="text-yellow">Database</span>
+                <span class="text-white">Firebase Firestore</span>
+            </div>
+            <div class="data-row">
+                <span class="text-yellow">AI Engine</span>
+                <span class="text-white">Google Gemini 2.0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-block magenta-border">
+        <h3 class="text-magenta">DEPLOYMENT</h3>
+        <p class="text-white">
+            Continuous deployment via <span class="text-yellow">GitHub Actions</span>
+            to <span class="text-yellow">GitHub Pages</span>. Zero-downtime releases.
+            Firebase handles authentication, real-time data synchronisation,
+            and conversation persistence.
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5 — WHERE: MARKET SECTORS                              -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-5">
+    <div class="slide-header">
+        <span class="page-num">P104</span>
+        <span class="section-label">WHERE — Market Sectors</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-green">SLIDE 05 ■ WHERE IT SERVES</div>
+
+    <div class="content-block yellow-border">
+        <h2 class="text-yellow glow-yellow">TARGET SECTORS &amp; ENVIRONMENTS</h2>
+        <p class="text-white">
+            Babel Fish is purpose-built for frontline public service environments
+            where linguistic diversity meets time-critical information needs.
+        </p>
+    </div>
+
+    <div class="separator sep-cyan"></div>
+
+    <div class="stat-grid">
+        <div class="stat-box" style="border-color: var(--ceefax-yellow);">
+            <span class="stat-num text-yellow">1,700+</span>
+            <span class="stat-label text-white">Public Libraries<br>in Australia</span>
+        </div>
+        <div class="stat-box" style="border-color: var(--ceefax-cyan);">
+            <span class="stat-num text-cyan">60+</span>
+            <span class="stat-label text-white">Languages Spoken<br>in Georges River</span>
+        </div>
+        <div class="stat-box" style="border-color: var(--ceefax-green);">
+            <span class="stat-num text-green">49%</span>
+            <span class="stat-label text-white">Residents Born<br>Overseas (LGA)</span>
+        </div>
+    </div>
+
+    <div class="grid-2col">
+        <div class="content-block cyan-border">
+            <h3 class="text-cyan">PRIMARY SECTORS</h3>
+            <ul>
+                <li class="text-white"><span class="text-yellow">Public Libraries</span> — Front-desk enquiry, digital literacy support, community programmes</li>
+                <li class="text-white"><span class="text-yellow">Local Government</span> — Council customer service centres, community hubs</li>
+                <li class="text-white"><span class="text-yellow">Community Services</span> — Settlement agencies, Centrelink referral pathways</li>
+            </ul>
+        </div>
+        <div class="content-block green-border">
+            <h3 class="text-green">DEPLOYMENT ENVIRONMENTS</h3>
+            <ul>
+                <li class="text-white"><span class="text-green">Service Desks</span> — Desktop &amp; tablet at point-of-service</li>
+                <li class="text-white"><span class="text-green">Roving Staff</span> — Mobile devices on the library floor</li>
+                <li class="text-white"><span class="text-green">Self-Service Kiosks</span> — Customer-facing terminals</li>
+                <li class="text-white"><span class="text-green">Remote Access</span> — Web-based, no installation required</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="separator sep-magenta"></div>
+
+    <div class="content-block magenta-border">
+        <h3 class="text-magenta">GEOGRAPHIC REACH</h3>
+        <p class="text-white">
+            Launching at <span class="text-yellow">Hurstville Library</span>,
+            with planned rollout across all Georges River branch libraries.
+            The web-based architecture enables <span class="text-cyan">seamless adoption
+            by any library system in Australia</span> — and beyond.
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6 — WHERE: USE CASES                                   -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-6">
+    <div class="slide-header">
+        <span class="page-num">P105</span>
+        <span class="section-label">WHERE — Use Cases</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-green">SLIDE 06 ■ USE CASES IN ACTION</div>
+
+    <div class="content-block yellow-border">
+        <h2 class="text-yellow glow-yellow">REAL SCENARIOS, REAL IMPACT</h2>
+        <p class="text-white">
+            Babel Fish is designed around the actual interactions that occur daily
+            at the library service desk. Every feature maps to a genuine need.
+        </p>
+    </div>
+
+    <div class="separator sep-red"></div>
+
+    <div class="content-block cyan-border">
+        <h3 class="text-cyan">STAFF MODE — SERVING WITH CONFIDENCE</h3>
+        <div class="data-row">
+            <span class="text-yellow">General Enquiries</span>
+            <span class="text-white">"Can I help you find something?"</span>
+        </div>
+        <div class="data-row">
+            <span class="text-yellow">Transactional</span>
+            <span class="text-white">"Your library card has expired."</span>
+        </div>
+        <div class="data-row">
+            <span class="text-yellow">Digital Services</span>
+            <span class="text-white">"Let me show you how to connect to Wi-Fi."</span>
+        </div>
+        <div class="data-row">
+            <span class="text-yellow">AI Suggestions</span>
+            <span class="text-white">Contextual phrases for unique situations</span>
+        </div>
+    </div>
+
+    <div class="content-block green-border">
+        <h3 class="text-green">CUSTOMER MODE — SELF-SERVICE ACCESS</h3>
+        <div class="data-row">
+            <span class="text-yellow">General Assistance</span>
+            <span class="text-white">"I need help finding a book."</span>
+        </div>
+        <div class="data-row">
+            <span class="text-yellow">Library Layout</span>
+            <span class="text-white">"Where are the children's books?"</span>
+        </div>
+        <div class="data-row">
+            <span class="text-yellow">Community Resources</span>
+            <span class="text-white">"Are there language classes available?"</span>
+        </div>
+        <div class="data-row">
+            <span class="text-yellow">Centrelink Directions</span>
+            <span class="text-white">Interactive map + QR code for mobile</span>
+        </div>
+    </div>
+
+    <div class="separator sep-yellow"></div>
+
+    <div class="content-block magenta-border">
+        <h3 class="text-magenta">THE BABEL FISH MOMENT</h3>
+        <p class="text-white">
+            A Mandarin-speaking patron approaches the desk. The staff member
+            selects <span class="text-cyan">普通话</span>, taps
+            <span class="text-yellow">"How can I help you today?"</span>, and
+            the device speaks the phrase aloud in fluent Mandarin. The patron
+            smiles, points to the customer mode, and navigates independently.
+            <span class="text-green">Connection achieved. No interpreter required.</span>
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7 — WHEN: ROADMAP                                      -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-7">
+    <div class="slide-header">
+        <span class="page-num">P106</span>
+        <span class="section-label">WHEN — Roadmap</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-magenta">SLIDE 07 ■ DEVELOPMENT ROADMAP</div>
+
+    <div class="content-block yellow-border">
+        <h2 class="text-yellow glow-yellow">FROM PROTOTYPE TO PLATFORM</h2>
+        <p class="text-white">
+            A phased approach ensures stability at each stage while building
+            towards a comprehensive multilingual service platform.
+        </p>
+    </div>
+
+    <div class="separator sep-cyan"></div>
+
+    <div class="timeline-item">
+        <div class="timeline-marker bg-green text-white">PHASE 1<br><span style="font-size:0.65rem;">COMPLETE</span></div>
+        <div class="timeline-content">
+            <h3 class="text-green">FOUNDATION — Core Phrasebook</h3>
+            <p class="text-white">
+                React frontend with 9-language support. Dual staff/customer modes.
+                Text-to-speech engine. Category-based phrase organisation.
+                Firebase authentication. GitHub Pages deployment.
+            </p>
+        </div>
+    </div>
+
+    <div class="timeline-item">
+        <div class="timeline-marker bg-blue text-cyan">PHASE 2<br><span style="font-size:0.65rem;">CURRENT</span></div>
+        <div class="timeline-content">
+            <h3 class="text-cyan">INTELLIGENCE — AI Integration</h3>
+            <p class="text-white">
+                Google Gemini API for contextual phrase generation. Speech
+                recognition via Web Speech API. Real-time conversation logging.
+                Google Maps and QR code integration for wayfinding.
+            </p>
+        </div>
+    </div>
+
+    <div class="timeline-item">
+        <div class="timeline-marker" style="background:#880088;color:#FF00FF;">PHASE 3<br><span style="font-size:0.65rem;">Q3 2026</span></div>
+        <div class="timeline-content">
+            <h3 class="text-magenta">EXPANSION — Offline &amp; Admin</h3>
+            <p class="text-white">
+                Full offline mode with cached phrases. Administrative interface
+                for phrase management. Custom phrase additions by staff.
+                Persistent conversation history across sessions.
+            </p>
+        </div>
+    </div>
+
+    <div class="timeline-item">
+        <div class="timeline-marker" style="background:#660000;color:#FF8800;">PHASE 4<br><span style="font-size:0.65rem;">2027</span></div>
+        <div class="timeline-content">
+            <h3 class="text-orange">PLATFORM — Multi-Modal &amp; Integration</h3>
+            <p class="text-white">
+                Machine learning for improved suggestions. Image and text
+                recognition. Library management system integration.
+                Advanced analytics dashboard. Multi-branch deployment.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8 — WHEN: MILESTONES & METRICS                         -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-8">
+    <div class="slide-header">
+        <span class="page-num">P107</span>
+        <span class="section-label">WHEN — Milestones</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-magenta">SLIDE 08 ■ MILESTONES &amp; SUCCESS METRICS</div>
+
+    <div class="content-block yellow-border">
+        <h2 class="text-yellow glow-yellow">ACHIEVED &amp; AHEAD</h2>
+        <p class="text-white">
+            Key milestones delivered to date and the targets that define
+            success at each stage of the project lifecycle.
+        </p>
+    </div>
+
+    <div class="separator sep-green"></div>
+
+    <div class="content-block cyan-border">
+        <h3 class="text-cyan">MILESTONES DELIVERED ✓</h3>
+        <div class="data-row">
+            <span class="text-green">✓ AUG 2025</span>
+            <span class="text-white">Initial prototype — core phrasebook live</span>
+        </div>
+        <div class="data-row">
+            <span class="text-green">✓ OCT 2025</span>
+            <span class="text-white">Firebase integration — auth &amp; real-time data</span>
+        </div>
+        <div class="data-row">
+            <span class="text-green">✓ DEC 2025</span>
+            <span class="text-white">Gemini AI phrase suggestions deployed</span>
+        </div>
+        <div class="data-row">
+            <span class="text-green">✓ FEB 2026</span>
+            <span class="text-white">Architecture optimisation &amp; security hardening</span>
+        </div>
+    </div>
+
+    <div class="content-block magenta-border">
+        <h3 class="text-magenta">UPCOMING TARGETS</h3>
+        <div class="data-row">
+            <span class="text-orange">→ Q2 2026</span>
+            <span class="text-white">Staff pilot programme — Hurstville branch</span>
+        </div>
+        <div class="data-row">
+            <span class="text-orange">→ Q3 2026</span>
+            <span class="text-white">Offline mode &amp; admin interface launch</span>
+        </div>
+        <div class="data-row">
+            <span class="text-orange">→ Q4 2026</span>
+            <span class="text-white">Multi-branch rollout across Georges River</span>
+        </div>
+        <div class="data-row">
+            <span class="text-orange">→ 2027</span>
+            <span class="text-white">Platform licensing for external library networks</span>
+        </div>
+    </div>
+
+    <div class="separator sep-yellow"></div>
+
+    <div class="stat-grid">
+        <div class="stat-box" style="border-color: var(--ceefax-green);">
+            <span class="stat-num text-green">50%</span>
+            <span class="stat-label text-white">Staff Adoption<br>Within 3 Months</span>
+        </div>
+        <div class="stat-box" style="border-color: var(--ceefax-yellow);">
+            <span class="stat-num text-yellow">10+</span>
+            <span class="stat-label text-white">Phrases Per<br>Session Target</span>
+        </div>
+        <div class="stat-box" style="border-color: var(--ceefax-cyan);">
+            <span class="stat-num text-cyan">&lt;2s</span>
+            <span class="stat-label text-white">Average<br>Load Time</span>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9 — WHY: THE PROBLEM                                   -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-9">
+    <div class="slide-header">
+        <span class="page-num">P108</span>
+        <span class="section-label">WHY — The Problem</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-cyan">SLIDE 09 ■ THE PROBLEM OF LINGUISTIC FRAGMENTATION</div>
+
+    <div class="content-block red-border">
+        <h2 class="text-red">THE SILENCE AT THE DESK</h2>
+        <p class="text-white">
+            Every day, in libraries across Australia, a patron approaches the
+            service desk with a question they cannot ask. The staff member sees
+            the need but cannot bridge the gap. Both parties leave the interaction
+            diminished. <span class="text-yellow">This is linguistic fragmentation —
+            not the absence of language, but the collision of languages without
+            a shared bridge.</span>
+        </p>
+    </div>
+
+    <div class="separator sep-red"></div>
+
+    <div class="stat-grid">
+        <div class="stat-box" style="border-color: var(--ceefax-red);">
+            <span class="stat-num text-red">300+</span>
+            <span class="stat-label text-white">Languages Spoken<br>Across Australia</span>
+        </div>
+        <div class="stat-box" style="border-color: var(--ceefax-orange);">
+            <span class="stat-num text-orange">22%</span>
+            <span class="stat-label text-white">Australians Speak<br>Non-English at Home</span>
+        </div>
+        <div class="stat-box" style="border-color: var(--ceefax-yellow);">
+            <span class="stat-num text-yellow">0</span>
+            <span class="stat-label text-white">Dedicated Library<br>Translation Tools</span>
+        </div>
+    </div>
+
+    <div class="grid-2col">
+        <div class="content-block yellow-border">
+            <h3 class="text-yellow">FOR STAFF</h3>
+            <ul>
+                <li class="text-white">Inability to assist patrons despite willingness</li>
+                <li class="text-white">Reliance on ad-hoc gestures and guesswork</li>
+                <li class="text-white">Professional frustration and service inconsistency</li>
+                <li class="text-white">No purpose-built tools for library contexts</li>
+            </ul>
+        </div>
+        <div class="content-block red-border">
+            <h3 class="text-red">FOR PATRONS</h3>
+            <ul>
+                <li class="text-white">Exclusion from services they are entitled to</li>
+                <li class="text-white">Anxiety and loss of dignity in public settings</li>
+                <li class="text-white">Inability to access critical information</li>
+                <li class="text-white">Dependence on family members as interpreters</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-block magenta-border">
+        <h3 class="text-magenta">THE GAP IN THE MARKET</h3>
+        <p class="text-white">
+            Generic translation apps like Google Translate exist, but they are
+            not designed for <span class="text-cyan">structured service interactions</span>.
+            They lack curated library-specific vocabulary, dual-mode interfaces,
+            category-based phrase organisation, and the ability to generate
+            contextual suggestions. <span class="text-yellow">Libraries need a tool
+            built for libraries.</span>
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10 — WHY: THE IMPERATIVE                               -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-10">
+    <div class="slide-header">
+        <span class="page-num">P109</span>
+        <span class="section-label">WHY — The Imperative</span>
+        <span class="timestamp">26 Feb 2026</span>
+    </div>
+
+    <div class="banner banner-cyan">SLIDE 10 ■ THE CASE FOR UNIVERSAL TRANSLATION</div>
+
+    <div class="content-block yellow-border">
+        <h2 class="text-yellow glow-yellow">WHY THIS MATTERS — NOW</h2>
+        <p class="text-white">
+            Public libraries are the last truly universal civic institution.
+            They are free, open, and serve everyone regardless of background.
+            But "everyone" is an empty promise when a quarter of the population
+            cannot communicate their needs at the service desk.
+        </p>
+    </div>
+
+    <div class="separator sep-yellow"></div>
+
+    <div class="grid-2col">
+        <div class="content-block cyan-border">
+            <h3 class="text-cyan">THE CIVIC ARGUMENT</h3>
+            <p class="text-white">
+                Libraries are gateways to settlement, education, and social
+                inclusion. When language barriers prevent access, we fail the
+                communities who need us most. <span class="text-yellow">Babel Fish
+                is not a convenience — it is an equity tool.</span>
+            </p>
+        </div>
+        <div class="content-block green-border">
+            <h3 class="text-green">THE PRACTICAL ARGUMENT</h3>
+            <p class="text-white">
+                Professional interpreter services are costly, require scheduling,
+                and are impractical for brief transactional queries. Babel Fish
+                provides <span class="text-yellow">instant, free, always-available
+                translation</span> precisely where it is needed.
+            </p>
+        </div>
+    </div>
+
+    <div class="separator sep-magenta"></div>
+
+    <div class="content-block magenta-border">
+        <h3 class="text-magenta">THE TECHNOLOGICAL MOMENT</h3>
+        <p class="text-white">
+            Advances in AI language models, browser-native speech APIs, and
+            cloud infrastructure make it possible — for the first time — to
+            deliver high-quality, real-time, multilingual translation as a
+            lightweight web application. <span class="text-cyan">The technology is
+            ready. The need is urgent. The gap is ours to close.</span>
+        </p>
+    </div>
+
+    <div class="separator sep-yellow"></div>
+
+    <div style="text-align: center; padding: 20px 0;">
+        <h2 class="text-yellow glow-yellow" style="font-size: 1.6rem; margin-bottom: 16px;">
+            "DON'T PANIC."
+        </h2>
+        <p class="text-cyan" style="font-size: 0.85rem; margin-bottom: 8px;">
+            The Babel Fish is here.
+        </p>
+        <div class="separator sep-cyan" style="max-width: 200px; margin: 16px auto;"></div>
+        <p class="text-white" style="font-size: 0.75rem;">
+            Georges River Libraries — Bridging Every Language
+        </p>
+        <div style="margin-top: 16px;">
+            <span class="tag bg-blue text-white">REACT</span>
+            <span class="tag bg-red text-white">FIREBASE</span>
+            <span class="tag" style="background:#006600;color:#00FF00;">GEMINI AI</span>
+            <span class="tag" style="background:#880088;color:#FF00FF;">9+ LANGUAGES</span>
+        </div>
+        <p class="text-green" style="margin-top: 24px; font-size: 0.7rem;">
+            cwrigh13.github.io/babel-fish
+        </p>
+    </div>
+</section>
+
+<!-- Navigation bar -->
+<nav class="nav-bar">
+    <a href="#slide-1">01 TITLE</a>
+    <a href="#slide-2">02 WHO</a>
+    <a href="#slide-3">03 WHAT</a>
+    <a href="#slide-4">04 ARCH</a>
+    <a href="#slide-5">05 WHERE</a>
+    <a href="#slide-6">06 CASES</a>
+    <a href="#slide-7">07 ROAD</a>
+    <a href="#slide-8">08 MILES</a>
+    <a href="#slide-9">09 PROBLEM</a>
+    <a href="#slide-10">10 WHY</a>
+</nav>
+
+</body>
+</html>
