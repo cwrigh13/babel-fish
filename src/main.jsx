@@ -7,7 +7,7 @@ import LiveTestPage from './pages/LiveTestPage';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <BrowserRouter>
+        <BrowserRouter basename="/babel-fish/">
             <Routes>
                 <Route path="/" element={<App />} />
                 <Route path="/live-test-scenarios" element={<LiveTestPage />} />
