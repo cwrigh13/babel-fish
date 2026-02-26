@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -16,16 +16,28 @@ concurrency:
 
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Fetch existing gh-pages content
+        run: |
+          git fetch origin gh-pages:gh-pages || true
+          mkdir -p _site
+          git archive gh-pages | tar -x -C _site 2>/dev/null || true
+
+      - name: Add pitch deck to site
+        run: |
+          cp pitch-deck.html _site/pitch-deck.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          publish_branch: gh-pages
-          keep_files: true
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
