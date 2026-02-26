@@ -48,7 +48,7 @@ const LiveTestPage = () => {
             setError(null);
 
             try {
-                const response = await fetch('/user-testing-scenarios.md');
+                const response = await fetch(`${import.meta.env.BASE_URL}user-testing-scenarios.md`);
                 if (!response.ok) {
                     throw new Error('Unable to load testing scenarios markdown.');
                 }
