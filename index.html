@@ -1,17 +1,2479 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/babel-fish/assets/vite-DcBtz0py.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Georges River Libraries Babel Fish</title>
-  <script type="module" crossorigin src="/babel-fish/assets/index-BtYn46Fe.js"></script>
-  <link rel="stylesheet" crossorigin href="/babel-fish/assets/index-MhE0QSPj.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap');
+        body { 
+            font-family: 'Work Sans', sans-serif; 
+            margin: 0; 
+            background-color: #F9FAFB;
+        }
+        .text-shadow-light { 
+            text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.05); 
+        }
+        .min-h-screen { 
+            min-height: 100vh; 
+        }
+        .max-w-4xl { 
+            max-width: 56rem; 
+        }
+        .mx-auto { 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        .rounded-xl { 
+            border-radius: 0.75rem; 
+        }
+        .shadow-lg { 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+        }
+        .p-6 { 
+            padding: 1.5rem; 
+        }
+        .md\:p-8 { 
+            padding: 2rem; 
+        }
+        .flex { 
+            display: flex; 
+        }
+        .justify-center { 
+            justify-content: center; 
+        }
+        .mb-6 { 
+            margin-bottom: 1.5rem; 
+        }
+        .rounded-lg { 
+            border-radius: 0.5rem; 
+        }
+        .text-4xl { 
+            font-size: 2.25rem; 
+        }
+        .md\:text-5xl { 
+            font-size: 3rem; 
+        }
+        .font-bold { 
+            font-weight: 700; 
+        }
+        .text-center { 
+            text-align: center; 
+        }
+        .gap-4 { 
+            gap: 1rem; 
+        }
+        .mb-8 { 
+            margin-bottom: 2rem; 
+        }
+        .button-base { 
+            padding: 0.75rem 1.5rem; 
+            border-radius: 9999px; 
+            font-weight: 600; 
+            transition: all 0.2s ease-in-out; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+            border: none; 
+        }
+        .mt-2 { 
+            margin-top: 0.5rem; 
+        }
+        .button-primary-active { 
+            background-color: #00A99D; 
+            color: white; 
+            transform: scale(1.05); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+        .button-primary-inactive { 
+            background-color: #E5E7EB; 
+            color: #333333; 
+        }
+        .button-primary-inactive:hover { 
+            background-color: #E0F2F1; 
+            color: #007A70; 
+            transform: translateY(-1px); 
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); 
+        }
+        .button-accent-active { 
+            background-color: #EB001B; 
+            color: white; 
+            transform: scale(1.05); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+        .button-accent-inactive { 
+            background-color: #E5E7EB; 
+            color: #333333; 
+        }
+        .button-accent-inactive:hover { 
+            background-color: #FDE0DF; 
+            color: #EB001B; 
+            transform: translateY(-1px); 
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); 
+        }
+        .grid { 
+            display: grid; 
+        }
+        .grid-cols-1 { 
+            grid-template-columns: repeat(1, minmax(0, 1fr)); 
+        }
+        .md\:grid-cols-2 { 
+            grid-template-columns: repeat(2, minmax(0, 1fr)); 
+        }
+        .gap-6 { 
+            gap: 1.5rem; 
+        }
+        .bg-white { 
+            background-color: white; 
+        }
+        .p-4 { 
+            padding: 1rem; 
+        }
+        .rounded-lg { 
+            border-radius: 0.5rem; 
+        }
+        .border { 
+            border-width: 1px; 
+        }
+        .border-gray-200 { 
+            border-color: #e5e7eb; 
+        }
+        .text-lg { 
+            font-size: 1.125rem; 
+        }
+        .font-semibold { 
+            font-weight: 600; 
+        }
+        .mb-2 { 
+            margin-bottom: 0.5rem; 
+        }
+        .text-gray-600 { 
+            color: #4b5563; 
+        }
+        .text-sm { 
+            font-size: 0.875rem; 
+        }
+        .phrase-card { 
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; /* rounded-lg */ 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start; /* Align content to the start (left) */ 
+            transition: all 0.2s ease-in-out; 
+        }
+        .phrase-card:hover { 
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.12); 
+            transform: translateY(-2px); 
+        }
+        .phrase-list-grid { /* New class for grid layout */ 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* Fixed two columns */
+            gap: 1rem; /* Gap between cards */ 
+            padding: 0 1rem; /* Add equal padding on left and right */
+        }
+        @media (max-width: 640px) { 
+            .phrase-list-grid { 
+                grid-template-columns: 1fr; 
+            } 
+        }
+        .category-section { 
+            background-color: #E0F2F1; 
+            padding: 1.5rem 2rem; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+        }
+        .staff-category-button-active { 
+            background-color: #00A99D; 
+            color: white; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+        }
+        .staff-category-button-inactive { 
+            background-color: #F1F3F4; 
+            color: #3C4043; 
+        }
+        .staff-category-button-inactive:hover { 
+            background-color: #E8EAED; 
+            color: #00A99D; 
+        }
+        .customer-category-button-active { 
+            background-color: #00A99D; 
+            color: white; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+        }
+        .customer-category-button-inactive { 
+            background-color: #F1F3F4; 
+            color: #3C4043; 
+        }
+        .customer-category-button-inactive:hover { 
+            background-color: #E8EAED; 
+            color: #00A99D; 
+        }
+        .language-buttons-container { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 1rem; 
+        }
+        .language-buttons-row { 
+            display: flex; 
+            justify-content: center; 
+            gap: 0.75rem; 
+            flex-wrap: wrap; 
+        }
+        .language-button { 
+            padding: 0.625rem 1.25rem; 
+            border-radius: 9999px; 
+            font-weight: 500; 
+            font-size: 0.875rem; 
+            transition: all 0.2s ease-in-out; 
+            border: none; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: inline-block; 
+            text-align: center; 
+            min-width: 90px; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+        }
+        .language-button-active { 
+            background-color: #00A99D; 
+            color: white; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+        }
+        .language-button-inactive { 
+            background-color: #F1F3F4; 
+            color: #3C4043; 
+        }
+        .language-button-inactive:hover { 
+            background-color: #E8EAED; 
+            color: #00A99D; 
+        }
+        .cursor-pointer { 
+            cursor: pointer; 
+        }
+        .flex-1 { 
+            flex: 1 1 0%; 
+        }
+        .text-left { 
+            text-align: left; 
+        }
+        .text-base { 
+            font-size: 1rem; 
+        }
+        .font-medium { 
+            font-weight: 500; 
+        }
+        .mb-1 { 
+            margin-bottom: 0.25rem; 
+        }
+        .flex-shrink-0 { 
+            flex-shrink: 0; 
+        }
+        .p-3 { 
+            padding: 0.75rem; 
+        }
+        .rounded-full { 
+            border-radius: 9999px; 
+        }
+        .shadow-md { 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
+        }
+        .transition-transform { 
+            transition-property: transform; 
+        }
+        .transform { 
+            transform: translateZ(0); 
+        }
+        .hover\:scale-105:hover { 
+            transform: scale(1.05); 
+        }
+        .focus\:outline-none:focus { 
+            outline: 2px solid transparent; 
+            outline-offset: 2px; 
+        }
+        .focus\:ring-2:focus { 
+            box-shadow: 0 0 0 2px rgba(0, 169, 157, 0.5); 
+        }
+        .focus\:ring-opacity-75:focus { 
+            box-shadow: 0 0 0 2px rgba(0, 169, 157, 0.75); 
+        }
+        .popup-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background-color: rgba(0, 0, 0, 0.7); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000; 
+        }
+        .popup-content { 
+            background-color: white; 
+            padding: 2rem; 
+            border-radius: 1rem; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+            text-align: center; 
+            position: relative; 
+            max-width: 90vw; 
+            max-height: 90vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .popup-close { 
+            position: absolute; 
+            top: 0.75rem; 
+            right: 0.75rem; 
+            background: none; 
+            border: none; 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+            color: #333333; 
+            padding: 0.25rem; 
+            line-height: 1; 
+        }
+        .text-2xl { 
+            font-size: 1.5rem; 
+        }
+        .text-teal-800 { 
+            color: #115e59; 
+        }
+        .mb-4 { 
+            margin-bottom: 1rem; 
+        }
+        .text-gray-700 { 
+            color: #374151; 
+        }
+        .w-48 { 
+            width: 12rem; 
+        }
+        .h-48 { 
+            height: 12rem; 
+        }
+        .object-contain { 
+            object-fit: contain; 
+        }
+        .mx-auto { 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        .rounded-md { 
+            border-radius: 0.375rem; 
+        }
+        .mt-4 { 
+            margin-top: 1rem; 
+        }
+        .text-gray-500 { 
+            color: #6b7280; 
+        }
+        .hidden { 
+            display: none; 
+        }
+        .block { 
+            display: block; 
+        }
+        .w-full { 
+            width: 100%; 
+        }
+        .h-300 { 
+            height: 300px; 
+        }
+        .border-0 { 
+            border: 0; 
+        }
+        .loading-lazy { 
+            loading: lazy; 
+        }
+        .no-referrer-when-downgrade { 
+            referrerpolicy: no-referrer-when-downgrade; 
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @media (min-width: 768px) {
+            .md\:p-8 { 
+                padding: 2rem; 
+            }
+            .md\:text-5xl { 
+                font-size: 3rem; 
+            }
+            .md\:grid-cols-2 { 
+                grid-template-columns: repeat(2, minmax(0, 1fr)); 
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <div id="root"></div>
-</body>
+    <div id="root"></div>
 
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Custom brand colours (approximated from the Georges River Council website)
+        const brandColors = {
+            primaryTeal: '#00A99D',
+            darkTeal: '#007A70',
+            lightTealBackground: '#E0F2F1',
+            accentRed: '#EB001B',
+            lightRedBackground: '#FDE0DF',
+            darkGreyText: '#333333',
+            mediumGrey: '#6B7280',
+            lightGreyBackground: '#F9FAFB',
+            filterButtonActiveBlue: '#4285F4',
+            filterButtonInactiveBg: '#F1F3F4',
+            filterButtonInactiveText: '#3C4043',
+            filterButtonHoverBg: '#E8EAED',
+        };
+
+        // Mapping of display names to BCP-47 language codes for SpeechSynthesisUtterance
+        const LANGUAGE_CODES = {
+            'Mandarin': { code: 'zh-CN', nativeName: '普通话' },
+            'Cantonese': { code: 'zh-HK', nativeName: '粤语' },
+            'Nepali': { code: 'ne-NP', nativeName: 'नेपाली' },
+            'Greek': { code: 'el-GR', nativeName: 'Ελληνικά' },
+            'Arabic': { code: 'ar-SA', nativeName: 'العربية' },
+            'Macedonian': { code: 'mk-MK', nativeName: 'Македонски' },
+            'Spanish': { code: 'es-ES', nativeName: 'Español' },
+            'Italian': { code: 'it-IT', nativeName: 'Italiano' },
+            'Indonesian': { code: 'id-ID', nativeName: 'Bahasa Indonesia' },
+            'English': { code: 'en-US', nativeName: 'English' },
+        };
+
+        // Speaker icon SVG
+        const speakerIcon = (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+        );
+
+        function App() {
+            // Load saved state from localStorage or use defaults
+            const getSavedState = (key, defaultValue) => {
+                try {
+                    const saved = localStorage.getItem(`babelFish_${key}`);
+                    return saved ? JSON.parse(saved) : defaultValue;
+                } catch (error) {
+                    console.warn(`Error loading saved state for ${key}:`, error);
+                    return defaultValue;
+                }
+            };
+
+            const [currentMode, setCurrentMode] = useState(() => getSavedState('currentMode', 'staff'));
+            const [showQrPopup, setShowQrPopup] = useState(false);
+            const [qrPopupType, setQrPopupType] = useState('');
+            const [showLanguageChoicePopup, setShowLanguageChoicePopup] = useState(false);
+            const [showLanguagePreferencePopup, setShowLanguagePreferencePopup] = useState(false);
+            const [languagePreferencePopupType, setLanguagePreferencePopupType] = useState('mandarin');
+            const [staffLanguage, setStaffLanguage] = useState(() => getSavedState('staffLanguage', 'Mandarin'));
+            const [customerLanguage, setCustomerLanguage] = useState(() => getSavedState('customerLanguage', 'Mandarin'));
+            const [staffSubcategoryFilter, setStaffSubcategoryFilter] = useState(() => getSavedState('staffSubcategoryFilter', 'All'));
+            const [customerSubcategoryFilter, setCustomerSubcategoryFilter] = useState(() => getSavedState('customerSubcategoryFilter', 'All'));
+            const [userId, setUserId] = useState('Loading...');
+            const [isAuthReady, setIsAuthReady] = useState(false);
+            const [phrases, setPhrases] = useState([]);
+            const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+            const [currentPlayingText, setCurrentPlayingText] = useState('');
+
+            // Sample phrases data (simplified version of the full database)
+            const samplePhrases = [
+
+                {
+                    id: '21',
+                    english: 'Do you prefer to speak Mandarin or Cantonese?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您更喜欢说普通话还是粤语？',
+                        'zh-HK': '您更喜歡說普通話還是粵語？',
+                        'ne-NP': 'तपाईं मन्दारिन वा क्यान्टोनीज बोल्न रुचाउनुहुन्छ?',
+                        'el-GR': 'Προτιμάτε να μιλάτε Μανδαρινικά ή Καντονέζικα;',
+                        'ar-SA': 'هل تفضل التحدث بالماندرين أم الكانتونية؟',
+                        'mk-MK': 'Дали преферирате да зборувате мандарински или кантонски?',
+                        'es-ES': '¿Prefiere hablar mandarín o cantonés?',
+                        'it-IT': 'Preferisce parlare mandarino o cantonese?',
+                        'id-ID': 'Apakah Anda lebih suka berbicara Mandarin atau Kanton?'
+                    }
+                },
+                {
+                    id: '22',
+                    english: 'Do you prefer to speak Cantonese or Mandarin?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您更喜欢说粤语还是普通话？',
+                        'zh-HK': '您更喜歡說粵語還是普通話？',
+                        'ne-NP': 'तपाईं क्यान्टोनीज वा मन्दारिन बोल्न रुचाउनुहुन्छ?',
+                        'el-GR': 'Προτιμάτε να μιλάτε Καντονέζικα ή Μανδαρινικά;',
+                        'ar-SA': 'هل تفضل التحدث بالكانتونية أم الماندرين؟',
+                        'mk-MK': 'Дали преферирате да зборувате кантонски или мандарински?',
+                        'es-ES': '¿Prefiere hablar cantonés o mandarín?',
+                        'it-IT': 'Preferisce parlare cantonese o mandarino?',
+                        'id-ID': 'Apakah Anda lebih suka berbicara Kanton atau Mandarin?'
+                    }
+                },
+                {
+                    id: '23',
+                    english: 'Unfortunately we do not have any staff who speak Cantonese',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '很抱歉，我们没有会说粤语的员工',
+                        'zh-HK': '很抱歉，我們沒有會說粵語的員工',
+                        'ne-NP': 'दुर्भाग्यवश, हाम्रो यहाँ कुनै कर्मचारी क्यान्टोनीज बोल्न सक्दैनन्',
+                        'el-GR': 'Δυστυχώς, δεν έχουμε προσωπικό που μιλάει Καντονέζικα',
+                        'ar-SA': 'للأسف، ليس لدينا موظفون يتحدثون الكانتونية',
+                        'mk-MK': 'За жал, немаме персонал што зборува кантонски',
+                        'es-ES': 'Desafortunadamente, no tenemos personal que hable cantonés',
+                        'it-IT': 'Sfortunatamente, non abbiamo personale che parli cantonese',
+                        'id-ID': 'Sayangnya, kami tidak memiliki staf yang berbicara Kanton'
+                    }
+                },
+
+
+                {
+                    id: '1',
+                    english: 'Do you need help with printing, scanning or photocopying?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您需要帮助打印、扫描或复印吗？',
+                        'zh-HK': '您需要幫助打印、掃描或複印嗎？',
+                        'ne-NP': 'तपाईंलाई प्रिन्टिङ, स्क्यानिङ वा फोटोकपी गर्न मद्दत चाहिन्छ?',
+                        'el-GR': 'Χρειάζεστε βοήθεια με την εκτύπωση, σάρωση ή φωτοτυπία;',
+                        'ar-SA': 'هل تحتاج مساعدة في الطباعة أو المسح الضوئي أو النسخ؟',
+                        'mk-MK': 'Дали ви треба помош со печатење, скенирање или фотокопирање?',
+                        'es-ES': '¿Necesita ayuda con impresión, escaneo o fotocopiado?',
+                        'it-IT': 'Ha bisogno di aiuto con stampa, scansione o fotocopiatura?',
+                        'id-ID': 'Apakah Anda memerlukan bantuan dengan pencetakan, pemindaian atau fotokopi?'
+                    }
+                },
+                {
+                    id: '6',
+                    english: 'Is this for return?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '这是要归还的吗？',
+                        'zh-HK': '這是要歸還的嗎？',
+                        'ne-NP': 'यो फिर्ता गर्नको लागि हो?',
+                        'el-GR': 'Είναι αυτό για επιστροφή;',
+                        'ar-SA': 'هل هذا للإرجاع؟',
+                        'mk-MK': 'Дали ова е за враќање?',
+                        'es-ES': '¿Es esto para devolver?',
+                        'it-IT': 'Questo è per la restituzione?',
+                        'id-ID': 'Apakah ini untuk dikembalikan?'
+                    }
+                },
+                {
+                    id: '7',
+                    english: 'Would you like to renew these items?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您想续借这些物品吗？',
+                        'zh-HK': '您想續借這些物品嗎？',
+                        'ne-NP': 'तपाईं यी वस्तुहरू नवीनीकरण गर्न चाहनुहुन्छ?',
+                        'el-GR': 'Θα θέλατε να ανανεώσετε αυτά τα αντικείμενα;',
+                        'ar-SA': 'هل تريد تجديد هذه العناصر؟',
+                        'mk-MK': 'Дали би сакале да ги обновите овие предмети?',
+                        'es-ES': '¿Le gustaría renovar estos artículos?',
+                        'it-IT': 'Vorrebbe rinnovare questi articoli?',
+                        'id-ID': 'Apakah Anda ingin memperbarui item-item ini?'
+                    }
+                },
+                {
+                    id: '8',
+                    english: 'I will find someone to help translate',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '我会找人帮您翻译。',
+                        'zh-HK': '我會找人幫您翻譯。',
+                        'ne-NP': 'म अनुवाद गर्न मद्दत गर्न कसैलाई भेटाउनेछु।',
+                        'el-GR': 'Θα βρω κάποιον να βοηθήσει με τη μετάφραση.',
+                        'ar-SA': 'سأجد شخصاً للمساعدة في الترجمة.',
+                        'mk-MK': 'Ќе најдам некој да помогне со превод.',
+                        'es-ES': 'Encontraré a alguien para ayudar con la traducción.',
+                        'it-IT': 'Troverò qualcuno per aiutare con la traduzione.',
+                        'id-ID': 'Saya akan mencari seseorang untuk membantu menerjemahkan.'
+                    }
+                },
+                {
+                    id: '13',
+                    english: 'Follow me please',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '请跟我来。',
+                        'zh-HK': '請跟我來。',
+                        'ne-NP': 'कृपया मलाई पछ्याउनुहोस्।',
+                        'el-GR': 'Παρακαλώ ακολουθήστε με.',
+                        'ar-SA': 'يرجى اتباعي.',
+                        'mk-MK': 'Ве молиме следете ме.',
+                        'es-ES': 'Por favor sígame.',
+                        'it-IT': 'Per favore seguitemi.',
+                        'id-ID': 'Silakan ikuti saya.'
+                    }
+                },
+                {
+                    id: '14',
+                    english: 'Please wait here',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '请在这里等。',
+                        'zh-HK': '請在這裡等。',
+                        'ne-NP': 'कृपया यहाँ प्रतीक्षा गर्नुहोस्।',
+                        'el-GR': 'Παρακαλώ περιμένετε εδώ.',
+                        'ar-SA': 'يرجى الانتظار هنا.',
+                        'mk-MK': 'Ве молиме почекајте тука.',
+                        'es-ES': 'Por favor espere aquí.',
+                        'it-IT': 'Per favore aspetti qui.',
+                        'id-ID': 'Silakan tunggu di sini.'
+                    }
+                },
+                {
+                    id: '15',
+                    english: 'Is this your first time to this library?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '这是您第一次来这个图书馆吗？',
+                        'zh-HK': '這是您第一次來這個圖書館嗎？',
+                        'ne-NP': 'यो तपाईंको यो पुस्तकालयमा पहिलो पटक हो?',
+                        'el-GR': 'Είναι αυτή η πρώτη σας επίσκεψη σε αυτή τη βιβλιοθήκη;',
+                        'ar-SA': 'هل هذه أول مرة لك في هذه المكتبة؟',
+                        'mk-MK': 'Дали ова е прв пат во оваа библиотека?',
+                        'es-ES': '¿Es la primera vez que viene a esta biblioteca?',
+                        'it-IT': 'È la sua prima volta in questa biblioteca?',
+                        'id-ID': 'Apakah ini pertama kalinya Anda ke perpustakaan ini?'
+                    }
+                },
+                {
+                    id: '16',
+                    english: 'Do you understand?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您明白吗？',
+                        'zh-HK': '您明白嗎？',
+                        'ne-NP': 'तपाईं बुझ्नुहुन्छ?',
+                        'el-GR': 'Καταλαβαίνετε;',
+                        'ar-SA': 'هل تفهم؟',
+                        'mk-MK': 'Дали разбирате?',
+                        'es-ES': '¿Entiende?',
+                        'it-IT': 'Capisce?',
+                        'id-ID': 'Apakah Anda mengerti?'
+                    }
+                },
+                {
+                    id: '17',
+                    english: 'Is this correct?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '这是正确的吗？',
+                        'zh-HK': '這是正確的嗎？',
+                        'ne-NP': 'यो सही छ?',
+                        'el-GR': 'Είναι αυτό σωστό;',
+                        'ar-SA': 'هل هذا صحيح؟',
+                        'mk-MK': 'Дали ова е точно?',
+                        'es-ES': '¿Es esto correcto?',
+                        'it-IT': 'È corretto?',
+                        'id-ID': 'Apakah ini benar?'
+                    }
+                },
+                {
+                    id: '18',
+                    english: 'Is this yours?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '这是您的吗？',
+                        'zh-HK': '這是您的嗎？',
+                        'ne-NP': 'यो तपाईंको हो?',
+                        'el-GR': 'Είναι αυτό δικό σας;',
+                        'ar-SA': 'هل هذا لك؟',
+                        'mk-MK': 'Дали ова е ваше?',
+                        'es-ES': '¿Es esto suyo?',
+                        'it-IT': 'È questo suo?',
+                        'id-ID': 'Apakah ini milik Anda?'
+                    }
+                },
+                {
+                    id: '19',
+                    english: 'Would you like to join this library?',
+                    type: 'staff',
+                    category: 'General Enquiries',
+                    translations: {
+                        'zh-CN': '您想加入这个图书馆吗？',
+                        'zh-HK': '您想加入這個圖書館嗎？',
+                        'ne-NP': 'तपाईं यो पुस्तकालयमा सामेल हुन चाहनुहुन्छ?',
+                        'el-GR': 'Θα θέλατε να εγγραφείτε σε αυτή τη βιβλιοθήκη;',
+                        'ar-SA': 'هل تريد الانضمام إلى هذه المكتبة؟',
+                        'mk-MK': 'Дали би сакале да се приклучите во оваа библиотека?',
+                        'es-ES': '¿Le gustaría unirse a esta biblioteca?',
+                        'it-IT': 'Vorrebbe iscriversi a questa biblioteca?',
+                        'id-ID': 'Apakah Anda ingin bergabung dengan perpustakaan ini?'
+                    }
+                },
+                {
+                    id: '9',
+                    english: 'You do not need to be a member to print, photocopy or scan.',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您不需要成为会员就可以打印、复印或扫描。',
+                        'zh-HK': '您不需要成為會員就可以打印、複印或掃描。',
+                        'ne-NP': 'तपाईं प्रिन्ट, फोटोकपी वा स्क्यान गर्न सदस्य हुनु पर्दैन।',
+                        'el-GR': 'Δεν χρειάζεται να είστε μέλος για να εκτυπώσετε, φωτοτυπήσετε ή σκανάρετε.',
+                        'ar-SA': 'لا تحتاج إلى أن تكون عضواً للطباعة أو النسخ أو المسح الضوئي.',
+                        'mk-MK': 'Не мора да бидете член за печатење, фотокопирање или скенирање.',
+                        'es-ES': 'No necesita ser miembro para imprimir, fotocopiar o escanear.',
+                        'it-IT': 'Non è necessario essere membro per stampare, fotocopiare o scansionare.',
+                        'id-ID': 'Anda tidak perlu menjadi anggota untuk mencetak, fotokopi atau memindai.'
+                    }
+                },
+                {
+                    id: '10',
+                    english: 'You do not need to be a member to use a computer.',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您不需要成为会员就可以使用电脑。',
+                        'zh-HK': '您不需要成為會員就可以使用電腦。',
+                        'ne-NP': 'तपाईं कम्प्युटर प्रयोग गर्न सदस्य हुनु पर्दैन।',
+                        'el-GR': 'Δεν χρειάζεται να είστε μέλος για να χρησιμοποιήσετε υπολογιστή.',
+                        'ar-SA': 'لا تحتاج إلى أن تكون عضواً لاستخدام الكمبيوتر.',
+                        'mk-MK': 'Не мора да бидете член за користење компјутер.',
+                        'es-ES': 'No necesita ser miembro para usar una computadora.',
+                        'it-IT': 'Non è necessario essere membro per usare un computer.',
+                        'id-ID': 'Anda tidak perlu menjadi anggota untuk menggunakan komputer.'
+                    }
+                },
+                {
+                    id: '11',
+                    english: 'Do you need to print?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您需要打印吗？',
+                        'zh-HK': '您需要打印嗎？',
+                        'ne-NP': 'तपाईंलाई प्रिन्ट चाहिन्छ?',
+                        'el-GR': 'Χρειάζεστε εκτύπωση;',
+                        'ar-SA': 'هل تحتاج إلى طباعة؟',
+                        'mk-MK': 'Дали треба да печатите?',
+                        'es-ES': '¿Necesita imprimir?',
+                        'it-IT': 'Ha bisogno di stampare?',
+                        'id-ID': 'Apakah Anda perlu mencetak?'
+                    }
+                },
+                {
+                    id: '12',
+                    english: 'How many copies?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '需要多少份？',
+                        'zh-HK': '需要多少份？',
+                        'ne-NP': 'कति प्रतिलिपिहरू?',
+                        'el-GR': 'Πόσες αντίγραφα;',
+                        'ar-SA': 'كم نسخة؟',
+                        'mk-MK': 'Колку копии?',
+                        'es-ES': '¿Cuántas copias?',
+                        'it-IT': 'Quante copie?',
+                        'id-ID': 'Berapa banyak salinan?'
+                    }
+                },
+                {
+                    id: '17',
+                    english: 'Do you want black and white or colour?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您想要黑白还是彩色？',
+                        'zh-HK': '您想要黑白還是彩色？',
+                        'ne-NP': 'तपाईं कालो र सेतो चाहनुहुन्छ वा रंग?',
+                        'el-GR': 'Θέλετε ασπρόμαυρο ή έγχρωμο;',
+                        'ar-SA': 'هل تريد أبيض وأسود أم ملون؟',
+                        'mk-MK': 'Дали сакате црно-бело или во боја?',
+                        'es-ES': '¿Quiere blanco y negro o color?',
+                        'it-IT': 'Vuole bianco e nero o a colori?',
+                        'id-ID': 'Apakah Anda ingin hitam putih atau berwarna?'
+                    }
+                },
+                {
+                    id: '18',
+                    english: 'Do you want to scan?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您想要扫描吗？',
+                        'zh-HK': '您想要掃描嗎？',
+                        'ne-NP': 'तपाईं स्क्यान गर्न चाहनुहुन्छ?',
+                        'el-GR': 'Θέλετε να σκανάρετε;',
+                        'ar-SA': 'هل تريد المسح الضوئي؟',
+                        'mk-MK': 'Дали сакате да скенирате?',
+                        'es-ES': '¿Quiere escanear?',
+                        'it-IT': 'Vuole scansionare?',
+                        'id-ID': 'Apakah Anda ingin memindai?'
+                    }
+                },
+                {
+                    id: '19',
+                    english: 'Do you have a USB disc?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您有USB磁盘吗？',
+                        'zh-HK': '您有USB磁碟嗎？',
+                        'ne-NP': 'तपाईंसँग USB डिस्क छ?',
+                        'el-GR': 'Έχετε δίσκο USB;',
+                        'ar-SA': 'هل لديك قرص USB؟',
+                        'mk-MK': 'Дали имате USB диск?',
+                        'es-ES': '¿Tiene un disco USB?',
+                        'it-IT': 'Ha un disco USB?',
+                        'id-ID': 'Apakah Anda memiliki disk USB?'
+                    }
+                },
+                {
+                    id: '20',
+                    english: 'Do you want to photocopy?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您想要复印吗？',
+                        'zh-HK': '您想要複印嗎？',
+                        'ne-NP': 'तपाईं फोटोकपी गर्न चाहनुहुन्छ?',
+                        'el-GR': 'Θέλετε να φωτοτυπήσετε;',
+                        'ar-SA': 'هل تريد النسخ؟',
+                        'mk-MK': 'Дали сакате да фотокопирате?',
+                        'es-ES': '¿Quiere fotocopiar?',
+                        'it-IT': 'Vuole fotocopiare?',
+                        'id-ID': 'Apakah Anda ingin fotokopi?'
+                    }
+                },
+                {
+                    id: '21',
+                    english: 'You can pay by cash or by credit card',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您可以用现金或信用卡支付。',
+                        'zh-HK': '您可以用現金或信用卡支付。',
+                        'ne-NP': 'तपाईं नगद वा क्रेडिट कार्डले तिर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να πληρώσετε με μετρητά ή με πιστωτική κάρτα.',
+                        'ar-SA': 'يمكنك الدفع نقداً أو ببطاقة الائتمان.',
+                        'mk-MK': 'Можете да платите со готовина или со кредитна картичка.',
+                        'es-ES': 'Puede pagar en efectivo o con tarjeta de crédito.',
+                        'it-IT': 'Può pagare in contanti o con carta di credito.',
+                        'id-ID': 'Anda dapat membayar dengan tunai atau kartu kredit.'
+                    }
+                },
+                {
+                    id: '22',
+                    english: 'Do you know the PIN/password for your library card?',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您知道您的借书证的PIN/密码吗？',
+                        'zh-HK': '您知道您的借書證的PIN/密碼嗎？',
+                        'ne-NP': 'तपाईं आफ्नो पुस्तकालय कार्डको PIN/पासवर्ड जान्नुहुन्छ?',
+                        'el-GR': 'Ξέρετε τον PIN/κωδικό πρόσβασης της κάρτας βιβλιοθήκης σας;',
+                        'ar-SA': 'هل تعرف رمز PIN/كلمة المرور لبطاقة المكتبة الخاصة بك؟',
+                        'mk-MK': 'Дали ја знаете PIN/лозинката за вашата библиотекарска картичка?',
+                        'es-ES': '¿Sabe el PIN/contraseña de su tarjeta de biblioteca?',
+                        'it-IT': 'Conosce il PIN/password della sua tessera della biblioteca?',
+                        'id-ID': 'Apakah Anda tahu PIN/password untuk kartu perpustakaan Anda?'
+                    }
+                },
+                {
+                    id: '23',
+                    english: 'I will reset your PIN/password.',
+                    type: 'staff',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我将重置您的PIN/密码。',
+                        'zh-HK': '我將重置您的PIN/密碼。',
+                        'ne-NP': 'म तपाईंको PIN/पासवर्ड रिसेट गर्नेछु।',
+                        'el-GR': 'Θα επαναφέρω τον PIN/κωδικό πρόσβασής σας.',
+                        'ar-SA': 'سأعيد تعيين رمز PIN/كلمة المرور الخاصة بك.',
+                        'mk-MK': 'Ќе ја ресетирам вашата PIN/лозинка.',
+                        'es-ES': 'Restableceré su PIN/contraseña.',
+                        'it-IT': 'Reimposterò il suo PIN/password.',
+                        'id-ID': 'Saya akan mengatur ulang PIN/password Anda.'
+                    }
+                },
+                {
+                    id: '2',
+                    english: 'Do you have a library card?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '您有借书证吗？',
+                        'zh-HK': '您有借書證嗎？',
+                        'ne-NP': 'तपाईंसँग पुस्तकालय कार्ड छ?',
+                        'el-GR': 'Έχετε κάρτα βιβλιοθήκης;',
+                        'ar-SA': 'هل لديك بطاقة مكتبة؟',
+                        'mk-MK': 'Дали имате библиотекарска картичка?',
+                        'es-ES': '¿Tienes una tarjeta de biblioteca?',
+                        'it-IT': 'Hai una tessera della biblioteca?',
+                        'id-ID': 'Apakah Anda memiliki kartu perpustakaan?'
+                    }
+                },
+                {
+                    id: '21',
+                    english: 'May I have your library card?',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我可以看看您的借书证吗？',
+                        'zh-HK': '我可以看看您的借書證嗎？',
+                        'ne-NP': 'म तपाईंको पुस्तकालय कार्ड हेर्न सक्छु?',
+                        'el-GR': 'Μπορώ να δω την κάρτα βιβλιοθήκης σας;',
+                        'ar-SA': 'هل يمكنني رؤية بطاقة المكتبة الخاصة بك؟',
+                        'mk-MK': 'Можам ли да ја видам вашата библиотекарска картичка?',
+                        'es-ES': '¿Puedo ver su tarjeta de biblioteca?',
+                        'it-IT': 'Posso vedere la sua tessera della biblioteca?',
+                        'id-ID': 'Bolehkah saya melihat kartu perpustakaan Anda?'
+                    }
+                },
+                {
+                    id: '22',
+                    english: 'You have overdue items on your account',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '您的账户上有逾期物品。',
+                        'zh-HK': '您的賬戶上有逾期物品。',
+                        'ne-NP': 'तपाईंको खातामा ओभरड्यु आइटमहरू छन्।',
+                        'el-GR': 'Έχετε καθυστερημένα αντικείμενα στον λογαριασμό σας.',
+                        'ar-SA': 'لديك عناصر متأخرة في حسابك.',
+                        'mk-MK': 'Имате задоцнети предмети на вашата сметка.',
+                        'es-ES': 'Tiene artículos vencidos en su cuenta.',
+                        'it-IT': 'Ha articoli scaduti nel suo account.',
+                        'id-ID': 'Anda memiliki item yang terlambat di akun Anda.'
+                    }
+                },
+                {
+                    id: '23',
+                    english: 'You can return library items to libraries at Hurstville, Kogarah, Penshurst, Oately or South Hurstville.',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '您可以将图书馆物品归还到Hurstville、Kogarah、Penshurst、Oately或South Hurstville的图书馆。',
+                        'zh-HK': '您可以將圖書館物品歸還到Hurstville、Kogarah、Penshurst、Oately或South Hurstville的圖書館。',
+                        'ne-NP': 'तपाईं पुस्तकालय वस्तुहरू Hurstville, Kogarah, Penshurst, Oately वा South Hurstville मा फिर्ता गर्न सक्नुहुन्छ।',
+                        'el-GR': 'Μπορείτε να επιστρέψετε αντικείμενα βιβλιοθήκης σε βιβλιοθήκες στο Hurstville, Kogarah, Penshurst, Oately ή South Hurstville.',
+                        'ar-SA': 'يمكنك إرجاع عناصر المكتبة إلى المكتبات في Hurstville أو Kogarah أو Penshurst أو Oately أو South Hurstville.',
+                        'mk-MK': 'Можете да вратите библиотекарски предмети во библиотеки во Hurstville, Kogarah, Penshurst, Oately или South Hurstville.',
+                        'es-ES': 'Puede devolver artículos de la biblioteca a las bibliotecas en Hurstville, Kogarah, Penshurst, Oately o South Hurstville.',
+                        'it-IT': 'Può restituire articoli della biblioteca alle biblioteche di Hurstville, Kogarah, Penshurst, Oately o South Hurstville.',
+                        'id-ID': 'Anda dapat mengembalikan item perpustakaan ke perpustakaan di Hurstville, Kogarah, Penshurst, Oately atau South Hurstville.'
+                    }
+                },
+                {
+                    id: '24',
+                    english: 'Your library card has expired. I need to see identification to renew your card',
+                    type: 'staff',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '您的借书证已过期。我需要查看身份证明来续借您的卡。',
+                        'zh-HK': '您的借書證已過期。我需要查看身份證明來續借您的卡。',
+                        'ne-NP': 'तपाईंको पुस्तकालय कार्ड म्याद सकिएको छ। मलाई तपाईंको कार्ड नवीनीकरण गर्न पहिचान हेर्नु पर्छ।',
+                        'el-GR': 'Η κάρτα βιβλιοθήκης σας έχει λήξει. Χρειάζομαι να δω ταυτότητα για να ανανεώσω την κάρτα σας.',
+                        'ar-SA': 'بطاقة المكتبة الخاصة بك منتهية الصلاحية. أحتاج إلى رؤية الهوية لتجديد بطاقتك.',
+                        'mk-MK': 'Вашата библиотекарска картичка е истечена. Треба да вида документ за идентификација за да ја обновам вашата картичка.',
+                        'es-ES': 'Su tarjeta de biblioteca ha expirado. Necesito ver identificación para renovar su tarjeta.',
+                        'it-IT': 'La sua tessera della biblioteca è scaduta. Devo vedere un documento d\'identità per rinnovare la sua tessera.',
+                        'id-ID': 'Kartu perpustakaan Anda telah kedaluwarsa. Saya perlu melihat identifikasi untuk memperbarui kartu Anda.'
+                    }
+                },
+                {
+                    id: '3',
+                    english: 'I need help finding a book',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我需要帮助找一本书',
+                        'zh-HK': '我需要幫助找一本書',
+                        'ne-NP': 'मलाई एउटा किताब भेट्न मद्दत चाहिन्छ',
+                        'el-GR': 'Χρειάζομαι βοήθεια για να βρω ένα βιβλίο',
+                        'ar-SA': 'أحتاج مساعدة في العثور على كتاب',
+                        'mk-MK': 'Ми треба помош за да најдам книга',
+                        'es-ES': 'Necesito ayuda para encontrar un libro',
+                        'it-IT': 'Ho bisogno di aiuto per trovare un libro',
+                        'id-ID': 'Saya perlu bantuan untuk menemukan buku'
+                    }
+                },
+                {
+                    id: '4',
+                    english: 'I would like to borrow these items',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我想借这些物品',
+                        'zh-HK': '我想借這些物品',
+                        'ne-NP': 'म यी वस्तुहरू सापटी लिन चाहन्छु',
+                        'el-GR': 'Θα ήθελα να δανειστώ αυτά τα αντικείμενα',
+                        'ar-SA': 'أود استعارة هذه العناصر',
+                        'mk-MK': 'Би сакав да ги позајмам овие предмети',
+                        'es-ES': 'Me gustaría pedir prestados estos artículos',
+                        'it-IT': 'Vorrei prendere in prestito questi articoli',
+                        'id-ID': 'Saya ingin meminjam item-item ini'
+                    }
+                },
+                {
+                    id: '5',
+                    english: 'I would like to return my item',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我想还我的物品',
+                        'zh-HK': '我想還我的物品',
+                        'ne-NP': 'म मेरो वस्तु फिर्ता गर्न चाहन्छु',
+                        'el-GR': 'Θα ήθελα να επιστρέψω το αντικείμενό μου',
+                        'ar-SA': 'أود إرجاع العنصر الخاص بي',
+                        'mk-MK': 'Би сакав да го вратам мојот предмет',
+                        'es-ES': 'Me gustaría devolver mi artículo',
+                        'it-IT': 'Vorrei restituire il mio articolo',
+                        'id-ID': 'Saya ingin mengembalikan item saya'
+                    }
+                },
+                {
+                    id: '6',
+                    english: 'I would like to renew my items',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我想续借我的物品',
+                        'zh-HK': '我想續借我的物品',
+                        'ne-NP': 'म मेरा वस्तुहरू नवीनीकरण गर्न चाहन्छु',
+                        'el-GR': 'Θα ήθελα να ανανεώσω τα αντικείμενά μου',
+                        'ar-SA': 'أود تجديد العناصر الخاصة بي',
+                        'mk-MK': 'Би сакав да ги обновам моите предмети',
+                        'es-ES': 'Me gustaría renovar mis artículos',
+                        'it-IT': 'Vorrei rinnovare i miei articoli',
+                        'id-ID': 'Saya ingin memperbarui item-item saya'
+                    }
+                },
+                {
+                    id: '7',
+                    english: 'What time are the opening hours of this library?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '这个图书馆的开放时间是什么时候？',
+                        'zh-HK': '這個圖書館的開放時間是什麼時候？',
+                        'ne-NP': 'यो पुस्तकालयको खुला समय कति बजे हो?',
+                        'el-GR': 'Ποια ώρα είναι οι ώρες λειτουργίας αυτής της βιβλιοθήκης;',
+                        'ar-SA': 'ما هو وقت ساعات العمل في هذه المكتبة؟',
+                        'mk-MK': 'Која е времето на работното време на оваа библиотека?',
+                        'es-ES': '¿A qué hora son los horarios de apertura de esta biblioteca?',
+                        'it-IT': 'A che ora sono gli orari di apertura di questa biblioteca?',
+                        'id-ID': 'Jam berapa jam buka perpustakaan ini?'
+                    }
+                },
+                {
+                    id: '8',
+                    english: 'Where are the bathrooms?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '洗手间在哪里？',
+                        'zh-HK': '洗手間在哪裡？',
+                        'ne-NP': 'स्नानघरहरू कहाँ छन्?',
+                        'el-GR': 'Πού είναι οι τουαλέτες;',
+                        'ar-SA': 'أين الحمامات؟',
+                        'mk-MK': 'Каде се тоалетите?',
+                        'es-ES': '¿Dónde están los baños?',
+                        'it-IT': 'Dove sono i bagni?',
+                        'id-ID': 'Di mana kamar mandi?'
+                    }
+                },
+                {
+                    id: '9',
+                    english: 'Is there a Justice of the Peace here today?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '今天这里有太平绅士吗？',
+                        'zh-HK': '今天這裡有太平紳士嗎？',
+                        'ne-NP': 'आज यहाँ शान्ति न्यायाधीश छ?',
+                        'el-GR': 'Υπάρχει Δικαστής Ειρήνης εδώ σήμερα;',
+                        'ar-SA': 'هل هناك قاضي صلح هنا اليوم؟',
+                        'mk-MK': 'Дали има мировен судија тука денес?',
+                        'es-ES': '¿Hay un Juez de Paz aquí hoy?',
+                        'it-IT': 'C\'è un Giudice di Pace qui oggi?',
+                        'id-ID': 'Apakah ada Hakim Perdamaian di sini hari ini?'
+                    }
+                },
+                {
+                    id: '10',
+                    english: 'How do I get to Centrelink?',
+                    type: 'customer',
+                    category: 'General Assistance',
+                    translations: {
+                        'zh-CN': '我怎么去Centrelink？',
+                        'zh-HK': '我怎麼去Centrelink？',
+                        'ne-NP': 'म कसरी Centrelink मा जान सक्छु?',
+                        'el-GR': 'Πώς μπορώ να φτάσω στο Centrelink;',
+                        'ar-SA': 'كيف أصل إلى Centrelink؟',
+                        'mk-MK': 'Како да стигнам до Centrelink?',
+                        'es-ES': '¿Cómo llego a Centrelink?',
+                        'it-IT': 'Come arrivo a Centrelink?',
+                        'id-ID': 'Bagaimana saya bisa ke Centrelink?'
+                    }
+                },
+                {
+                    id: '11',
+                    english: 'Do you have computers?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '你们有电脑吗？',
+                        'zh-HK': '你們有電腦嗎？',
+                        'ne-NP': 'तपाईंसँग कम्प्युटरहरू छन्?',
+                        'el-GR': 'Έχετε υπολογιστές;',
+                        'ar-SA': 'هل لديكم أجهزة كمبيوتر؟',
+                        'mk-MK': 'Дали имате компјутери?',
+                        'es-ES': '¿Tienen computadoras?',
+                        'it-IT': 'Avete computer?',
+                        'id-ID': 'Apakah Anda memiliki komputer?'
+                    }
+                },
+                {
+                    id: '12',
+                    english: 'I need help using a computer',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助使用电脑',
+                        'zh-HK': '我需要幫助使用電腦',
+                        'ne-NP': 'मलाई कम्प्युटर प्रयोग गर्न मद्दत चाहिन्छ',
+                        'el-GR': 'Χρειάζομαι βοήθεια για τη χρήση υπολογιστή',
+                        'ar-SA': 'أحتاج مساعدة في استخدام الكمبيوتر',
+                        'mk-MK': 'Ми треба помош за користење компјутер',
+                        'es-ES': 'Necesito ayuda para usar una computadora',
+                        'it-IT': 'Ho bisogno di aiuto per usare un computer',
+                        'id-ID': 'Saya perlu bantuan menggunakan komputer'
+                    }
+                },
+                {
+                    id: '13',
+                    english: 'Are there printers available?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '有打印机可用吗？',
+                        'zh-HK': '有打印機可用嗎？',
+                        'ne-NP': 'प्रिन्टरहरू उपलब्ध छन्?',
+                        'el-GR': 'Υπάρχουν διαθέσιμοι εκτυπωτές;',
+                        'ar-SA': 'هل هناك طابعات متاحة؟',
+                        'mk-MK': 'Дали има достапни печатачи?',
+                        'es-ES': '¿Hay impresoras disponibles?',
+                        'it-IT': 'Ci sono stampanti disponibili?',
+                        'id-ID': 'Apakah ada printer yang tersedia?'
+                    }
+                },
+
+                {
+                    id: '15',
+                    english: 'I need help printing.',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助打印。',
+                        'zh-HK': '我需要幫助打印。',
+                        'ne-NP': 'मलाई प्रिन्टिङ गर्न मद्दत चाहिन्छ।',
+                        'el-GR': 'Χρειάζομαι βοήθεια για την εκτύπωση.',
+                        'ar-SA': 'أحتاج مساعدة في الطباعة.',
+                        'mk-MK': 'Ми треба помош за печатење.',
+                        'es-ES': 'Necesito ayuda para imprimir.',
+                        'it-IT': 'Ho bisogno di aiuto per stampare.',
+                        'id-ID': 'Saya perlu bantuan untuk mencetak.'
+                    }
+                },
+                {
+                    id: '16',
+                    english: 'I need to scan a document.',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要扫描一份文件。',
+                        'zh-HK': '我需要掃描一份文件。',
+                        'ne-NP': 'मलाई एउटा कागजात स्क्यान गर्नु पर्छ।',
+                        'el-GR': 'Χρειάζομαι να σκανάρω ένα έγγραφο.',
+                        'ar-SA': 'أحتاج إلى مسح ضوئي لمستند.',
+                        'mk-MK': 'Треба да скенирам документ.',
+                        'es-ES': 'Necesito escanear un documento.',
+                        'it-IT': 'Devo scansionare un documento.',
+                        'id-ID': 'Saya perlu memindai dokumen.'
+                    }
+                },
+
+                {
+                    id: '18',
+                    english: 'I need help with scanning a document',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助扫描文件',
+                        'zh-HK': '我需要幫助掃描文件',
+                        'ne-NP': 'मलाई कागजात स्क्यान गर्न मद्दत चाहिन्छ',
+                        'el-GR': 'Χρειάζομαι βοήθεια για τη σάρωση εγγράφου',
+                        'ar-SA': 'أحتاج مساعدة في مسح ضوئي لمستند',
+                        'mk-MK': 'Ми треба помош за скенирање документ',
+                        'es-ES': 'Necesito ayuda para escanear un documento',
+                        'it-IT': 'Ho bisogno di aiuto per scansionare un documento',
+                        'id-ID': 'Saya perlu bantuan untuk memindai dokumen'
+                    }
+                },
+                {
+                    id: '19',
+                    english: 'Can I photocopy a document in this library?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我可以在这个图书馆复印文件吗？',
+                        'zh-HK': '我可以在這個圖書館複印文件嗎？',
+                        'ne-NP': 'म यो पुस्तकालयमा कागजात फोटोकपी गर्न सक्छु?',
+                        'el-GR': 'Μπορώ να φωτοτυπήσω ένα έγγραφο σε αυτή τη βιβλιοθήκη;',
+                        'ar-SA': 'هل يمكنني نسخ مستند في هذه المكتبة؟',
+                        'mk-MK': 'Можам ли да фотокопирам документ во оваа библиотека?',
+                        'es-ES': '¿Puedo fotocopiar un documento en esta biblioteca?',
+                        'it-IT': 'Posso fotocopiare un documento in questa biblioteca?',
+                        'id-ID': 'Bisakah saya fotokopi dokumen di perpustakaan ini?'
+                    }
+                },
+
+                {
+                    id: '21',
+                    english: 'I need help with the photocopier.',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '我需要帮助使用复印机。',
+                        'zh-HK': '我需要幫助使用複印機。',
+                        'ne-NP': 'मलाई फोटोकपी मशीन प्रयोग गर्न मद्दत चाहिन्छ।',
+                        'el-GR': 'Χρειάζομαι βοήθεια με τη φωτοτυπική μηχανή.',
+                        'ar-SA': 'أحتاج مساعدة في استخدام آلة النسخ.',
+                        'mk-MK': 'Ми треба помош со фотокопирачот.',
+                        'es-ES': 'Necesito ayuda con la fotocopiadora.',
+                        'it-IT': 'Ho bisogno di aiuto con la fotocopiatrice.',
+                        'id-ID': 'Saya perlu bantuan dengan mesin fotokopi.'
+                    }
+                },
+                {
+                    id: '22',
+                    english: 'Can you help me connect to the wifi?',
+                    type: 'customer',
+                    category: 'Digital Services',
+                    translations: {
+                        'zh-CN': '您能帮我连接Wi-Fi吗？',
+                        'zh-HK': '您能幫我連接Wi-Fi嗎？',
+                        'ne-NP': 'तपाईं मलाई Wi-Fi मा जडान गर्न मद्दत गर्न सक्नुहुन्छ?',
+                        'el-GR': 'Μπορείτε να με βοηθήσετε να συνδεθώ στο wifi;',
+                        'ar-SA': 'هل يمكنك مساعدتي في الاتصال بالواي فاي؟',
+                        'mk-MK': 'Можете ли да ми помогнете да се поврзам со wifi?',
+                        'es-ES': '¿Puede ayudarme a conectarme al wifi?',
+                        'it-IT': 'Può aiutarmi a connettermi al wifi?',
+                        'id-ID': 'Bisakah Anda membantu saya terhubung ke wifi?'
+                    }
+                },
+                {
+                    id: '23',
+                    english: 'I do not have a library card',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我没有借书证',
+                        'zh-HK': '我沒有借書證',
+                        'ne-NP': 'मसँग पुस्तकालय कार्ड छैन',
+                        'el-GR': 'Δεν έχω κάρτα βιβλιοθήκης',
+                        'ar-SA': 'ليس لدي بطاقة مكتبة',
+                        'mk-MK': 'Немам библиотекарска картичка',
+                        'es-ES': 'No tengo tarjeta de biblioteca',
+                        'it-IT': 'Non ho una tessera della biblioteca',
+                        'id-ID': 'Saya tidak memiliki kartu perpustakaan'
+                    }
+                },
+                {
+                    id: '24',
+                    english: 'I would like to sign up for a library card',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我想申请一张借书证',
+                        'zh-HK': '我想申請一張借書證',
+                        'ne-NP': 'म पुस्तकालय कार्डको लागि साइन अप गर्न चाहन्छु',
+                        'el-GR': 'Θα ήθελα να εγγραφώ για κάρτα βιβλιοθήκης',
+                        'ar-SA': 'أود التسجيل للحصول على بطاقة مكتبة',
+                        'mk-MK': 'Би сакав да се регистрирам за библиотекарска картичка',
+                        'es-ES': 'Me gustaría registrarme para una tarjeta de biblioteca',
+                        'it-IT': 'Vorrei iscrivermi per una tessera della biblioteca',
+                        'id-ID': 'Saya ingin mendaftar untuk kartu perpustakaan'
+                    }
+                },
+
+                {
+                    id: '26',
+                    english: 'How long can I borrow these items?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我可以借这些物品多长时间？',
+                        'zh-HK': '我可以借這些物品多長時間？',
+                        'ne-NP': 'म यी वस्तुहरू कति लामो समय सापटी लिन सक्छु?',
+                        'el-GR': 'Πόσο καιρό μπορώ να δανειστώ αυτά τα αντικείμενα;',
+                        'ar-SA': 'كم من الوقت يمكنني استعارة هذه العناصر؟',
+                        'mk-MK': 'Колку долго можам да ги позајмам овие предмети?',
+                        'es-ES': '¿Por cuánto tiempo puedo pedir prestados estos artículos?',
+                        'it-IT': 'Per quanto tempo posso prendere in prestito questi articoli?',
+                        'id-ID': 'Berapa lama saya bisa meminjam item-item ini?'
+                    }
+                },
+                {
+                    id: '27',
+                    english: 'Do I have any overdue items?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我有任何逾期物品吗？',
+                        'zh-HK': '我有任何逾期物品嗎？',
+                        'ne-NP': 'मसँग कुनै ओभरड्यु आइटम छन्?',
+                        'el-GR': 'Έχω καθυστερημένα αντικείμενα;',
+                        'ar-SA': 'هل لدي أي عناصر متأخرة؟',
+                        'mk-MK': 'Дали имам задоцнети предмети?',
+                        'es-ES': '¿Tengo algún artículo vencido?',
+                        'it-IT': 'Ho articoli scaduti?',
+                        'id-ID': 'Apakah saya memiliki item yang terlambat?'
+                    }
+                },
+                {
+                    id: '28',
+                    english: 'Do I have any late fees?',
+                    type: 'customer',
+                    category: 'Transactional',
+                    translations: {
+                        'zh-CN': '我有任何逾期费用吗？',
+                        'zh-HK': '我有任何逾期費用嗎？',
+                        'ne-NP': 'मसँग कुनै ओभरड्यु शुल्क छन्?',
+                        'el-GR': 'Έχω πρόστιμα καθυστέρησης;',
+                        'ar-SA': 'هل لدي أي رسوم تأخير؟',
+                        'mk-MK': 'Дали имам казни за доцнење?',
+                        'es-ES': '¿Tengo alguna multa por retraso?',
+                        'it-IT': 'Ho multe per ritardo?',
+                        'id-ID': 'Apakah saya memiliki biaya keterlambatan?'
+                    }
+                },
+
+            ];
+
+            // Save state to localStorage
+            const saveState = (key, value) => {
+                try {
+                    localStorage.setItem(`babelFish_${key}`, JSON.stringify(value));
+                } catch (error) {
+                    console.warn(`Error saving state for ${key}:`, error);
+                }
+            };
+
+            // Save state whenever it changes
+            useEffect(() => {
+                saveState('currentMode', currentMode);
+            }, [currentMode]);
+
+            useEffect(() => {
+                saveState('staffLanguage', staffLanguage);
+            }, [staffLanguage]);
+
+            useEffect(() => {
+                saveState('customerLanguage', customerLanguage);
+            }, [customerLanguage]);
+
+            useEffect(() => {
+                saveState('staffSubcategoryFilter', staffSubcategoryFilter);
+            }, [staffSubcategoryFilter]);
+
+            useEffect(() => {
+                saveState('customerSubcategoryFilter', customerSubcategoryFilter);
+            }, [customerSubcategoryFilter]);
+
+            useEffect(() => {
+                // Simulate loading phrases
+                setTimeout(() => {
+                    setPhrases(samplePhrases);
+                    setIsAuthReady(true);
+                    setUserId('demo-user-123');
+                }, 1000);
+            }, []);
+
+            const speakPhrase = (text, langCode) => {
+                if ('speechSynthesis' in window) {
+                    // Stop any currently playing speech
+                    speechSynthesis.cancel();
+                    
+                    // Set playing state
+                    setIsAudioPlaying(true);
+                    setCurrentPlayingText(text);
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = langCode;
+                    utterance.rate = 0.8;
+                    utterance.pitch = 1.0;
+                    utterance.volume = 1.0;
+                    
+                    // Try to select the best available voice for the language
+                    const voices = speechSynthesis.getVoices();
+                    const preferredVoice = voices.find(voice => 
+                        voice.lang.startsWith(langCode.split('-')[0]) && 
+                        voice.lang.includes(langCode.split('-')[1] || '')
+                    );
+                    
+                    if (preferredVoice) {
+                        utterance.voice = preferredVoice;
+                    }
+                    
+                    // Add event handlers for better user experience
+                    utterance.onstart = () => {
+                        console.log(`Started speaking: ${text}`);
+                        setIsAudioPlaying(true);
+                        setCurrentPlayingText(text);
+                    };
+                    
+                    utterance.onend = () => {
+                        console.log(`Finished speaking: ${text}`);
+                        setIsAudioPlaying(false);
+                        setCurrentPlayingText('');
+                    };
+                    
+                    utterance.onerror = (event) => {
+                        console.error('Speech synthesis error:', event.error);
+                        setIsAudioPlaying(false);
+                        setCurrentPlayingText('');
+                        
+                        // Fallback: try with a different voice or language code
+                        if (event.error === 'not-allowed') {
+                            // Try with a more generic language code
+                            const fallbackLangCode = langCode.split('-')[0];
+                            if (fallbackLangCode !== langCode) {
+                                utterance.lang = fallbackLangCode;
+                                speechSynthesis.speak(utterance);
+                            }
+                        }
+                    };
+                    
+                    // Add a small delay to ensure the previous speech is fully stopped
+                    setTimeout(() => {
+                        speechSynthesis.speak(utterance);
+                    }, 50);
+                } else {
+                    // Fallback for browsers without speech synthesis
+                    alert('Text-to-speech is not supported in this browser. Please try a different browser.');
+                }
+            };
+
+            // Enhanced function to get available voices and log them for debugging
+            const logAvailableVoices = () => {
+                if ('speechSynthesis' in window) {
+                    const voices = speechSynthesis.getVoices();
+                    console.log('Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+                }
+            };
+
+            // Function to stop audio playback
+            const stopAudio = () => {
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.cancel();
+                    setIsAudioPlaying(false);
+                    setCurrentPlayingText('');
+                }
+            };
+
+            // Load voices when they become available
+            useEffect(() => {
+                if ('speechSynthesis' in window) {
+                    // Some browsers load voices asynchronously
+                    speechSynthesis.onvoiceschanged = logAvailableVoices;
+                    logAvailableVoices(); // Try immediately
+                }
+            }, []);
+
+            // Keyboard shortcut for stopping audio (Escape key)
+            useEffect(() => {
+                const handleKeyDown = (event) => {
+                    if (event.key === 'Escape' && isAudioPlaying) {
+                        stopAudio();
+                    }
+                };
+
+                document.addEventListener('keydown', handleKeyDown);
+                return () => {
+                    document.removeEventListener('keydown', handleKeyDown);
+                };
+            }, [isAudioPlaying]);
+
+            // Filter phrases based on current mode and filters
+            const filteredPhrases = phrases.filter(phrase => {
+                if (phrase.type !== currentMode) return false;
+                if (currentMode === 'staff' && staffSubcategoryFilter !== 'All' && phrase.category !== staffSubcategoryFilter) return false;
+                if (currentMode === 'customer' && customerSubcategoryFilter !== 'All' && phrase.category !== customerSubcategoryFilter) return false;
+                // Only show the Mandarin preference question when Mandarin is selected
+                if (currentMode === 'staff' && phrase.english === 'Do you prefer to speak Mandarin or Cantonese?' && staffLanguage !== 'Mandarin') return false;
+                // Only show the Cantonese preference question when Cantonese is selected
+                if (currentMode === 'staff' && phrase.english === 'Do you prefer to speak Cantonese or Mandarin?' && staffLanguage !== 'Cantonese') return false;
+                // Only show the "no Cantonese staff" message when Cantonese is selected
+                if (currentMode === 'staff' && phrase.english === 'Unfortunately we do not have any staff who speak Cantonese' && staffLanguage !== 'Cantonese') return false;
+                return true;
+            });
+
+            // Group phrases by category
+            const groupedPhrases = filteredPhrases.reduce((acc, phrase) => {
+                if (!acc[phrase.category]) {
+                    acc[phrase.category] = [];
+                }
+                acc[phrase.category].push(phrase);
+                return acc;
+            }, {});
+
+            // Get category names for filtering
+            const staffCategories = [...new Set(phrases.filter(p => p.type === 'staff').map(p => p.category))];
+            const customerCategories = [...new Set(phrases.filter(p => p.type === 'customer').map(p => p.category))];
+
+            // Function to get native language name for category
+            const getCategoryNativeName = (categoryName, currentLanguage) => {
+                const categoryTranslations = {
+                    'General Enquiries': {
+                        'zh-CN': '一般查询',
+                        'zh-HK': '一般查詢',
+                        'ne-NP': 'सामान्य जानकारी',
+                        'el-GR': 'Γενικές Ερωτήσεις',
+                        'ar-SA': 'استفسارات عامة',
+                        'mk-MK': 'Општи прашања',
+                        'es-ES': 'Consultas Generales',
+                        'it-IT': 'Richieste Generali',
+                        'id-ID': 'Pertanyaan Umum'
+                    },
+                    'Digital Services': {
+                        'zh-CN': '数字服务',
+                        'zh-HK': '數位服務',
+                        'ne-NP': 'डिजिटल सेवाहरू',
+                        'el-GR': 'Ψηφιακές Υπηρεσίες',
+                        'ar-SA': 'الخدمات الرقمية',
+                        'mk-MK': 'Дигитални услуги',
+                        'es-ES': 'Servicios Digitales',
+                        'it-IT': 'Servizi Digitali',
+                        'id-ID': 'Layanan Digital'
+                    },
+                    'Transactional': {
+                        'zh-CN': '交易服务',
+                        'zh-HK': '交易服務',
+                        'ne-NP': 'लेनदेन सेवाहरू',
+                        'el-GR': 'Συναλλακτικές Υπηρεσίες',
+                        'ar-SA': 'الخدمات المعاملاتية',
+                        'mk-MK': 'Трансакциски услуги',
+                        'es-ES': 'Servicios Transaccionales',
+                        'it-IT': 'Servizi Transazionali',
+                        'id-ID': 'Layanan Transaksional'
+                    },
+                    'General Assistance': {
+                        'zh-CN': '一般协助',
+                        'zh-HK': '一般協助',
+                        'ne-NP': 'सामान्य सहयोग',
+                        'el-GR': 'Γενική Βοήθεια',
+                        'ar-SA': 'المساعدة العامة',
+                        'mk-MK': 'Општа помош',
+                        'es-ES': 'Asistencia General',
+                        'it-IT': 'Assistenza Generale',
+                        'id-ID': 'Bantuan Umum'
+                    }
+                };
+                
+                const currentLangCode = LANGUAGE_CODES[currentLanguage].code;
+                return categoryTranslations[categoryName]?.[currentLangCode] || categoryName;
+            };
+
+            return (
+                <div className="min-h-screen" style={{ backgroundColor: brandColors.lightGreyBackground }}>
+                    <div className="max-w-4xl mx-auto rounded-xl shadow-lg p-6 md:p-8" style={{ backgroundColor: 'white' }}>
+                        {/* Logo */}
+                        <div className="flex justify-center mb-6 p-4 rounded-lg" style={{ backgroundColor: brandColors.darkTeal }}>
+                            <img
+                                src="https://georgesriver.spydus.com/api/maintenance/1.0/imagebrowser/image?blobName=a31cf63f-7e24-41d5-b1f8-c206bde45ce6.png"
+                                alt="Georges River Libraries Logo"
+                                style={{ 
+                                    maxWidth: '200px', 
+                                    height: 'auto', 
+                                    objectFit: 'contain',
+                                    borderRadius: '0.375rem'
+                                }}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "https://placehold.co/300x80/007A70/ffffff?text=Georges+River+Libraries";
+                                }}
+                            />
+                        </div>
+
+                        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-shadow-light" style={{ color: brandColors.darkTeal }}>
+                            Georges River Libraries Babel Fish
+                        </h1>
+
+                        {/* Mode Selection Buttons */}
+                        <div className="flex justify-center gap-4 mb-8">
+                            <button
+                                onClick={() => setCurrentMode('staff')}
+                                className={`button-base mt-2 ${currentMode === 'staff' ? 'button-primary-active' : 'button-primary-inactive'}`}
+                            >
+                                <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>For Staff</span><br />
+                                <span style={{fontSize: '0.75rem', opacity: 0.8}}>
+                                    {(() => {
+                                        const staffTranslations = {
+                                            'zh-CN': '为员工',
+                                            'zh-HK': '為員工',
+                                            'ne-NP': 'कर्मचारीहरूको लागि',
+                                            'el-GR': 'Για το Προσωπικό',
+                                            'ar-SA': 'للموظفين',
+                                            'mk-MK': 'За персонал',
+                                            'es-ES': 'Para el Personal',
+                                            'it-IT': 'Per il Personale',
+                                            'id-ID': 'Untuk Staf'
+                                        };
+                                        const currentLanguage = staffLanguage;
+                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                        return staffTranslations[langCode] || 'For Staff';
+                                    })()}
+                                </span>
+                            </button>
+                            <button
+                                onClick={() => setCurrentMode('customer')}
+                                className={`button-base mt-2 ${currentMode === 'customer' ? 'button-accent-active' : 'button-accent-inactive'}`}
+                            >
+                                <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>For Customers</span><br />
+                                <span style={{fontSize: '0.75rem', opacity: 0.8}}>
+                                    {(() => {
+                                        const customerTranslations = {
+                                            'zh-CN': '为顾客',
+                                            'zh-HK': '為顧客',
+                                            'ne-NP': 'ग्राहकहरूको लागि',
+                                            'el-GR': 'Για τους Πελάτες',
+                                            'ar-SA': 'للعملاء',
+                                            'mk-MK': 'За клиенти',
+                                            'es-ES': 'Para Clientes',
+                                            'it-IT': 'Per i Clienti',
+                                            'id-ID': 'Untuk Pelanggan'
+                                        };
+                                        const currentLanguage = customerLanguage;
+                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                        return customerTranslations[langCode] || 'For Customers';
+                                    })()}
+                                </span>
+                            </button>
+                        </div>
+
+
+
+                        {/* Language Selection */}
+                        <div className="language-buttons-container mb-8">
+                            {currentMode === 'staff' ? (
+                                <>
+                                    <div className="language-buttons-row">
+                                        <button
+                                            onClick={() => setStaffLanguage('Mandarin')}
+                                            className={`language-button ${staffLanguage === 'Mandarin' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Mandarin</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>普通话</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Cantonese')}
+                                            className={`language-button ${staffLanguage === 'Cantonese' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Cantonese</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>粤语</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Nepali')}
+                                            className={`language-button ${staffLanguage === 'Nepali' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Nepali</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>नेपाली</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Greek')}
+                                            className={`language-button ${staffLanguage === 'Greek' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Greek</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Ελληνικά</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Arabic')}
+                                            className={`language-button ${staffLanguage === 'Arabic' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Arabic</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>العربية</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Macedonian')}
+                                            className={`language-button ${staffLanguage === 'Macedonian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Macedonian</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Македонски</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Spanish')}
+                                            className={`language-button ${staffLanguage === 'Spanish' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Spanish</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Español</span>
+                                        </button>
+                                    </div>
+                                    <div className="language-buttons-row">
+                                        <button
+                                            onClick={() => setStaffLanguage('Italian')}
+                                            className={`language-button ${staffLanguage === 'Italian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Italian</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Italiano</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setStaffLanguage('Indonesian')}
+                                            className={`language-button ${staffLanguage === 'Indonesian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Indonesian</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Bahasa Indonesia</span>
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="language-buttons-row">
+                                        <button
+                                            onClick={() => setCustomerLanguage('Mandarin')}
+                                            className={`language-button ${customerLanguage === 'Mandarin' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>普通话</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Mandarin</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Cantonese')}
+                                            className={`language-button ${customerLanguage === 'Cantonese' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>粤语</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Cantonese</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Nepali')}
+                                            className={`language-button ${customerLanguage === 'Nepali' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>नेपाली</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Nepali</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Greek')}
+                                            className={`language-button ${customerLanguage === 'Greek' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Ελληνικά</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Greek</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Arabic')}
+                                            className={`language-button ${customerLanguage === 'Arabic' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>العربية</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Arabic</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Macedonian')}
+                                            className={`language-button ${customerLanguage === 'Macedonian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Македонски</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Macedonian</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Spanish')}
+                                            className={`language-button ${customerLanguage === 'Spanish' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Español</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Spanish</span>
+                                        </button>
+                                    </div>
+                                    <div className="language-buttons-row">
+                                        <button
+                                            onClick={() => setCustomerLanguage('Italian')}
+                                            className={`language-button ${customerLanguage === 'Italian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Italiano</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Italian</span>
+                                        </button>
+                                        <button
+                                            onClick={() => setCustomerLanguage('Indonesian')}
+                                            className={`language-button ${customerLanguage === 'Indonesian' ? 'language-button-active' : 'language-button-inactive'}`}
+                                        >
+                                            <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>Bahasa Indonesia</span><br /><span style={{fontSize: '0.75rem', opacity: 0.8}}>Indonesian</span>
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Category Filter Buttons */}
+                        <div className="flex flex-wrap justify-center gap-4 mb-8">
+                            {currentMode === 'staff' ? (
+                                <>
+                                    <button
+                                        onClick={() => setStaffSubcategoryFilter('All')}
+                                        className={`language-button ${staffSubcategoryFilter === 'All'
+                                            ? 'language-button-active'
+                                            : 'language-button-inactive'
+                                        }`}
+                                    >
+                                        <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>All</span><br />
+                                        <span style={{fontSize: '0.75rem', opacity: 0.8}}>
+                                            {(() => {
+                                                const allTranslations = {
+                                                    'zh-CN': '全部',
+                                                    'zh-HK': '全部',
+                                                    'ne-NP': 'सबै',
+                                                    'el-GR': 'Όλα',
+                                                    'ar-SA': 'الكل',
+                                                    'mk-MK': 'Сите',
+                                                    'es-ES': 'Todo',
+                                                    'it-IT': 'Tutto',
+                                                    'id-ID': 'Semua'
+                                                };
+                                                const currentLanguage = staffLanguage;
+                                                const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                return allTranslations[langCode] || 'All';
+                                            })()}
+                                        </span>
+                                    </button>
+                                    {staffCategories.map((actualCategoryName) => {
+                                        // Define translations for category names
+                                        const categoryTranslations = {
+                                            'General Enquiries': {
+                                                'zh-CN': '一般查询',
+                                                'zh-HK': '一般查詢',
+                                                'ne-NP': 'सामान्य जानकारी',
+                                                'el-GR': 'Γενικές Ερωτήσεις',
+                                                'ar-SA': 'استفسارات عامة',
+                                                'mk-MK': 'Општи прашања',
+                                                'es-ES': 'Consultas Generales',
+                                                'it-IT': 'Richieste Generali',
+                                                'id-ID': 'Pertanyaan Umum'
+                                            },
+                                            'Digital Services': {
+                                                'zh-CN': '数字服务',
+                                                'zh-HK': '數位服務',
+                                                'ne-NP': 'डिजिटल सेवाहरू',
+                                                'el-GR': 'Ψηφιακές Υπηρεσίες',
+                                                'ar-SA': 'الخدمات الرقمية',
+                                                'mk-MK': 'Дигитални услуги',
+                                                'es-ES': 'Servicios Digitales',
+                                                'it-IT': 'Servizi Digitali',
+                                                'id-ID': 'Layanan Digital'
+                                            },
+                                            'Transactional': {
+                                                'zh-CN': '交易服务',
+                                                'zh-HK': '交易服務',
+                                                'ne-NP': 'लेनदेन सेवाहरू',
+                                                'el-GR': 'Συναλλακτικές Υπηρεσίες',
+                                                'ar-SA': 'الخدمات المعاملاتية',
+                                                'mk-MK': 'Трансакциски услуги',
+                                                'es-ES': 'Servicios Transaccionales',
+                                                'it-IT': 'Servizi Transazionali',
+                                                'id-ID': 'Layanan Transaksional'
+                                            }
+                                        };
+                                        
+                                        const currentLanguage = staffLanguage;
+                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                        const translation = categoryTranslations[actualCategoryName]?.[langCode] || actualCategoryName;
+                                        
+                                        return (
+                                            <button
+                                                key={actualCategoryName}
+                                                onClick={() => setStaffSubcategoryFilter(actualCategoryName)}
+                                                className={`language-button ${staffSubcategoryFilter === actualCategoryName
+                                                    ? 'language-button-active'
+                                                    : 'language-button-inactive'
+                                                }`}
+                                            >
+                                                <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>{actualCategoryName}</span><br />
+                                                <span style={{fontSize: '0.75rem', opacity: 0.8}}>{translation}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => setCustomerSubcategoryFilter('All')}
+                                        className={`language-button ${customerSubcategoryFilter === 'All'
+                                            ? 'language-button-active'
+                                            : 'language-button-inactive'
+                                        }`}
+                                    >
+                                        <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>
+                                            {(() => {
+                                                const allTranslations = {
+                                                    'zh-CN': '全部',
+                                                    'zh-HK': '全部',
+                                                    'ne-NP': 'सबै',
+                                                    'el-GR': 'Όλα',
+                                                    'ar-SA': 'الكل',
+                                                    'mk-MK': 'Сите',
+                                                    'es-ES': 'Todo',
+                                                    'it-IT': 'Tutto',
+                                                    'id-ID': 'Semua'
+                                                };
+                                                const currentLanguage = customerLanguage;
+                                                const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                return allTranslations[langCode] || 'All';
+                                            })()}
+                                        </span><br />
+                                        <span style={{fontSize: '0.75rem', opacity: 0.8}}>All</span>
+                                    </button>
+                                    {customerCategories.map((actualCategoryName) => {
+                                        // Define translations for category names
+                                        const categoryTranslations = {
+                                            'General Assistance': {
+                                                'zh-CN': '一般协助',
+                                                'zh-HK': '一般協助',
+                                                'ne-NP': 'सामान्य सहयोग',
+                                                'el-GR': 'Γενική Βοήθεια',
+                                                'ar-SA': 'المساعدة العامة',
+                                                'mk-MK': 'Општа помош',
+                                                'es-ES': 'Asistencia General',
+                                                'it-IT': 'Assistenza Generale',
+                                                'id-ID': 'Bantuan Umum'
+                                            },
+                                            'Digital Services': {
+                                                'zh-CN': '数字服务',
+                                                'zh-HK': '數位服務',
+                                                'ne-NP': 'डिजिटल सेवाहरू',
+                                                'el-GR': 'Ψηφιακές Υπηρεσίες',
+                                                'ar-SA': 'الخدمات الرقمية',
+                                                'mk-MK': 'Дигитални услуги',
+                                                'es-ES': 'Servicios Digitales',
+                                                'it-IT': 'Servizi Digitali',
+                                                'id-ID': 'Layanan Digital'
+                                            },
+                                            'Transactional': {
+                                                'zh-CN': '交易服务',
+                                                'zh-HK': '交易服務',
+                                                'ne-NP': 'लेनदेन सेवाहरू',
+                                                'el-GR': 'Συναλλακτικές Υπηρεσίες',
+                                                'ar-SA': 'الخدمات المعاملاتية',
+                                                'mk-MK': 'Трансакциски услуги',
+                                                'es-ES': 'Servicios Transaccionales',
+                                                'it-IT': 'Servizi Transazionali',
+                                                'id-ID': 'Layanan Transaksional'
+                                            }
+                                        };
+                                        
+                                        const currentLanguage = customerLanguage;
+                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                        const translation = categoryTranslations[actualCategoryName]?.[langCode] || actualCategoryName;
+                                        
+                                        return (
+                                            <button
+                                                key={actualCategoryName}
+                                                onClick={() => setCustomerSubcategoryFilter(actualCategoryName)}
+                                                className={`language-button ${customerSubcategoryFilter === actualCategoryName
+                                                    ? 'language-button-active'
+                                                    : 'language-button-inactive'
+                                                }`}
+                                            >
+                                                <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>{translation}</span><br />
+                                                <span style={{fontSize: '0.75rem', opacity: 0.8}}>{actualCategoryName}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </>
+                            )}
+                        </div>
+
+
+
+                        {/* Phrase List Display */}
+                        {Object.keys(groupedPhrases).length === 0 && (
+                            <div className="text-center text-lg py-10" style={{ color: brandColors.mediumGrey }}>
+                                {isAuthReady ? 'Loading phrases or no phrases found.' : 'Initialising application...'}
+                            </div>
+                        )}
+
+                        {Object.keys(groupedPhrases).map((category) => (
+                            <div key={category} className="mb-8 category-section">
+                                <h2 className="text-2xl md:text-3xl font-bold mb-4 pb-2 border-b-2" style={{ color: brandColors.darkTeal, borderColor: brandColors.primaryTeal, marginLeft: '0', paddingLeft: '0' }}>
+                                    <div className="text-center">
+                                        {currentMode === 'staff' ? (
+                                            <>
+                                                <div className="text-xl font-bold mb-1" style={{ color: brandColors.darkTeal }}>
+                                                    {category}
+                                                </div>
+                                                <div className="text-lg font-medium" style={{ color: brandColors.mediumGrey }}>
+                                                    {getCategoryNativeName(category, currentMode === 'staff' ? staffLanguage : customerLanguage)}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="text-xl font-bold mb-1" style={{ color: brandColors.darkTeal }}>
+                                                    {getCategoryNativeName(category, currentMode === 'staff' ? staffLanguage : customerLanguage)}
+                                                </div>
+                                                <div className="text-lg font-medium" style={{ color: brandColors.mediumGrey }}>{category}</div>
+                                            </>
+                                        )}
+                                    </div>
+                                </h2>
+                                <ul className="phrase-list-grid">
+                                    {groupedPhrases[category].map((phrase) => (
+                                        <li
+                                            key={phrase.id}
+                                            className="phrase-card cursor-pointer"
+                                            onClick={() => {
+                                                if (phrase.english === 'How do I get to Centrelink?' && currentMode === 'customer') {
+                                                    setQrPopupType('centrelink');
+                                                    setShowQrPopup(true);
+                                                } else if (phrase.english === 'Where are the computers?' && currentMode === 'customer') {
+                                                    setQrPopupType('computers');
+                                                    setShowQrPopup(true);
+                                                }
+                                            }}
+                                        >
+                                            <div className="flex-1 text-left mb-4">
+                                                {currentMode === 'staff' ? (
+                                                    <>
+                                                        {/* English heading first, then translation underneath */}
+                                                        <p className="text-lg font-semibold mb-1" style={{ color: brandColors.darkTeal }}>{phrase.english}</p>
+                                                        <p className="text-base font-medium" style={{ color: brandColors.darkGreyText }}>
+                                                            {phrase.translations?.[LANGUAGE_CODES[staffLanguage].code] || phrase.english}
+                                                        </p>
+                                                        {phrase.english === 'Do you prefer to speak Mandarin or Cantonese?' && staffLanguage === 'Mandarin' && (
+                                                            <div className="flex justify-center mt-2">
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setLanguagePreferencePopupType('mandarin');
+                                                                        setShowLanguagePreferencePopup(true);
+                                                                    }}
+                                                                    className="px-6 py-3 text-base font-bold rounded-full transition-colors"
+                                                                    style={{
+                                                                        backgroundColor: brandColors.lightTealBackground,
+                                                                        color: brandColors.darkTeal,
+                                                                        border: `1px solid ${brandColors.primaryTeal}`,
+                                                                        cursor: 'pointer',
+                                                                        minWidth: '140px'
+                                                                    }}
+                                                                    onMouseEnter={(e) => {
+                                                                        e.target.style.backgroundColor = brandColors.primaryTeal;
+                                                                        e.target.style.color = 'white';
+                                                                    }}
+                                                                    onMouseLeave={(e) => {
+                                                                        e.target.style.backgroundColor = brandColors.lightTealBackground;
+                                                                        e.target.style.color = brandColors.darkTeal;
+                                                                    }}
+                                                                >
+                                                                    点击选择选项
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                        {phrase.english === 'Do you prefer to speak Cantonese or Mandarin?' && staffLanguage === 'Cantonese' && (
+                                                            <div className="flex justify-center mt-2">
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setLanguagePreferencePopupType('cantonese');
+                                                                        setShowLanguagePreferencePopup(true);
+                                                                    }}
+                                                                    className="px-6 py-3 text-base font-bold rounded-full transition-colors"
+                                                                    style={{
+                                                                        backgroundColor: brandColors.lightTealBackground,
+                                                                        color: brandColors.darkTeal,
+                                                                        border: `1px solid ${brandColors.primaryTeal}`,
+                                                                        cursor: 'pointer',
+                                                                        minWidth: '140px'
+                                                                    }}
+                                                                    onMouseEnter={(e) => {
+                                                                        e.target.style.backgroundColor = brandColors.primaryTeal;
+                                                                        e.target.style.color = 'white';
+                                                                    }}
+                                                                    onMouseLeave={(e) => {
+                                                                        e.target.style.backgroundColor = brandColors.lightTealBackground;
+                                                                        e.target.style.color = brandColors.darkTeal;
+                                                                    }}
+                                                                >
+                                                                    點擊選擇選項
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <p className="text-lg font-semibold mb-1" style={{ color: brandColors.darkTeal }}>
+                                                            {phrase.translations?.[LANGUAGE_CODES[customerLanguage].code] || phrase.english}
+                                                        </p>
+                                                        <p className="text-base font-medium" style={{ color: brandColors.darkGreyText }}>
+                                                            {phrase.english}
+                                                            {(phrase.english === 'How do I get to Centrelink?' || phrase.english === 'Where are the computers?') && (
+                                                                <>
+                                                                    <br />
+                                                                    <span className="text-sm ml-0 italic" style={{color: brandColors.mediumGrey}}>
+                                                                        {phrase.english === 'How do I get to Centrelink?' ? 'Click on me for a map' : 'Click on me for computer locations'}
+                                                                    </span>
+                                                                </>
+                                                            )}
+                                                        </p>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (phrase.english === 'How do I get to Centrelink?' && currentMode === 'customer') {
+                                                        setQrPopupType('centrelink');
+                                                        setShowQrPopup(true);
+                                                    } else if (phrase.english === 'Where are the computers?' && currentMode === 'customer') {
+                                                        setQrPopupType('computers');
+                                                        setShowQrPopup(true);
+                                                                                                    } else {
+                                                    const currentLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                                    let textToSpeak, langCodeToUse;
+                                                    
+                                                    if (currentMode === 'staff') {
+                                                        // For staff: speak the translation in the selected language
+                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                        textToSpeak = phrase.translations?.[langCode] || phrase.english;
+                                                        langCodeToUse = langCode;
+                                                    } else {
+                                                        // For customers: always speak the English version
+                                                        textToSpeak = phrase.english;
+                                                        langCodeToUse = 'en-US';
+                                                    }
+                                                    
+                                                    // If this text is currently playing, stop it
+                                                    if (isAudioPlaying && currentPlayingText === textToSpeak) {
+                                                        stopAudio();
+                                                    } else {
+                                                        speakPhrase(textToSpeak, langCodeToUse);
+                                                    }
+                                                }
+                                                }}
+                                                className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+                                                style={{ 
+                                                    backgroundColor: (() => {
+                                                        let textToCompare;
+                                                        if (currentMode === 'staff') {
+                                                            const currentLanguage = staffLanguage;
+                                                            const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                            textToCompare = phrase.translations?.[langCode] || phrase.english;
+                                                        } else {
+                                                            textToCompare = phrase.english;
+                                                        }
+                                                        
+                                                        if (isAudioPlaying && currentPlayingText === textToCompare) {
+                                                            return '#004D40'; // Dark teal when playing
+                                                        }
+                                                        return currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed;
+                                                    })(),
+                                                    color: 'white', 
+                                                    focusRingColor: brandColors.primaryTeal, 
+                                                    border: 'none',
+                                                    animation: (() => {
+                                                        let textToCompare;
+                                                        if (currentMode === 'staff') {
+                                                            const currentLanguage = staffLanguage;
+                                                            const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                            textToCompare = phrase.translations?.[langCode] || phrase.english;
+                                                        } else {
+                                                            textToCompare = phrase.english;
+                                                        }
+                                                        
+                                                        if (isAudioPlaying && currentPlayingText === textToCompare) {
+                                                            return 'pulse 1s infinite';
+                                                        }
+                                                        return 'none';
+                                                    })()
+                                                }}
+                                                title={(() => {
+                                                    let textToCompare;
+                                                    if (currentMode === 'staff') {
+                                                        const currentLanguage = staffLanguage;
+                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                        textToCompare = phrase.translations?.[langCode] || phrase.english;
+                                                    } else {
+                                                        textToCompare = phrase.english;
+                                                    }
+                                                    
+                                                    if (isAudioPlaying && currentPlayingText === textToCompare) {
+                                                        return 'Stop audio';
+                                                    }
+                                                    return 'Play audio';
+                                                })()}
+                                            >
+                                                {(() => {
+                                                    let textToCompare;
+                                                    if (currentMode === 'staff') {
+                                                        const currentLanguage = staffLanguage;
+                                                        const langCode = LANGUAGE_CODES[currentLanguage].code;
+                                                        textToCompare = phrase.translations?.[langCode] || phrase.english;
+                                                    } else {
+                                                        textToCompare = phrase.english;
+                                                    }
+                                                    
+                                                    if (isAudioPlaying && currentPlayingText === textToCompare) {
+                                                        return (
+                                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                                                            </svg>
+                                                        );
+                                                    }
+                                                    return speakerIcon;
+                                                })()}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+
+
+                    </div>
+
+                    {/* QR Code Pop-up Modal */}
+                    {showQrPopup && (
+                        <div className="popup-overlay">
+                            <div className="popup-content">
+                                <button className="popup-close" onClick={() => setShowQrPopup(false)}>
+                                    &times;
+                                </button>
+                                {qrPopupType === 'centrelink' ? (
+                                    <>
+                                        <h3 className="text-2xl font-bold text-teal-800 mb-4">Directions to Centrelink</h3>
+                                        <p className="text-lg text-gray-700 mb-4">Scan this QR code for Google Maps directions (in Mandarin):</p>
+                                        
+                                        {/* Google Map iframe */}
+                                        <iframe
+                                            src="https://www.google.com/maps/embed/v1/directions?key=&origin=Hurstville+Library,+12-16+MacMahon+St,+Hurstville+NSW+2220,+Australia&destination=Centrelink+Hurstville,+125+Forest+Rd,+Hurstville+NSW+2220,+Australia&mode=driving&language=zh-CN"
+                                            width="100%"
+                                            height="300"
+                                            style={{ border: 0, borderRadius: '0.5rem', marginBottom: '1rem' }}
+                                            allowFullScreen=""
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            title="Directions to Centrelink Hurstville"
+                                        ></iframe>
+                                        
+                                        <img
+                                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.google.com/maps/dir/?api=1&origin=12-16%20MacMahon%20St,%20Hurstville%20NSW%202220,%20Australia&destination=125%20Forest%20Rd,%20Hurstville%20NSW%202220,%20Australia&travelmode=driving&hl=zh-CN"
+                                            alt="QR Code for Centrelink Directions"
+                                            className="w-48 h-48 object-contain mx-auto rounded-md"
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = "https://placehold.co/192x192/cccccc/333333?text=QR+Error";
+                                            }}
+                                        />
+                                        <p className="text-sm text-gray-500 mt-4">Opens in Google Maps app or browser.</p>
+                                    </>
+                                ) : qrPopupType === 'computers' ? (
+                                    <>
+                                        <h3 className="text-2xl font-bold text-teal-800 mb-4">Computer Locations</h3>
+                                        <p className="text-lg text-gray-700 mb-4">Public computers are available in the following areas:</p>
+                                        
+                                        <div className="text-left mb-4">
+                                            <h4 className="font-semibold text-lg mb-2" style={{ color: brandColors.darkTeal }}>Computer Stations:</h4>
+                                            <ul className="list-disc list-inside space-y-1 text-gray-700">
+                                                <li>Ground Floor - Main Computer Lab (8 computers)</li>
+                                                <li>Ground Floor - Quick Access Terminals (4 computers)</li>
+                                                <li>First Floor - Study Area (6 computers)</li>
+                                                <li>Children's Section - Educational Computers (2 computers)</li>
+                                            </ul>
+                                            
+                                            <h4 className="font-semibold text-lg mb-2 mt-4" style={{ color: brandColors.darkTeal }}>Wi-Fi Information:</h4>
+                                            <ul className="list-disc list-inside space-y-1 text-gray-700">
+                                                <li>Network: "GeorgesRiver_Library"</li>
+                                                <li>Password: "Library2024"</li>
+                                                <li>Free unlimited access</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <img
+                                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Network:GeorgesRiver_Library%0APassword:Library2024%0A%0AConnect to library Wi-Fi for free internet access."
+                                            alt="QR Code for Wi-Fi Information"
+                                            className="w-48 h-48 object-contain mx-auto rounded-md"
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = "https://placehold.co/192x192/cccccc/333333?text=QR+Error";
+                                            }}
+                                        />
+                                        <p className="text-sm text-gray-500 mt-4">Scan to get Wi-Fi connection details.</p>
+                                    </>
+                                ) : null}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Language Preference Pop-up Modal */}
+                    {showLanguagePreferencePopup && (
+                        <div className="popup-overlay">
+                            <div style={{ 
+                                backgroundColor: brandColors.lightTealBackground, 
+                                padding: '2rem 3rem 3rem 3rem', 
+                                borderRadius: '1rem', 
+                                textAlign: 'center', 
+                                position: 'relative', 
+                                maxWidth: '95vw', 
+                                maxHeight: '95vh', 
+                                minWidth: '500px',
+                                display: 'flex', 
+                                flexDirection: 'column',
+                                border: 'none',
+                                boxShadow: 'none'
+                            }}>
+                                <button className="popup-close" onClick={() => setShowLanguagePreferencePopup(false)}>
+                                    &times;
+                                </button>
+                                <p className="text-2xl font-bold mb-6" style={{ color: brandColors.darkTeal }}>
+                                    {languagePreferencePopupType === 'mandarin' ? '请选择您偏好的语言：' : '請選擇您偏好的語言：'}
+                                </p>
+                                
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                    <button
+                                        onClick={() => {
+                                            setShowLanguagePreferencePopup(false);
+                                            // You can add any additional logic here for handling the selection
+                                        }}
+                                        className="w-full text-left rounded-lg"
+                                        style={{
+                                            backgroundColor: 'white',
+                                            color: brandColors.darkTeal,
+                                            border: 'none',
+                                            outline: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '1.5rem'
+                                        }}
+                                    >
+                                        <div>
+                                            <div className="font-semibold text-xl">
+                                                {languagePreferencePopupType === 'mandarin' ? '普通话' : '粵語'}
+                                            </div>
+                                            <div className="text-base text-gray-600 mt-1">
+                                                {languagePreferencePopupType === 'mandarin' ? 'Mandarin' : 'Cantonese'}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                speakPhrase(languagePreferencePopupType === 'mandarin' ? 'Mandarin' : 'Cantonese', 'en-US');
+                                            }}
+                                            className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+                                            style={{
+                                                backgroundColor: brandColors.primaryTeal,
+                                                color: 'white',
+                                                border: 'none',
+                                                minWidth: '120px',
+                                                minHeight: '50px'
+                                            }}
+                                            title="Play English audio"
+                                        >
+                                            {speakerIcon}
+                                        </button>
+                                    </button>
+                                    
+                                    <button
+                                        onClick={() => {
+                                            setShowLanguagePreferencePopup(false);
+                                            // You can add any additional logic here for handling the selection
+                                        }}
+                                        className="w-full text-left rounded-lg"
+                                        style={{
+                                            backgroundColor: 'white',
+                                            color: brandColors.darkTeal,
+                                            border: 'none',
+                                            outline: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '1.5rem'
+                                        }}
+                                    >
+                                        <div>
+                                            <div className="font-semibold text-xl">
+                                                {languagePreferencePopupType === 'mandarin' ? '粤语' : '普通話'}
+                                            </div>
+                                            <div className="text-base text-gray-600 mt-1">
+                                                {languagePreferencePopupType === 'mandarin' ? 'Cantonese' : 'Mandarin'}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                speakPhrase(languagePreferencePopupType === 'mandarin' ? 'Cantonese' : 'Mandarin', 'en-US');
+                                            }}
+                                            className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+                                            style={{
+                                                backgroundColor: brandColors.primaryTeal,
+                                                color: 'white',
+                                                border: 'none',
+                                                minWidth: '120px',
+                                                minHeight: '50px'
+                                            }}
+                                            title="Play English audio"
+                                        >
+                                            {speakerIcon}
+                                        </button>
+                                    </button>
+                                    
+                                    <button
+                                        onClick={() => {
+                                            setShowLanguagePreferencePopup(false);
+                                            // You can add any additional logic here for handling the selection
+                                        }}
+                                        className="w-full text-left rounded-lg"
+                                        style={{
+                                            backgroundColor: 'white',
+                                            color: brandColors.darkTeal,
+                                            border: 'none',
+                                            outline: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '1.5rem'
+                                        }}
+                                    >
+                                        <div>
+                                            <div className="font-semibold text-xl">
+                                                {languagePreferencePopupType === 'mandarin' ? '都可以' : '都可以'}
+                                            </div>
+                                            <div className="text-base text-gray-600 mt-1">Either</div>
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                speakPhrase('Either', 'en-US');
+                                            }}
+                                            className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+                                            style={{
+                                                backgroundColor: brandColors.primaryTeal,
+                                                color: 'white',
+                                                border: 'none',
+                                                minWidth: '120px',
+                                                minHeight: '50px'
+                                            }}
+                                            title="Play English audio"
+                                        >
+                                            {speakerIcon}
+                                        </button>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
 </html>
