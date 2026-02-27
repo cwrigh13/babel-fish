@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npm ls react-router-dom)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where npm)",
+      "Bash(where node)",
+      "Bash(curl -s http://localhost:5173/)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :5173)",
+      "Bash(npx vite --port 5173 --host 127.0.0.1)",
+      "Bash(taskkill /PID 20288 /F)",
+      "Bash(cmd /c \"taskkill /PID 20288 /F\")",
+      "Bash(powershell -Command \"Stop-Process -Id 20288 -Force\")",
+      "Bash(powershell -NoProfile -Command \"Stop-Process -Id 20288 -Force\")",
+      "Bash(npm run build)",
+      "Bash(git fetch origin gh-pages)",
+      "Bash(git worktree add /tmp/gh-pages-deploy origin/gh-pages)",
+      "Bash(git push origin HEAD:gh-pages)",
+      "Bash(git worktree remove /tmp/gh-pages-deploy)",
+      "Bash(git add src/ public/ vite.config.js tailwind.config.js postcss.config.js package.json package-lock.json index.html .claude/launch.json .gitignore)",
+      "Bash(git commit:*)",
+      "Bash(git push origin master)",
+      "Bash(git worktree add /tmp/gh-pages-deploy2 origin/gh-pages)",
+      "Bash(git worktree remove /tmp/gh-pages-deploy2)",
+      "Bash(git add src/main.jsx)",
+      "Bash(git worktree remove /tmp/gh-pages-deploy3)",
+      "Bash(git add src/pages/LiveTestPage.jsx)",
+      "Bash(git fetch origin main)",
+      "Bash(git worktree add /tmp/main-deploy origin/main)",
+      "Bash(git push origin HEAD:main)",
+      "Bash(git worktree remove /tmp/main-deploy)",
+      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__list_projects",
+      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__list_organizations",
+      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__get_project",
+      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__list_edge_functions",
+      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__get_edge_function",
+      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__get_project_url",
+      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__get_publishable_keys"
+    ]
+  }
+}
