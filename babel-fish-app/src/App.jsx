@@ -179,6 +179,38 @@ const initialPhrases = [
       'id-ID': 'Sama-sama。', 'en-US': 'You are welcome.',
     }
   },
+  { type: 'staff', category: 'General Enquiries', english: 'Can I help you?',
+    translations: {
+      'zh-CN': '我可以帮您吗？', 'zh-HK': '我可以幫你嗎？', 'ne-NP': 'के म तपाईंलाई मद्दत गर्न सक्छु?',
+      'el-GR': 'Μπορώ να σας βοηθήσω；', 'ar-SA': 'هل يمكنني مساعدتك؟', 'mk-MK': 'Можам ли да ви помогнам？',
+      'es-ES': '¿Puedo ayudarle？', 'it-IT': 'Posso aiutarla？',
+      'id-ID': 'Bisakah saya membantu Anda？', 'en-US': 'Can I help you?',
+    }
+  },
+  { type: 'staff', category: 'General Enquiries', english: 'Do you understand?',
+    translations: {
+      'zh-CN': '您明白了吗？', 'zh-HK': '你明白嗎？', 'ne-NP': 'के तपाईंलाई बुझ्नु भयो?',
+      'el-GR': 'Καταλαβαίνετε；', 'ar-SA': 'هل تفهم؟', 'mk-MK': 'Дали разбирате？',
+      'es-ES': '¿Entiende？', 'it-IT': 'Capisce？',
+      'id-ID': 'Apakah Anda mengerti？', 'en-US': 'Do you understand?',
+    }
+  },
+  { type: 'staff', category: 'General Enquiries', english: 'Please speak slowly.',
+    translations: {
+      'zh-CN': '请讲慢一点。', 'zh-HK': '請講慢啲。', 'ne-NP': 'कृपया बिस्तारै बोल्नुहोस्।',
+      'el-GR': 'Παρακαλώ μιλάτε αργά。', 'ar-SA': 'الرجاء التحدث ببطء。', 'mk-MK': 'Ве молам зборувајте бавно。',
+      'es-ES': 'Por favor, hable despacio。', 'it-IT': 'Per favore, parli lentamente。',
+      'id-ID': 'Tolong berbicara perlahan。', 'en-US': 'Please speak slowly.',
+    }
+  },
+  { type: 'staff', category: 'General Enquiries', english: 'I will get someone who can help you.',
+    translations: {
+      'zh-CN': '我去找人来帮您。', 'zh-HK': '我去搵個人嚟幫你。', 'ne-NP': 'म तपाईंलाई मद्दत गर्न सक्ने कोहीलाई ल्याउँछु।',
+      'el-GR': 'Θα φέρω κάποιον που μπορεί να σας βοηθήσει。', 'ar-SA': 'سأحضر شخصًا يمكنه مساعدتك。', 'mk-MK': 'Ќе доведам некој кој може да ви помогне。',
+      'es-ES': 'Voy a buscar a alguien que pueda ayudarle。', 'it-IT': 'Vado a cercare qualcuno che possa aiutarla。',
+      'id-ID': 'Saya akan mencari seseorang yang bisa membantu Anda。', 'en-US': 'I will get someone who can help you.',
+    }
+  },
 
   { type: 'staff', category: 'Transactional', english: 'Please show me your library card',
     translations: {
@@ -244,6 +276,30 @@ const initialPhrases = [
       'id-ID': 'Bisakah saya melihat ID foto Anda untuk mengonfirm details? If no photo ID, a passport plus a bank statement or phone bill copy is needed.', 'en-US': 'May I see your photo ID to confirm details? If no photo ID, a passport plus a bank statement or phone bill copy is needed.',
     }
   },
+  { type: 'staff', category: 'Transactional', english: 'Your reservation is ready for pickup.',
+    translations: {
+      'zh-CN': '您的预约物品已备好，请取用。', 'zh-HK': '你的預約物品已準備好，請取用。', 'ne-NP': 'तपाईंको आरक्षण उठाउन तयार छ।',
+      'el-GR': 'Η κράτησή σας είναι έτοιμη για παραλαβή。', 'ar-SA': 'حجزك جاهز للاستلام。', 'mk-MK': 'Вашата резервација е готова за подигање。',
+      'es-ES': 'Su reserva está lista para recoger。', 'it-IT': 'La sua prenotazione è pronta per il ritiro。',
+      'id-ID': 'Reservasi Anda siap untuk diambil。', 'en-US': 'Your reservation is ready for pickup.',
+    }
+  },
+  { type: 'staff', category: 'Transactional', english: 'Would you like to pay by cash or card?',
+    translations: {
+      'zh-CN': '您想付现金还是刷卡？', 'zh-HK': '你想用現金定卡付款？', 'ne-NP': 'के तपाईं नगद वा कार्डले भुक्तानी गर्न चाहनुहुन्छ?',
+      'el-GR': 'Θα θέλατε να πληρώσετε με μετρητά ή κάρτα；', 'ar-SA': 'هل تريد الدفع نقداً أم ببطاقة؟', 'mk-MK': 'Дали сакате да платите со готовина или картичка？',
+      'es-ES': '¿Le gustaría pagar en efectivo o con tarjeta？', 'it-IT': 'Vuole pagare in contanti o con carta？',
+      'id-ID': 'Apakah Anda ingin membayar tunai atau dengan kartu？', 'en-US': 'Would you like to pay by cash or card?',
+    }
+  },
+  { type: 'staff', category: 'Transactional', english: 'These items are for reference only and cannot be borrowed.',
+    translations: {
+      'zh-CN': '这些物品仅供参考，不能借出。', 'zh-HK': '呢啲物品只供參考，唔可以借出。', 'ne-NP': 'यी वस्तुहरू केवल सन्दर्भको लागि हुन् र उधारो लिन सकिँदैन।',
+      'el-GR': 'Αυτά τα αντικείμενα είναι μόνο για αναφορά και δεν μπορούν να δανειστούν。', 'ar-SA': 'هذه المواد للرجوع إليها فقط ولا يمكن استعارتها。', 'mk-MK': 'Овие предмети се само за референца и не можат да се позајмат。',
+      'es-ES': 'Estos artículos son solo de consulta y no se pueden prestar。', 'it-IT': 'Questi articoli sono solo di consultazione e non possono essere prestati。',
+      'id-ID': 'Barang-barang ini hanya untuk referensi dan tidak dapat dipinjam。', 'en-US': 'These items are for reference only and cannot be borrowed.',
+    }
+  },
 
   { type: 'staff', category: 'Digital Services', english: 'Would you like to use the internet?',
     translations: {
@@ -283,6 +339,22 @@ const initialPhrases = [
       'el-GR': 'Πόσα αντίγραφα χρειάζεστε？', 'ar-SA': 'كم عدد النسسख التي تحتاجها？', 'mk-MK': 'Коmčine pečatenjeto？',
       'es-ES': '¿Cuántas copias necesita？', 'it-IT': 'Quante copies le servono？',
       'id-ID': 'Berapa many copies do you need？', 'en-US': 'How many copies do you need?',
+    }
+  },
+  { type: 'staff', category: 'Digital Services', english: 'Would you like to use a scanner?',
+    translations: {
+      'zh-CN': '您想使用扫描仪吗？', 'zh-HK': '你想用掃描器嗎？', 'ne-NP': 'के तपाईं स्क्यानर प्रयोग गर्न चाहनुहुन्छ?',
+      'el-GR': 'Θα θέλατε να χρησιμοποιήσετε τον σαρωτή；', 'ar-SA': 'هل ترغب في استخدام الماسح الضوئي؟', 'mk-MK': 'Дали сакате да го користите скенерот？',
+      'es-ES': '¿Le gustaría usar el escáner？', 'it-IT': 'Le piacerebbe usare lo scanner？',
+      'id-ID': 'Apakah Anda ingin menggunakan pemindai？', 'en-US': 'Would you like to use a scanner?',
+    }
+  },
+  { type: 'staff', category: 'Digital Services', english: 'You have limited time remaining on the computer.',
+    translations: {
+      'zh-CN': '您在电脑上的时间即将结束。', 'zh-HK': '你用電腦嘅時間快完喇。', 'ne-NP': 'कम्प्युटरमा तपाईंको समय सीमित बाँकी छ।',
+      'el-GR': 'Ο χρόνος σας στον υπολογιστή είναι περιορισμένος。', 'ar-SA': 'تبقى لك وقت محدود على الحاسوب。', 'mk-MK': 'Ви останало ограничено време на компјутерот。',
+      'es-ES': 'Le queda poco tiempo en el ordenador。', 'it-IT': 'Ha poco tempo rimanente sul computer。',
+      'id-ID': 'Anda memiliki waktu terbatas yang tersisa di komputer。', 'en-US': 'You have limited time remaining on the computer.',
     }
   },
 
@@ -375,6 +447,38 @@ const initialPhrases = [
       'id-ID': 'Apakah ada hakim perdamaímที่ verfügbar heute？', 'en-US': 'Is there a justice of the peace available today?',
     }
   },
+  { type: 'customer', category: 'General Assistance', english: 'I need help finding a book.',
+    translations: {
+      'zh-CN': '我需要帮助找一本书。', 'zh-HK': '我需要幫助搵一本書。', 'ne-NP': 'मलाई किताब खोज्न मद्दत चाहिन्छ।',
+      'el-GR': 'Χρειάζομαι βοήθεια να βρω ένα βιβλίο。', 'ar-SA': 'أحتاج مساعدة في إيجاد كتاب。', 'mk-MK': 'Ми треба помош да најдам книга。',
+      'es-ES': 'Necesito ayuda para encontrar un libro。', 'it-IT': 'Ho bisogno di aiuto per trovare un libro。',
+      'id-ID': 'Saya butuh bantuan menemukan sebuah buku。', 'en-US': 'I need help finding a book.',
+    }
+  },
+  { type: 'customer', category: 'General Assistance', english: 'I lost my library card.',
+    translations: {
+      'zh-CN': '我丢了我的借书证。', 'zh-HK': '我唔見咗我嘅圖書證。', 'ne-NP': 'मेरो पुस्तकालय कार्ड हराएको छ।',
+      'el-GR': 'Έχασα την κάρτα βιβλιοθήκης μου。', 'ar-SA': 'لقد فقدت بطاقة مكتبتي。', 'mk-MK': 'Ја изгубив мојата библиотечна картичка。',
+      'es-ES': 'He perdido mi tarjeta de la biblioteca。', 'it-IT': 'Ho perso la mia tessera della biblioteca。',
+      'id-ID': 'Saya kehilangan kartu perpustakaan saya。', 'en-US': 'I lost my library card.',
+    }
+  },
+  { type: 'customer', category: 'General Assistance', english: 'I forgot my PIN.',
+    translations: {
+      'zh-CN': '我忘记了我的密码。', 'zh-HK': '我唔記得我嘅密碼。', 'ne-NP': 'म मेरो पिन बिर्सें।',
+      'el-GR': 'Ξέχασα το PIN μου。', 'ar-SA': 'نسيت رقمي السري。', 'mk-MK': 'Го заборавив мојот PIN。',
+      'es-ES': 'Olvidé mi PIN。', 'it-IT': 'Ho dimenticato il mio PIN。',
+      'id-ID': 'Saya lupa PIN saya。', 'en-US': 'I forgot my PIN.',
+    }
+  },
+  { type: 'customer', category: 'General Assistance', english: 'Can I speak to a librarian?',
+    translations: {
+      'zh-CN': '我可以和图书馆员交谈吗？', 'zh-HK': '我可以同圖書館員傾談嗎？', 'ne-NP': 'के म पुस्तकालयकर्मीसँग कुरा गर्न सक्छु?',
+      'el-GR': 'Μπορώ να μιλήσω με έναν βιβλιοθηκάριο；', 'ar-SA': 'هل يمكنني التحدث مع أمين المكتبة؟', 'mk-MK': 'Можам ли да разговарам со библиотекар？',
+      'es-ES': '¿Puedo hablar con un bibliotecario？', 'it-IT': 'Posso parlare con un bibliotecario？',
+      'id-ID': 'Bisakah saya berbicara dengan pustakawan？', 'en-US': 'Can I speak to a librarian?',
+    }
+  },
 
   { type: 'customer', category: 'Library Layout', english: 'Where is the bathroom?',
     translations: {
@@ -430,6 +534,30 @@ const initialPhrases = [
       'el-GR': 'Πώς πηγαίνω στο Κέντρο Ηλικιωμένων？', 'ar-SA': 'كيف أصل إلى مركز كبار السν？', 'mk-MK': 'КаKаको da stignam до Centarot za postari graǵani？',
       'es-ES': '¿Cómo llego al Centro de Mayores？', 'it-IT': 'Como arrivo al Centro Anziani？',
       'id-ID': 'Bagaimana cara menuju Pusat Lansia？', 'en-US': 'How do I get to the Seniors Centre?',
+    }
+  },
+  { type: 'customer', category: 'Library Layout', english: 'Where is the reference section?',
+    translations: {
+      'zh-CN': '参考资料区在哪里？', 'zh-HK': '參考資料區喺邊度？', 'ne-NP': 'सन्दर्भ खण्ड कहाँ छ?',
+      'el-GR': 'Πού είναι το τμήμα αναφοράς；', 'ar-SA': 'أين قسم المراجع؟', 'mk-MK': 'Каде е референтниот дел？',
+      'es-ES': '¿Dónde está la sección de referencia？', 'it-IT': 'Dov\'è la sezione di consultazione？',
+      'id-ID': 'Di mana bagian referensi？', 'en-US': 'Where is the reference section?',
+    }
+  },
+  { type: 'customer', category: 'Library Layout', english: 'Where is the study area?',
+    translations: {
+      'zh-CN': '自习室在哪里？', 'zh-HK': '自習室喺邊度？', 'ne-NP': 'अध्ययन क्षेत्र कहाँ छ?',
+      'el-GR': 'Πού είναι η αίθουσα μελέτης；', 'ar-SA': 'أين منطقة الدراسة؟', 'mk-MK': 'Каде е просторот за учење？',
+      'es-ES': '¿Dónde está el área de estudio？', 'it-IT': 'Dov\'è la zona studio？',
+      'id-ID': 'Di mana area belajar？', 'en-US': 'Where is the study area?',
+    }
+  },
+  { type: 'customer', category: 'Library Layout', english: 'Where is the magazine section?',
+    translations: {
+      'zh-CN': '杂志区在哪里？', 'zh-HK': '雜誌區喺邊度？', 'ne-NP': 'पत्रिका खण्ड कहाँ छ?',
+      'el-GR': 'Πού είναι το τμήμα περιοδικών；', 'ar-SA': 'أين قسم المجلات؟', 'mk-MK': 'Каде е делот со списанија？',
+      'es-ES': '¿Dónde está la sección de revistas？', 'it-IT': 'Dov\'è la sezione riviste？',
+      'id-ID': 'Di mana bagian majalah？', 'en-US': 'Where is the magazine section?',
     }
   },
 
@@ -505,6 +633,22 @@ const initialPhrases = [
       'id-ID': 'Berapa biaya pencetakan？', 'en-US': 'How much does printing cost?',
     }
   },
+  { type: 'customer', category: 'Digital Services', english: 'I would like to book a computer session.',
+    translations: {
+      'zh-CN': '我想预约电脑使用时段。', 'zh-HK': '我想預約電腦使用時段。', 'ne-NP': 'म कम्प्युटर सत्र बुक गर्न चाहन्छु।',
+      'el-GR': 'Θα ήθελα να κλείσω μια συνεδρία στον υπολογιστή。', 'ar-SA': 'أود حجز جلسة على الحاسوب。', 'mk-MK': 'Би сакал да резервирам сесија на компјутер。',
+      'es-ES': 'Me gustaría reservar una sesión de ordenador。', 'it-IT': 'Vorrei prenotare una sessione al computer。',
+      'id-ID': 'Saya ingin memesan sesi komputer。', 'en-US': 'I would like to book a computer session.',
+    }
+  },
+  { type: 'customer', category: 'Digital Services', english: 'Can I scan a document?',
+    translations: {
+      'zh-CN': '我可以扫描文件吗？', 'zh-HK': '我可以掃描文件嗎？', 'ne-NP': 'के म कागजात स्क्यान गर्न सक्छु?',
+      'el-GR': 'Μπορώ να σαρώσω ένα έγγραφο；', 'ar-SA': 'هل يمكنني مسح مستند ضوئيًا؟', 'mk-MK': 'Можам ли да скенирам документ？',
+      'es-ES': '¿Puedo escanear un documento？', 'it-IT': 'Posso scansionare un documento？',
+      'id-ID': 'Bisakah saya memindai dokumen？', 'en-US': 'Can I scan a document?',
+    }
+  },
 
   { type: 'customer', category: 'Language & Community Resources', english: 'Do you have Chinese language magazines?',
     translations: {
@@ -536,6 +680,30 @@ const initialPhrases = [
       'el-GR': 'Υπάρχει κάποιος here who can speak Cantonese？', 'ar-SA': 'هل يوجد هنا من يتحدث الكانتونية？', 'mk-MK': 'Даli ima nekoj ovde што zboruva kantonski？',
       'es-ES': '¿Has alguien here who can speak Cantonese？', 'it-IT': 'C\'è qualcuno here who can speak Cantonese？',
       'id-ID': 'Apakah there is anyone here who can speak Cantonese？', 'en-US': 'Is there anyone here who can speak Cantonese?',
+    }
+  },
+  { type: 'customer', category: 'Language & Community Resources', english: 'Do you have books in other languages?',
+    translations: {
+      'zh-CN': '你们有其他语言的书籍吗？', 'zh-HK': '你有冇其他語言嘅書？', 'ne-NP': 'तपाईंसँग अन्य भाषाका किताबहरू छन्?',
+      'el-GR': 'Έχετε βιβλία σε άλλες γλώσσες；', 'ar-SA': 'هل لديكم كتب بلغات أخرى؟', 'mk-MK': 'Дали имате книги на други јазици？',
+      'es-ES': '¿Tienen libros en otros idiomas？', 'it-IT': 'Avete libri in altre lingue？',
+      'id-ID': 'Apakah Anda memiliki buku dalam bahasa lain？', 'en-US': 'Do you have books in other languages?',
+    }
+  },
+  { type: 'customer', category: 'Language & Community Resources', english: 'Are there any community programs or events at the library?',
+    translations: {
+      'zh-CN': '图书馆有社区活动或项目吗？', 'zh-HK': '圖書館有冇社區活動或節目？', 'ne-NP': 'पुस्तकालयमा कुनै सामुदायिक कार्यक्रम वा गतिविधिहरू छन्?',
+      'el-GR': 'Υπάρχουν κοινοτικά προγράμματα ή εκδηλώσεις στη βιβλιοθήκη；', 'ar-SA': 'هل توجد برامج أو فعاليات مجتمعية في المكتبة؟', 'mk-MK': 'Дали има општествени програми или настани во библиотеката？',
+      'es-ES': '¿Hay programas o eventos comunitarios en la biblioteca？', 'it-IT': 'Ci sono programmi o eventi comunitari in biblioteca？',
+      'id-ID': 'Apakah ada program atau acara komunitas di perpustakaan？', 'en-US': 'Are there any community programs or events at the library?',
+    }
+  },
+  { type: 'customer', category: 'Language & Community Resources', english: 'Do you have newspapers in other languages?',
+    translations: {
+      'zh-CN': '你们有其他语言的报纸吗？', 'zh-HK': '你有冇其他語言嘅報紙？', 'ne-NP': 'तपाईंसँग अन्य भाषाका समाचारपत्रहरू छन्?',
+      'el-GR': 'Έχετε εφημερίδες σε άλλες γλώσσες；', 'ar-SA': 'هل لديكم صحف بلغات أخرى؟', 'mk-MK': 'Дали имате весници на други јазици？',
+      'es-ES': '¿Tienen periódicos en otros idiomas？', 'it-IT': 'Avete giornali in altre lingue？',
+      'id-ID': 'Apakah Anda memiliki koran dalam bahasa lain？', 'en-US': 'Do you have newspapers in other languages?',
     }
   },
 ];
