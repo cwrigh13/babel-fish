@@ -39,6 +39,8 @@ const LiveTestPage = () => {
     const [noteModalOpen, setNoteModalOpen] = useState(false);
     const [noteModalState, setNoteModalState] = useState(null);
     const [noteText, setNoteText] = useState('');
+    const [noteSubmitStatus, setNoteSubmitStatus] = useState('idle'); // idle | submitting | success | error
+    const [noteSubmitResult, setNoteSubmitResult] = useState(null);
 
     const iframeUrl = getIframeUrl();
 
@@ -154,10 +156,12 @@ const LiveTestPage = () => {
         setNoteModalOpen(false);
         setNoteModalState(null);
         setNoteText('');
+        setNoteSubmitStatus('idle');
+        setNoteSubmitResult(null);
     };
 
-    const githubIssueUrl = useMemo(() => {
-        if (!noteModalState || !noteText.trim()) return null;
+    const handleSubmitNote = async () => {
+        if (!noteModalState || !noteText.trim()) return;
 
         const { scenarioTitle, stepIndex, stepText, role: noteRole } = noteModalState;
 
@@ -178,8 +182,34 @@ const LiveTestPage = () => {
             noteText.trim(),
         ].filter(Boolean).join('\n');
 
-        return `https://github.com/cwrigh13/babel-fish/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=user-testing`;
-    }, [noteModalState, noteText]);
+        setNoteSubmitStatus('submitting');
+        setNoteSubmitResult(null);
+
+        try {
+            const apiBase = import.meta.env.VITE_API_URL || '';
+            const res = await fetch(`${apiBase}/api/create-issue`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, body, labels: ['user-testing'] }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to create issue.');
+            }
+
+            setNoteSubmitStatus('success');
+            setNoteSubmitResult(data);
+
+            setTimeout(() => {
+                closeNoteModal();
+            }, 3000);
+        } catch (err) {
+            setNoteSubmitStatus('error');
+            setNoteSubmitResult({ error: err.message });
+        }
+    };
 
     const handleStepKeyDown = (event, scenarioId, index) => {
         if (event.key === 'Enter' || event.key === ' ') {
@@ -554,9 +584,23 @@ const LiveTestPage = () => {
 
                         </div>
 
-                        <p className="mt-3 text-[11px]" style={{ color: '#9CA3AF' }}>
-                            This will open a pre-filled GitHub Issue in a new tab.
-                        </p>
+                        {noteSubmitStatus === 'success' && noteSubmitResult?.url && (
+                            <div className="mt-3 flex items-center gap-2 rounded-xl px-3 py-2" style={{ backgroundColor: '#F0FDF4', border: '1px solid #86EFAC' }}>
+                                <CheckCircle2 className="h-4 w-4 flex-shrink-0" style={{ color: '#16A34A' }} />
+                                <div className="flex-1 text-xs" style={{ color: '#166534' }}>
+                                    Issue #{noteSubmitResult.number} created.{' '}
+                                    <a href={noteSubmitResult.url} target="_blank" rel="noopener noreferrer" className="underline font-medium">
+                                        View on GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        )}
+
+                        {noteSubmitStatus === 'error' && (
+                            <div className="mt-3 rounded-xl px-3 py-2 text-xs" style={{ backgroundColor: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B' }}>
+                                {noteSubmitResult?.error || 'Something went wrong. Please try again.'}
+                            </div>
+                        )}
 
                         <div className="mt-3 flex items-center justify-end gap-2">
                             <button
@@ -565,26 +609,25 @@ const LiveTestPage = () => {
                                 className="rounded-full border border-gray-300 bg-white px-4 py-1.5 text-xs font-medium hover:bg-gray-50 transition"
                                 style={{ color: '#333333' }}
                             >
-                                Cancel
+                                {noteSubmitStatus === 'success' ? 'Close' : 'Cancel'}
                             </button>
-                            {githubIssueUrl ? (
-                                <a
-                                    href={githubIssueUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={closeNoteModal}
-                                    className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold text-white shadow-md transition-all duration-200 hover:shadow-lg"
+                            {noteSubmitStatus !== 'success' && (
+                                <button
+                                    type="button"
+                                    onClick={handleSubmitNote}
+                                    disabled={!noteText.trim() || noteSubmitStatus === 'submitting'}
+                                    className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold text-white shadow-md transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                                     style={{ backgroundColor: '#00A99D' }}
                                 >
-                                    Open GitHub Issue ↗
-                                </a>
-                            ) : (
-                                <span
-                                    className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold text-white opacity-50 cursor-not-allowed"
-                                    style={{ backgroundColor: '#00A99D' }}
-                                >
-                                    Open GitHub Issue ↗
-                                </span>
+                                    {noteSubmitStatus === 'submitting' ? (
+                                        <>
+                                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                            Submitting...
+                                        </>
+                                    ) : (
+                                        'Submit Issue'
+                                    )}
+                                </button>
                             )}
                         </div>
                     </div>

@@ -66,6 +66,43 @@ app.get('/api/phrases', async (req, res) => {
   }
 });
 
+// Create GitHub issue (proxies to GitHub API so the PAT stays server-side)
+app.post('/api/create-issue', async (req, res) => {
+  const pat = process.env.GITHUB_PAT;
+  if (!pat) {
+    return res.status(503).json({ error: 'GitHub integration is not configured.' });
+  }
+
+  const { title, body, labels } = req.body;
+  if (!title) {
+    return res.status(400).json({ error: 'Title is required.' });
+  }
+
+  try {
+    const response = await fetch('https://api.github.com/repos/cwrigh13/babel-fish/issues', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${pat}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title, body, labels: labels || ['user-testing'] }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      console.error('GitHub API error:', response.status, err);
+      return res.status(response.status).json({ error: err.message || 'Failed to create issue.' });
+    }
+
+    const issue = await response.json();
+    res.status(201).json({ url: issue.html_url, number: issue.number });
+  } catch (error) {
+    console.error('Error creating GitHub issue:', error);
+    res.status(500).json({ error: 'Failed to create issue.' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Babel Fish server running on port ${PORT}`);
