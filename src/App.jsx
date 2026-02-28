@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { Download } from 'lucide-react';
 import { LANGUAGE_CODES } from './constants/languages';
 import { brandColors } from './constants/colors';
 import { samplePhrases } from './data/phrases';
+import { getVoiceStatus, getVoiceInstallInfo } from './utils/speechVoices';
+
+// Languages unavailable as Windows speech voices — buttons hidden for now
+const LANGUAGES_NO_WINDOWS_VOICE = ['Greek', 'Nepali', 'Arabic', 'Macedonian'];
+const languageButtonFilter = ([name]) => name !== 'English' && !LANGUAGES_NO_WINDOWS_VOICE.includes(name);
 
 // Speaker icon SVG
 const speakerIcon = (
@@ -36,6 +42,10 @@ function App() {
     const [phrases, setPhrases] = useState([]);
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const [currentPlayingText, setCurrentPlayingText] = useState('');
+    const [speechVoices, setSpeechVoices] = useState([]);
+    const [showVoiceLanguagesModal, setShowVoiceLanguagesModal] = useState(false);
+    /** Snapshot of voices shown in the modal; refreshed when modal opens or user clicks Refresh */
+    const [modalVoiceList, setModalVoiceList] = useState([]);
 
     // Save state to localStorage
     const saveState = (key, value) => {
@@ -59,45 +69,76 @@ function App() {
         }, 300);
     }, []);
 
-    const speakPhrase = (text, langCode) => {
-        if ('speechSynthesis' in window) {
-            speechSynthesis.cancel();
-            setIsAudioPlaying(true);
-            setCurrentPlayingText(text);
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = langCode;
-            utterance.rate = 0.8;
-            utterance.pitch = 1.0;
-            utterance.volume = 1.0;
-
-            const voices = speechSynthesis.getVoices();
-            const preferredVoice = voices.find(voice =>
-                voice.lang.startsWith(langCode.split('-')[0]) &&
-                voice.lang.includes(langCode.split('-')[1] || '')
-            );
-
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-            }
-
-            utterance.onend = () => {
-                setIsAudioPlaying(false);
-                setCurrentPlayingText('');
-            };
-
-            utterance.onerror = (event) => {
-                console.error('Speech synthesis error:', event.error);
-                setIsAudioPlaying(false);
-                setCurrentPlayingText('');
-            };
-
-            setTimeout(() => {
-                speechSynthesis.speak(utterance);
-            }, 50);
-        } else {
-            alert('Text-to-speech is not supported in this browser.');
+    // Reset language to Mandarin if saved language has no Windows voice (buttons are hidden)
+    useEffect(() => {
+        if (LANGUAGES_NO_WINDOWS_VOICE.includes(staffLanguage)) {
+            setStaffLanguage('Mandarin');
         }
+        if (LANGUAGES_NO_WINDOWS_VOICE.includes(customerLanguage)) {
+            setCustomerLanguage('Mandarin');
+        }
+    }, [staffLanguage, customerLanguage]);
+
+    // Pre-load voices (Chrome returns [] until voiceschanged fires)
+    useEffect(() => {
+        if (!('speechSynthesis' in window)) return;
+        const updateVoices = () => setSpeechVoices(speechSynthesis.getVoices());
+        updateVoices();
+        speechSynthesis.addEventListener('voiceschanged', updateVoices);
+        return () => speechSynthesis.removeEventListener('voiceschanged', updateVoices);
+    }, []);
+
+    // When the voice modal opens, take a fresh snapshot for display; keep in sync for Refresh
+    useEffect(() => {
+        if (!showVoiceLanguagesModal || !('speechSynthesis' in window)) return;
+        setModalVoiceList(Array.from(speechSynthesis.getVoices()));
+    }, [showVoiceLanguagesModal]);
+
+    const speakPhrase = (text, langCode) => {
+        if (!('speechSynthesis' in window)) {
+            alert('Text-to-speech is not supported in this browser.');
+            return;
+        }
+        speechSynthesis.cancel();
+        const voices = speechVoices.length > 0 ? speechVoices : speechSynthesis.getVoices();
+        const targetLang = langCode.toLowerCase().replace('_', '-');
+        const targetPrefix = targetLang.split('-')[0];
+        const isEnglish = targetPrefix === 'en';
+
+        // For non-English (e.g. Greek), we must use a matching voice or the engine spells letters
+        const preferredVoice = voices.find(v => v.lang.toLowerCase().replace('_', '-') === targetLang) ||
+                             voices.find(v => v.lang.toLowerCase().startsWith(targetPrefix));
+
+        if (!isEnglish && !preferredVoice) {
+            const langName = Object.entries(LANGUAGE_CODES).find(([, d]) => (d.code || '').toLowerCase().replace('_', '-') === targetLang)?.[0] || langCode;
+            alert(`No ${langName} voice is available on this device. To hear the phrase pronounced correctly, add a ${langName} voice in your system settings (e.g. Windows: Settings → Time & language → Speech → Add voice).`);
+            return;
+        }
+
+        setIsAudioPlaying(true);
+        setCurrentPlayingText(text);
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = preferredVoice ? preferredVoice.lang : langCode;
+        utterance.rate = 0.8;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
+        }
+
+        utterance.onend = () => {
+            setIsAudioPlaying(false);
+            setCurrentPlayingText('');
+        };
+
+        utterance.onerror = (event) => {
+            console.error('Speech synthesis error:', event.error);
+            setIsAudioPlaying(false);
+            setCurrentPlayingText('');
+        };
+
+        setTimeout(() => speechSynthesis.speak(utterance), 50);
     };
 
     const stopAudio = () => {
@@ -233,7 +274,7 @@ function App() {
                 <div className="language-buttons-container mb-8">
                     <div className="language-buttons-row">
                         {currentMode === 'staff' ? (
-                            Object.entries(LANGUAGE_CODES).filter(([name]) => name !== 'English').map(([name, data]) => (
+                            Object.entries(LANGUAGE_CODES).filter(languageButtonFilter).map(([name, data]) => (
                                 <button
                                     key={name}
                                     onClick={() => setStaffLanguage(name)}
@@ -244,7 +285,7 @@ function App() {
                                 </button>
                             ))
                         ) : (
-                            Object.entries(LANGUAGE_CODES).filter(([name]) => name !== 'English').map(([name, data]) => (
+                            Object.entries(LANGUAGE_CODES).filter(languageButtonFilter).map(([name, data]) => (
                                 <button
                                     key={name}
                                     onClick={() => setCustomerLanguage(name)}
@@ -299,7 +340,12 @@ function App() {
                         No phrases found.
                     </div>
                 ) : (
-                    Object.keys(groupedPhrases).map((category) => (
+                    Object.keys(groupedPhrases).map((category) => {
+                        const categoryPhrases = groupedPhrases[category];
+                        const firstPhrase = categoryPhrases[0];
+                        const restPhrases = categoryPhrases.slice(1);
+
+                        return (
                         <div key={category} className="category-section">
                             <div className="category-header">
                                 <h2 className="category-title-en">
@@ -311,10 +357,91 @@ function App() {
                                 <div className="mx-auto mt-4 w-24 h-1 rounded-full" style={{ backgroundColor: brandColors.primaryTeal }}></div>
                             </div>
 
+                            {/* Phrase cards in a single grid so the first card is same width as the rest */}
                             <div className="phrase-list-grid">
-                                {groupedPhrases[category].map((phrase) => {
-                                    const langToUse = currentMode === 'staff' ? LANGUAGE_CODES[staffLanguage].code : 'en-US';
-                                    const textToSpeak = currentMode === 'staff' ? (phrase.translations?.[langToUse] || phrase.english) : phrase.english;
+                            {firstPhrase && (() => {
+                                const activeLangName = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                const langToUse = LANGUAGE_CODES[activeLangName]?.code || 'en-US';
+                                const textToSpeak = (currentMode === 'staff' || activeLangName !== 'English')
+                                    ? (firstPhrase.translations?.[langToUse] || firstPhrase.english)
+                                    : firstPhrase.english;
+                                const isPlaying = isAudioPlaying && currentPlayingText === textToSpeak;
+                                return (
+                                    <div
+                                        key={firstPhrase.id}
+                                        className="phrase-card"
+                                        onClick={() => {
+                                            if (firstPhrase.english === 'How do I get to Centrelink?' && currentMode === 'customer') {
+                                                setQrPopupType('centrelink');
+                                                setShowQrPopup(true);
+                                            } else if (firstPhrase.english === 'Do you have computers?' && currentMode === 'customer') {
+                                                setQrPopupType('computers');
+                                                setShowQrPopup(true);
+                                            }
+                                        }}
+                                    >
+                                        <div className="text-left mb-6">
+                                            {currentMode === 'staff' ? (
+                                                <>
+                                                    <p className="text-2xl font-bold mb-3" style={{ color: brandColors.darkTeal, lineHeight: '1.25', letterSpacing: '-0.01em' }}>
+                                                        {firstPhrase.english}
+                                                    </p>
+                                                    <p className="text-lg font-medium" style={{ color: brandColors.darkGreyText, opacity: 0.85 }}>
+                                                        {firstPhrase.translations?.[LANGUAGE_CODES[staffLanguage].code] || firstPhrase.english}
+                                                    </p>
+                                                    {(firstPhrase.english === 'Do you prefer to speak Mandarin or Cantonese?' && staffLanguage === 'Mandarin') && (
+                                                        <div className="flex justify-center mt-4">
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); setLanguagePreferencePopupType('mandarin'); setShowLanguagePreferencePopup(true); }}
+                                                                className="pill-button"
+                                                            >点击选择选项</button>
+                                                        </div>
+                                                    )}
+                                                    {(firstPhrase.english === 'Do you prefer to speak Cantonese or Mandarin?' && staffLanguage === 'Cantonese') && (
+                                                        <div className="flex justify-center mt-4">
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); setLanguagePreferencePopupType('cantonese'); setShowLanguagePreferencePopup(true); }}
+                                                                className="pill-button"
+                                                            >點擊選擇選項</button>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <p className="text-2xl font-bold mb-3" style={{ color: brandColors.darkTeal, lineHeight: '1.25', letterSpacing: '-0.01em' }}>
+                                                        {firstPhrase.translations?.[LANGUAGE_CODES[customerLanguage].code] || firstPhrase.english}
+                                                    </p>
+                                                    <p className="text-lg font-medium" style={{ color: brandColors.darkGreyText, opacity: 0.85 }}>
+                                                        {firstPhrase.english}
+                                                    </p>
+                                                </>
+                                            )}
+                                        </div>
+
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (isPlaying) {
+                                                    stopAudio();
+                                                } else {
+                                                    speakPhrase(textToSpeak, langToUse);
+                                                }
+                                            }}
+                                            className={`speaker-button-wide ${isPlaying ? 'playing' : ''}`}
+                                            style={{ backgroundColor: isPlaying ? '#004D40' : (currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed) }}
+                                            aria-label={`Play pronunciation in ${activeLangName}`}
+                                        >
+                                            {speakerIcon}
+                                        </button>
+                                    </div>
+                                );
+                            })()}
+                                {restPhrases.map((phrase) => {
+                                    const activeLangName = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                    const langToUse = LANGUAGE_CODES[activeLangName]?.code || 'en-US';
+                                    const textToSpeak = (currentMode === 'staff' || activeLangName !== 'English') 
+                                        ? (phrase.translations?.[langToUse] || phrase.english) 
+                                        : phrase.english;
                                     const isPlaying = isAudioPlaying && currentPlayingText === textToSpeak;
 
                                     return (
@@ -380,6 +507,7 @@ function App() {
                                                 }}
                                                 className={`speaker-button-wide ${isPlaying ? 'playing' : ''}`}
                                                 style={{ backgroundColor: isPlaying ? '#004D40' : (currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed) }}
+                                                aria-label={`Play pronunciation in ${activeLangName}`}
                                             >
                                                 {speakerIcon}
                                             </button>
@@ -388,9 +516,21 @@ function App() {
                                 })}
                             </div>
                         </div>
-                    ))
+                        );
+                    })
                 )}
             </div>
+
+            {/* Fixed bottom-right: check / install speech voices */}
+            <button
+                type="button"
+                onClick={() => setShowVoiceLanguagesModal(true)}
+                className="fixed bottom-6 right-6 p-3 rounded-full shadow-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ backgroundColor: brandColors.darkTeal, color: 'white' }}
+                aria-label="Check and install speech voices for all languages"
+            >
+                <Download size={24} aria-hidden="true" />
+            </button>
 
             {/* Modals */}
             {showQrPopup && (
@@ -463,6 +603,94 @@ function App() {
                     </div>
                 </div>
             )}
+
+            {showVoiceLanguagesModal && (() => {
+                const { installed, missing } = getVoiceStatus(LANGUAGE_CODES, modalVoiceList);
+                const installInfo = getVoiceInstallInfo();
+                const handleRefreshVoices = () => {
+                    if ('speechSynthesis' in window) {
+                        const list = Array.from(speechSynthesis.getVoices());
+                        setModalVoiceList(list);
+                    }
+                };
+                return (
+                    <div className="popup-overlay" onClick={() => setShowVoiceLanguagesModal(false)}>
+                        <div
+                            className="popup-content overflow-y-auto"
+                            onClick={e => e.stopPropagation()}
+                            style={{ maxWidth: '480px', maxHeight: '85vh' }}
+                        >
+                            <button className="popup-close" onClick={() => setShowVoiceLanguagesModal(false)} aria-label="Close">&times;</button>
+                            <h3 className="text-2xl font-bold mb-4 text-teal-800">
+                                Speech voices for Babel Fish
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-4">
+                                Phrases are read using your device&apos;s text-to-speech. Languages without an installed voice cannot be pronounced correctly.
+                            </p>
+                            <div className="mb-4">
+                                <h4 className="font-semibold text-teal-800 mb-2" style={{ color: brandColors.darkTeal }}>Installed ({installed.length})</h4>
+                                <ul className="text-sm text-gray-700 space-y-1">
+                                    {installed.length === 0 ? (
+                                        <li>No Babel Fish languages detected. Voices may still be loading — try &quot;Refresh list&quot;.</li>
+                                    ) : (
+                                        installed.map(({ name, nativeName }) => (
+                                            <li key={name} className="flex items-center gap-2">
+                                                <span aria-hidden="true">✓</span> {name} ({nativeName})
+                                            </li>
+                                        ))
+                                    )}
+                                </ul>
+                            </div>
+                            <div className="mb-4">
+                                <h4 className="font-semibold text-teal-800 mb-2" style={{ color: brandColors.darkTeal }}>Missing ({missing.length})</h4>
+                                {missing.length === 0 ? (
+                                    <p className="text-sm text-gray-700">All Babel Fish languages have a voice installed.</p>
+                                ) : (
+                                    <>
+                                        <ul className="text-sm text-gray-700 space-y-1 mb-3">
+                                            {missing.map(({ name, nativeName }) => (
+                                                <li key={name} className="flex items-center gap-2">
+                                                    <span aria-hidden="true">✗</span> {name} ({nativeName})
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <p className="text-sm text-gray-600 mb-2">{installInfo.instructions}</p>
+                                        {installInfo.openSettingsUrl ? (
+                                            <a
+                                                href={installInfo.openSettingsUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-block px-4 py-2 rounded-lg font-medium text-white hover:opacity-90"
+                                                style={{ backgroundColor: brandColors.primaryTeal }}
+                                            >
+                                                {installInfo.label}
+                                            </a>
+                                        ) : null}
+                                    </>
+                                )}
+                            </div>
+                            <div className="flex gap-3 justify-end pt-2">
+                                <button
+                                    type="button"
+                                    onClick={handleRefreshVoices}
+                                    className="text-sm underline"
+                                    style={{ color: brandColors.darkTeal }}
+                                >
+                                    Refresh list
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowVoiceLanguagesModal(false)}
+                                    className="px-4 py-2 rounded-lg font-medium text-white"
+                                    style={{ backgroundColor: brandColors.darkTeal }}
+                                >
+                                    Done
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })()}
         </div>
     );
 }
