@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Babel Fish - Live Test Scenarios</title>
+    <style>
+        :root {
+            --teal: #0d9488;
+            --teal-light: #ccfbf1;
+            --red: #dc2626;
+            --red-light: #fee2e2;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--teal), #0f766e);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .intro-box {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .intro-box h2 {
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .intro-box p, .intro-box li {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+        }
+
+        .intro-box ol {
+            padding-left: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .intro-box li {
+            margin-bottom: 0.35rem;
+        }
+
+        .app-link-btn {
+            display: inline-block;
+            background: var(--teal);
+            color: white;
+            text-decoration: none;
+            padding: 0.65rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 0.75rem;
+            transition: background 0.2s;
+        }
+
+        .app-link-btn:hover {
+            background: #0f766e;
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .section-label .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-staff {
+            background: var(--teal-light);
+            color: var(--teal);
+        }
+
+        .badge-customer {
+            background: var(--red-light);
+            color: var(--red);
+        }
+
+        .section-label h2 {
+            font-size: 1.3rem;
+            color: var(--gray-900);
+        }
+
+        .scenario-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+
+        .scenario-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .scenario-header {
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .scenario-header:hover {
+            background: var(--gray-50);
+        }
+
+        .scenario-id {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            margin-right: 0.5rem;
+        }
+
+        .id-staff {
+            background: var(--teal-light);
+            color: var(--teal);
+        }
+
+        .id-customer {
+            background: var(--red-light);
+            color: var(--red);
+        }
+
+        .scenario-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .chevron {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            transition: transform 0.2s;
+        }
+
+        .scenario-card.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .scenario-body {
+            display: none;
+            padding: 0 1.25rem 1.25rem;
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .scenario-card.open .scenario-body {
+            display: block;
+        }
+
+        .context-box {
+            background: var(--gray-50);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin: 0.75rem 0;
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            border-left: 3px solid var(--gray-200);
+        }
+
+        .scenario-body h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin: 1rem 0 0.5rem;
+            color: var(--gray-800);
+        }
+
+        .scenario-body ol {
+            padding-left: 1.25rem;
+        }
+
+        .scenario-body li {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            margin-bottom: 0.35rem;
+        }
+
+        .success-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .success-list li {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .success-list li::before {
+            content: "\2713";
+            position: absolute;
+            left: 0;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: var(--gray-600);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.35rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Babel Fish - Live Test Scenarios</h1>
+        <p>Follow these scenarios to test the app. Tap a scenario to expand it.</p>
+    </div>
+
+    <div class="container">
+        <div class="intro-box">
+            <h2>How to use this page</h2>
+            <ol>
+                <li>Open the Babel Fish app using the button below (ideally on a second tab or device).</li>
+                <li>Pick a scenario below and tap it to expand the instructions.</li>
+                <li>Follow the steps in the app and check whether you reach the success state described.</li>
+                <li>If something doesn't work as expected or feels confusing, make a note - that feedback is valuable!</li>
+            </ol>
+            <a class="app-link-btn" href="https://grlibraries.github.io/babel-fish/" target="_blank" rel="noopener">
+                Open Babel Fish App &rarr;
+            </a>
+        </div>
+
+        <!-- STAFF SCENARIOS -->
+        <div class="section-label">
+            <span class="badge badge-staff">Staff</span>
+            <h2>Staff Scenarios</h2>
+        </div>
+
+        <div class="scenario-card" id="s1">
+            <div class="scenario-header" onclick="toggle('s1')">
+                <div>
+                    <span class="scenario-id id-staff">S1</span>
+                    <span class="scenario-title">Select a Display Language</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">A customer who speaks Mandarin has just approached the service desk. You need to set the app to show Mandarin translations so you can communicate with them.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>Confirm the app is in <strong>"For Staff"</strong> mode (the teal button should be active). If not, tap "For Staff".</li>
+                    <li>Find the row of language buttons below the mode selector.</li>
+                    <li>Tap <strong>"Mandarin"</strong> to select it as the display language.</li>
+                    <li>Scroll down and verify that each phrase card now shows English text on top with a Mandarin translation underneath.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>The "Mandarin" language button is highlighted/active.</li>
+                    <li>Every phrase card displays the English phrase in bold with the Mandarin translation below it.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="scenario-card" id="s2">
+            <div class="scenario-header" onclick="toggle('s2')">
+                <div>
+                    <span class="scenario-id id-staff">S2</span>
+                    <span class="scenario-title">Play an Audio Phrase for a Customer</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">A Greek-speaking customer needs help but there is a language barrier. You want to play a greeting phrase out loud so the customer can understand.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>Make sure you are in <strong>"For Staff"</strong> mode.</li>
+                    <li>Select <strong>"Greek"</strong> from the language buttons.</li>
+                    <li>Scroll to find a greeting phrase (e.g. "Welcome to the library" or "How can I help you?").</li>
+                    <li>Tap the <strong>coloured speaker button</strong> on that phrase card.</li>
+                    <li>Listen to the audio that plays and observe the button state while it is speaking.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>The browser's text-to-speech reads the phrase aloud in Greek.</li>
+                    <li>The speaker button visually changes while audio is playing.</li>
+                    <li>Audio can be stopped by pressing Escape or tapping the button again.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="scenario-card" id="s3">
+            <div class="scenario-header" onclick="toggle('s3')">
+                <div>
+                    <span class="scenario-id id-staff">S3</span>
+                    <span class="scenario-title">Filter Phrases by Category</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">You are helping a customer with a book loan and only want to see transaction-related phrases, not the entire list.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>In "For Staff" mode, select any language.</li>
+                    <li>Find the category filter buttons (All, General Enquiries, Transactional, Digital Services).</li>
+                    <li>Tap <strong>"Transactional"</strong> to filter the list.</li>
+                    <li>Scroll through the results and confirm only borrowing/returning/renewal phrases appear.</li>
+                    <li>Tap <strong>"All"</strong> to reset the filter and confirm all phrases reappear.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>Only Transactional phrases are shown when that filter is active.</li>
+                    <li>The active filter button is visually highlighted.</li>
+                    <li>Tapping "All" restores the full phrase list.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="scenario-card" id="s4">
+            <div class="scenario-header" onclick="toggle('s4')">
+                <div>
+                    <span class="scenario-id id-staff">S4</span>
+                    <span class="scenario-title">Use the Mandarin/Cantonese Preference Card</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">A Chinese-speaking customer has approached but you are not sure if they prefer Mandarin or Cantonese. The app has a special card to help you ask.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>In "For Staff" mode, select <strong>"Mandarin"</strong> as your language.</li>
+                    <li>Scroll to the "General Enquiries" section and find the card that says <strong>"Do you prefer to speak Mandarin or Cantonese?"</strong></li>
+                    <li>Tap the small Chinese-text button on that card to open the language preference popup.</li>
+                    <li>In the popup, tap one of the language options (Mandarin, Cantonese, or Either).</li>
+                    <li>Listen to the audio confirmation that plays after your selection.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>A popup appears with three language options displayed in Chinese characters.</li>
+                    <li>Tapping an option plays the corresponding audio phrase.</li>
+                    <li>The popup closes automatically after a short delay.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="scenario-card" id="s5">
+            <div class="scenario-header" onclick="toggle('s5')">
+                <div>
+                    <span class="scenario-id id-staff">S5</span>
+                    <span class="scenario-title">Help a Customer with Digital Services</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">A Nepali-speaking customer needs help using the library computers and printer. You want to find the right phrases quickly.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>In "For Staff" mode, select <strong>"Nepali"</strong> as the display language.</li>
+                    <li>Tap the <strong>"Digital Services"</strong> category filter.</li>
+                    <li>Browse the filtered list for phrases about computers, printing, or scanning.</li>
+                    <li>Play at least one phrase using the speaker button to confirm audio works in Nepali.</li>
+                    <li>Switch back to "All" to confirm the full list returns.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>Only Digital Services phrases are displayed when filtered.</li>
+                    <li>Phrase cards show Nepali translations alongside English.</li>
+                    <li>Audio playback works correctly for the Nepali phrases.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CUSTOMER SCENARIOS -->
+        <div class="section-label">
+            <span class="badge badge-customer">Customer</span>
+            <h2>Customer Scenarios</h2>
+        </div>
+
+        <div class="scenario-card" id="c1">
+            <div class="scenario-header" onclick="toggle('c1')">
+                <div>
+                    <span class="scenario-id id-customer">C1</span>
+                    <span class="scenario-title">Switch to Customer Mode and Choose Your Language</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">You are a customer who speaks Arabic. The app may currently be in Staff mode. You need to switch it to Customer mode and select your language.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>Look at the two large buttons near the top ("For Staff" and "For Customers").</li>
+                    <li>Tap <strong>"For Customers"</strong> to switch to customer mode.</li>
+                    <li>Notice that the language buttons now show the native language name prominently (e.g. "&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;") with the English name smaller underneath.</li>
+                    <li>Tap <strong>"Arabic"</strong> (&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;) to select your language.</li>
+                    <li>Scroll down and confirm that phrase cards now show the Arabic translation as the large primary text with English below it.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>Customer mode is active (the red "For Customers" button is highlighted).</li>
+                    <li>Language buttons display native names prominently.</li>
+                    <li>Phrase cards show Arabic text large and bold, with English text smaller below.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="scenario-card" id="c2">
+            <div class="scenario-header" onclick="toggle('c2')">
+                <div>
+                    <span class="scenario-id id-customer">C2</span>
+                    <span class="scenario-title">Browse and Listen to General Assistance Phrases</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">You are a Spanish-speaking customer who has just entered the library for the first time and needs basic help.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>Make sure you are in <strong>"For Customers"</strong> mode.</li>
+                    <li>Select <strong>"Spanish"</strong> (Espa&ntilde;ol) as your language.</li>
+                    <li>Tap the <strong>"General Assistance"</strong> (Asistencia General) category filter.</li>
+                    <li>Browse the list of available phrases in this category.</li>
+                    <li>Tap the speaker button on any phrase to hear it spoken aloud in English.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>Only General Assistance phrases are displayed.</li>
+                    <li>Category filter buttons show the native-language name prominently.</li>
+                    <li>Tapping the speaker button plays the English audio for the customer to hear.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="scenario-card" id="c3">
+            <div class="scenario-header" onclick="toggle('c3')">
+                <div>
+                    <span class="scenario-id id-customer">C3</span>
+                    <span class="scenario-title">Get Walking Directions to Centrelink</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">You are at Hurstville Library and need to find the nearest Centrelink office. The app has a special interactive card for this.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>Switch to <strong>"For Customers"</strong> mode and select any language.</li>
+                    <li>Browse the phrases or filter to find the card that says <strong>"How do I get to Centrelink?"</strong></li>
+                    <li>Tap on that phrase card (not the speaker button, but the card itself).</li>
+                    <li>A popup should appear showing a Google Map with walking directions.</li>
+                    <li>Look for the QR code at the bottom of the popup and confirm it is visible and scannable.</li>
+                    <li>Close the popup by tapping the X button or clicking outside it.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>Tapping the Centrelink card opens a directions popup.</li>
+                    <li>The popup contains an embedded Google Map showing the walking route.</li>
+                    <li>A QR code is displayed that links to Google Maps directions.</li>
+                    <li>The popup closes cleanly.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="scenario-card" id="c4">
+            <div class="scenario-header" onclick="toggle('c4')">
+                <div>
+                    <span class="scenario-id id-customer">C4</span>
+                    <span class="scenario-title">Explore Library Layout Information</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">You are an Indonesian-speaking customer trying to find out where different areas of the library are located.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>In "For Customers" mode, select <strong>"Indonesian"</strong> (Bahasa Indonesia).</li>
+                    <li>Find and tap the <strong>"Library Layout"</strong> (Tata Letak Perpustakaan) category filter.</li>
+                    <li>Browse through the library layout phrases.</li>
+                    <li>Check that each card shows the Indonesian translation prominently with the English version below.</li>
+                    <li>Play one phrase to verify audio works.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>Only Library Layout phrases are shown when filtered.</li>
+                    <li>Indonesian translations appear as the primary text on each card.</li>
+                    <li>The category filter button shows the Indonesian translation for "Library Layout".</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="scenario-card" id="c5">
+            <div class="scenario-header" onclick="toggle('c5')">
+                <div>
+                    <span class="scenario-id id-customer">C5</span>
+                    <span class="scenario-title">Test Switching Between All Customer Categories</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+            </div>
+            <div class="scenario-body">
+                <div class="context-box">You are a new Italian-speaking customer and want to explore everything the app has to offer across all categories.</div>
+                <h4>Steps</h4>
+                <ol>
+                    <li>In "For Customers" mode, select <strong>"Italian"</strong> (Italiano).</li>
+                    <li>Start with "All" filter active and note the total number of phrase cards visible.</li>
+                    <li>Tap through each category filter one by one: General Assistance, Transactional, Library Layout, Language &amp; Community Resources, Digital Services.</li>
+                    <li>For each category, confirm that the displayed phrases change and are relevant to that topic.</li>
+                    <li>Return to "All" and confirm the full list is restored.</li>
+                </ol>
+                <h4>Success looks like</h4>
+                <ul class="success-list">
+                    <li>Each of the 5 customer category filters works and shows different phrases.</li>
+                    <li>The active filter is visually highlighted.</li>
+                    <li>Returning to "All" restores the complete phrase list.</li>
+                    <li>Italian translations display correctly in every category.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Georges River Libraries &middot; Babel Fish User Testing
+    </div>
+
+    <script>
+        function toggle(id) {
+            const card = document.getElementById(id);
+            card.classList.toggle('open');
+        }
+    </script>
+</body>
+
+</html>
