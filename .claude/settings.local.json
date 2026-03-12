@@ -37,7 +37,12 @@
       "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__list_edge_functions",
       "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__get_edge_function",
       "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__get_project_url",
-      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__get_publishable_keys"
+      "mcp__42772c38-de3c-43ca-8a5e-cfb5e1a898b5__get_publishable_keys",
+      "Bash(powershell -Command \"Stop-Process -Id 12256 -Force\")",
+      "Bash(node index.js)",
+      "Bash(curl -s http://localhost:5000/health)",
+      "Bash(git status -u)",
+      "Bash(git add server/index.js src/pages/LiveTestPage.jsx vite.config.js)"
     ]
   }
 }

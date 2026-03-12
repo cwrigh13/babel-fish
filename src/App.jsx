@@ -248,7 +248,8 @@ function App() {
                                 const staffTranslations = {
                                     'zh-CN': '为员工', 'zh-HK': '為員工', 'ne-NP': 'कर्मचारीहरूको लागि', 'el-GR': 'Για το Προσωπικό', 'ar-SA': 'للموظفين', 'mk-MK': 'За персонал', 'es-ES': 'Para el Personal', 'it-IT': 'Per il Personale', 'id-ID': 'Untuk Staf'
                                 };
-                                const langCode = LANGUAGE_CODES[staffLanguage]?.code;
+                                const currentSelectedLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                const langCode = LANGUAGE_CODES[currentSelectedLanguage]?.code;
                                 return staffTranslations[langCode] || 'For Staff';
                             })()}
                         </span>
@@ -263,7 +264,8 @@ function App() {
                                 const customerTranslations = {
                                     'zh-CN': '为顾客', 'zh-HK': '為顧客', 'ne-NP': 'ग्राहकहरूको लागि', 'el-GR': 'Για τους Πελάτες', 'ar-SA': 'للعملاء', 'mk-MK': 'За клиенти', 'es-ES': 'Para Clientes', 'it-IT': 'Per i Clienti', 'id-ID': 'Untuk Pelanggan'
                                 };
-                                const langCode = LANGUAGE_CODES[customerLanguage]?.code;
+                                const currentSelectedLanguage = currentMode === 'staff' ? staffLanguage : customerLanguage;
+                                const langCode = LANGUAGE_CODES[currentSelectedLanguage]?.code;
                                 return customerTranslations[langCode] || 'For Customers';
                             })()}
                         </span>
