@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { brandColors } from '../utils/constants';
 import FeedbackModal from './FeedbackModal';
-import { submitFeedback } from '../services/feedback';
 
 const scenarios = [
   {
@@ -84,8 +83,7 @@ const LiveTestScenarios = () => {
   const handleNoteClick = (scenarioId, scenarioTitle, stepIndex, stepText) => {
     setFeedbackContext({
       scenario: `${scenarioId}: ${scenarioTitle}`,
-      step: `Step ${stepIndex + 1}: ${stepText}`,
-      pageUrl: window.location.href
+      step: `Step ${stepIndex + 1}: ${stepText}`
     });
     setShowFeedbackModal(true);
   };
@@ -107,14 +105,6 @@ const LiveTestScenarios = () => {
       total: scenario.steps.length,
       percentage: Math.round((completed / scenario.steps.length) * 100)
     };
-  };
-
-  const handleSubmitFeedback = async (feedbackData) => {
-    const enhancedData = {
-      ...feedbackData,
-      ...feedbackContext
-    };
-    return submitFeedback(enhancedData);
   };
 
   return (
@@ -225,8 +215,8 @@ const LiveTestScenarios = () => {
       <FeedbackModal
         isOpen={showFeedbackModal}
         onClose={() => setShowFeedbackModal(false)}
-        onSubmit={handleSubmitFeedback}
         scenario={feedbackContext.scenario}
+        stepContext={feedbackContext.step}
       />
     </div>
   );

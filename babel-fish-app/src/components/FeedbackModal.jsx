@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { brandColors } from '../utils/constants';
 
-const GITHUB_REPO_URL = 'https://github.com/cwrigh13/babel-fish';
+// Replace with your Formspree form endpoint, e.g. 'https://formspree.io/f/xxxxxxxx'
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 
-const FeedbackModal = ({ isOpen, onClose, onSubmit, scenario }) => {
+const FeedbackModal = ({ isOpen, onClose, scenario, stepContext }) => {
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
   if (!isOpen) return null;
 
-  const handleOpenGitHubIssue = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!message.trim()) {
@@ -17,14 +19,34 @@ const FeedbackModal = ({ isOpen, onClose, onSubmit, scenario }) => {
       return;
     }
 
-    const title = `[Testing Feedback] ${scenario || 'General Testing'}`;
-    const body = `## Feedback\n\n${message.trim()}\n\n---\n**Context:**\n- Scenario: ${scenario || 'General Testing'}\n- Page: ${window.location.href}\n- User Agent: ${navigator.userAgent}`;
+    setIsSubmitting(true);
+    setSubmitStatus(null);
 
-    const issueUrl = `${GITHUB_REPO_URL}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
-    window.open(issueUrl, '_blank');
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          message: message.trim(),
+          scenario: scenario || 'General Testing',
+          step: stepContext || '',
+          page: window.location.href
+        })
+      });
 
-    setMessage('');
-    onClose();
+      if (!response.ok) throw new Error('Submission failed');
+
+      setSubmitStatus({ type: 'success', text: 'Feedback submitted — thank you!' });
+      setMessage('');
+      setTimeout(() => {
+        onClose();
+        setSubmitStatus(null);
+      }, 2000);
+    } catch {
+      setSubmitStatus({ type: 'error', text: 'Failed to submit. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -77,7 +99,7 @@ const FeedbackModal = ({ isOpen, onClose, onSubmit, scenario }) => {
           </button>
         </div>
 
-        <form onSubmit={handleOpenGitHubIssue}>
+        <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '16px' }}>
             <label
               htmlFor="feedback-message"
@@ -107,6 +129,7 @@ const FeedbackModal = ({ isOpen, onClose, onSubmit, scenario }) => {
                 minHeight: '120px',
                 boxSizing: 'border-box'
               }}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -122,6 +145,7 @@ const FeedbackModal = ({ isOpen, onClose, onSubmit, scenario }) => {
           >
             <strong>Context captured:</strong>
             <div>Scenario: {scenario || 'General Testing'}</div>
+            {stepContext && <div>Step: {stepContext}</div>}
             <div>Page: {window.location.pathname}</div>
           </div>
 
@@ -144,6 +168,7 @@ const FeedbackModal = ({ isOpen, onClose, onSubmit, scenario }) => {
             <button
               type="button"
               onClick={onClose}
+              disabled={isSubmitting}
               style={{
                 padding: '10px 20px',
                 borderRadius: '8px',
@@ -159,18 +184,20 @@ const FeedbackModal = ({ isOpen, onClose, onSubmit, scenario }) => {
             </button>
             <button
               type="submit"
+              disabled={isSubmitting}
               style={{
                 padding: '10px 24px',
                 borderRadius: '8px',
                 border: 'none',
                 backgroundColor: brandColors.primaryTeal,
                 color: 'white',
-                cursor: 'pointer',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 fontSize: '1rem',
-                fontWeight: '500'
+                fontWeight: '500',
+                opacity: isSubmitting ? 0.7 : 1
               }}
             >
-              Open GitHub Issue
+              {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
             </button>
           </div>
         </form>
