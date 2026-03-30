@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    open: true
+    strictPort: false, // If port 3000 is in use, try the next available port
+    open: true,
+    host: true // Allow access from network
   },
   build: {
     outDir: 'dist',

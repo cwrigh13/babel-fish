@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const admin = require('firebase-admin');
+const axios = require('axios');
 
 // Load environment variables
 dotenv.config();
@@ -63,6 +64,69 @@ app.get('/api/phrases', async (req, res) => {
   } catch (error) {
     console.error('Error fetching phrases:', error);
     res.status(500).json({ error: 'Failed to fetch phrases' });
+  }
+});
+
+// Feedback endpoint - creates GitHub issues
+app.post('/api/feedback', async (req, res) => {
+  try {
+    const { message, pageUrl, userAgent, scenario } = req.body;
+
+    if (!message || message.trim() === '') {
+      return res.status(400).json({ error: 'Feedback message is required' });
+    }
+
+    const token = process.env.GITHUB_TOKEN;
+    const owner = process.env.GITHUB_REPO_OWNER || 'grlibraries';
+    const repo = process.env.GITHUB_REPO_NAME || 'babel-fish';
+
+    if (!token) {
+      console.error('GITHUB_TOKEN not configured');
+      return res.status(500).json({ error: 'Server configuration error' });
+    }
+
+    const timestamp = new Date().toISOString();
+    const issueTitle = `User Feedback - ${scenario || 'General'} (${timestamp.split('T')[0]})`;
+    const issueBody = `## Feedback
+
+${message}
+
+---
+
+**Context:**
+- **Page/Scenario:** ${scenario || 'N/A'}
+- **URL:** ${pageUrl || 'N/A'}
+- **Timestamp:** ${timestamp}
+- **User Agent:** ${userAgent || 'N/A'}
+`;
+
+    const response = await axios.post(
+      `https://api.github.com/repos/${owner}/${repo}/issues`,
+      {
+        title: issueTitle,
+        body: issueBody,
+        labels: ['user-feedback', 'live-test']
+      },
+      {
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'babel-fish-feedback'
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      issueUrl: response.data.html_url,
+      issueNumber: response.data.number
+    });
+  } catch (error) {
+    console.error('Error creating GitHub issue:', error.response?.data || error.message);
+    res.status(500).json({
+      error: 'Failed to submit feedback',
+      details: error.response?.data?.message || error.message
+    });
   }
 });
 

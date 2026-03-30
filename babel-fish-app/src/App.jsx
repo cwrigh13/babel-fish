@@ -2,14 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, onSnapshot, addDoc, query, getDocs } from 'firebase/firestore';
-import { 
-  validateUserQuery, 
-  validateLanguage, 
-  RateLimiter, 
-  enforceHTTPS, 
+import {
+  validateUserQuery,
+  validateLanguage,
+  RateLimiter,
+  enforceHTTPS,
   validateAPIResponse,
-  sanitizeAPIPayload 
+  sanitizeAPIPayload
 } from './utils/security';
+import FeedbackButton from './components/FeedbackButton';
+import FeedbackModal from './components/FeedbackModal';
+import { submitFeedback } from './services/feedback';
 
 // Ensure __app_id and __firebase_config are defined in the environment
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -555,7 +558,8 @@ function App() {
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [showQrPopup, setShowQrPopup] = useState(false); // State to control QR code pop-up visibility
   const [showLanguageChoicePopup, setShowLanguageChoicePopup] = useState(false); // New state for language choice popup
-  
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false); // State for feedback modal
+
   // Security: Initialize rate limiter
   const rateLimiter = useRef(new RateLimiter(
     parseInt(process.env.REACT_APP_MAX_REQUESTS_PER_MINUTE) || 60,
@@ -1494,6 +1498,17 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Feedback Button */}
+        <FeedbackButton onClick={() => setShowFeedbackModal(true)} />
+
+        {/* Feedback Modal */}
+        <FeedbackModal
+          isOpen={showFeedbackModal}
+          onClose={() => setShowFeedbackModal(false)}
+          onSubmit={submitFeedback}
+          scenario={mode === 'staff' ? 'Staff Mode Testing' : 'Customer Mode Testing'}
+        />
       </div>
     </div>
   );
