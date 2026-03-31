@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, 'claude/**']
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -20,21 +20,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch existing gh-pages content
-        run: |
-          git fetch origin gh-pages:gh-pages || true
-          mkdir -p _site
-          git archive gh-pages | tar -x -C _site 2>/dev/null || true
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'babel-fish-app/package-lock.json'
 
-      - name: Add pitch deck to site
-        run: |
-          cp pitch-deck.html _site/pitch-deck.html
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./babel-fish-app
+
+      - name: Build project
+        run: npm run build
+        working-directory: ./babel-fish-app
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: ./babel-fish-app/build
 
   deploy:
     needs: build
