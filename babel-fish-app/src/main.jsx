@@ -1,9 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
+import LiveTestScenarios from './components/LiveTestScenarios.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter basename="/babel-fish">
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/live-test-scenarios" element={<LiveTestScenarios />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>,
 )
