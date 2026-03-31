@@ -1,12 +1,9 @@
-// Feedback service for submitting user feedback to GitHub Issues
-// via the backend API proxy
+// Feedback service for submitting user feedback via Formspree
 
-const API_BASE_URL = typeof __api_url !== 'undefined'
-  ? __api_url
-  : (import.meta.env?.VITE_API_URL || 'http://localhost:5000');
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mreoqnld';
 
 /**
- * Submit user feedback to be created as a GitHub issue
+ * Submit user feedback via Formspree
  * @param {Object} feedbackData - The feedback data
  * @param {string} feedbackData.message - The user's feedback message
  * @param {string} feedbackData.pageUrl - The current page URL
@@ -16,12 +13,20 @@ const API_BASE_URL = typeof __api_url !== 'undefined'
  */
 export const submitFeedback = async (feedbackData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/feedback`, {
+    const response = await fetch(FORMSPREE_ENDPOINT, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
-      body: JSON.stringify(feedbackData)
+      body: JSON.stringify({
+        message: feedbackData.message,
+        pageUrl: feedbackData.pageUrl,
+        userAgent: feedbackData.userAgent,
+        scenario: feedbackData.scenario || 'General Testing',
+        _subject: `Babel Fish Feedback - ${feedbackData.scenario || 'General Testing'}`,
+        _replyto: 'noreply@babel-fish.app'
+      })
     });
 
     if (!response.ok) {

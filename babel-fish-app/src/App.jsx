@@ -1507,7 +1507,7 @@ function App() {
           isOpen={showFeedbackModal}
           onClose={() => setShowFeedbackModal(false)}
           onSubmit={submitFeedback}
-          scenario={mode === 'staff' ? 'Staff Mode Testing' : 'Customer Mode Testing'}
+          scenario={currentMode === 'staff' ? 'Staff Mode Testing' : 'Customer Mode Testing'}
         />
       </div>
     </div>
