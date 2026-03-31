@@ -4,42 +4,17 @@
     <meta charset="utf-8">
     <title>Georges River Libraries Babel Fish</title>
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
-      // MIT License
-      // https://github.com/rafgraph/spa-github-pages
-      // This script takes the current URL and converts the path, query string and hash
-      // into a route that the React Router can handle when the page loads
-      var pathSegmentsToKeep = 1; // Keep 'babel-fish' segment
-
+      // Redirect to the hash-based URL for SPA routing on GitHub Pages
       var l = window.location;
       var basePath = '/babel-fish';
-
-      // Calculate the path after the base
       var currentPath = l.pathname;
-      var redirectPath = currentPath;
 
-      // If we're at the root of the repo, just go to index
-      if (currentPath === basePath || currentPath === basePath + '/') {
-        redirectPath = '/';
-      } else if (currentPath.startsWith(basePath + '/')) {
-        redirectPath = currentPath.slice(basePath.length);
+      if (currentPath.startsWith(basePath + '/') && currentPath !== basePath + '/') {
+        var route = currentPath.slice(basePath.length);
+        window.location.replace(basePath + '/#' + route + l.search + l.hash);
+      } else {
+        window.location.replace(basePath + '/');
       }
-
-      // Build the redirect URL with the path preserved in query string
-      var redirectUrl = basePath + '/?p=' + encodeURIComponent(redirectPath);
-
-      // Preserve query string
-      if (l.search) {
-        redirectUrl += '&q=' + encodeURIComponent(l.search.slice(1).replace(/&/g, '~and~'));
-      }
-
-      // Preserve hash
-      if (l.hash) {
-        redirectUrl += l.hash;
-      }
-
-      // Redirect to index.html with the path info
-      window.location.replace(redirectUrl);
     </script>
   </head>
   <body>
