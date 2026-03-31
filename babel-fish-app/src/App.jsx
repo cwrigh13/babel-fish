@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, onSnapshot, addDoc, query, getDocs } from 'firebase/firestore';
@@ -12,6 +13,7 @@ import {
 } from './utils/security';
 import FeedbackButton from './components/FeedbackButton';
 import FeedbackModal from './components/FeedbackModal';
+import LiveTestScenarios from './components/LiveTestScenarios';
 import { submitFeedback } from './services/feedback';
 
 // Ensure __app_id and __firebase_config are defined in the environment
@@ -544,7 +546,8 @@ const initialPhrases = [
 ];
 
 
-function App() {
+// Main Babel Fish App Component
+function MainApp() {
   const [phrases, setPhrases] = useState([]);
   const [currentMode, setCurrentMode] = useState('staff'); // 'staff' or 'customer'
   const [customerLanguage, setCustomerLanguage] = useState('Mandarin'); // Default customer language
@@ -1018,6 +1021,22 @@ function App() {
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-shadow-light" style={{ color: brandColors.darkTeal }}>
           Georges River Libraries Babel Fish
         </h1>
+
+        {/* Navigation */}
+        <div className="flex justify-center gap-4 mb-4">
+          <Link
+            to="/"
+            className="px-4 py-2 rounded-full text-sm font-medium bg-teal-100 text-teal-700 hover:bg-teal-200 transition-all"
+          >
+            Home
+          </Link>
+          <Link
+            to="/live-test-scenarios"
+            className="px-4 py-2 rounded-full text-sm font-medium bg-teal-100 text-teal-700 hover:bg-teal-200 transition-all"
+          >
+            Test Scenarios
+          </Link>
+        </div>
 
         {/* Mode Toggle Buttons */}
         <div className="flex justify-center gap-4 mb-8">
@@ -1511,6 +1530,18 @@ function App() {
         />
       </div>
     </div>
+  );
+}
+
+// Router wrapper component
+function App() {
+  return (
+    <BrowserRouter basename="/babel-fish">
+      <Routes>
+        <Route path="/" element={<MainApp />} />
+        <Route path="/live-test-scenarios" element={<LiveTestScenarios />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
