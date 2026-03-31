@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, onSnapshot, addDoc, query, getDocs } from 'firebase/firestore';
@@ -1536,12 +1536,12 @@ function MainApp() {
 // Router wrapper component
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter basename="/babel-fish">
       <Routes>
         <Route path="/" element={<MainApp />} />
         <Route path="/live-test-scenarios" element={<LiveTestScenarios />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 
