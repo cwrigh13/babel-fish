@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: false, // If port 3000 is in use, try the next available port
-    open: true,
+    open: false,
     host: true // Allow access from network
   },
   build: {
@@ -17,8 +17,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore']
+          vendor: ['react', 'react-dom']
         }
       }
     }
