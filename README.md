@@ -9,10 +9,9 @@
 * **Text-to-Speech:** Staff can play audio of translated phrases for non-English speaking customers, ensuring clarity and correct pronunciation.
 * **AI-Powered Suggestions:** An integrated AI feature helps staff generate appropriate phrases for unique situations, offering on-the-fly translations for enhanced service.
 * **Customer-Focused Information:** Provides quick access to key information, such as directions to Centrelink with an interactive map and scannable QR code.
-* **Scalable Architecture:** Built on a modern full-stack framework with Firebase, allowing for easy expansion with more languages, features, and an administrative interface in the future.
+* **Scalable Architecture:** Built as a static React app with phrase data held locally, allowing for easy expansion with more languages, features, and an administrative interface in the future.
 
 ## **Technologies**
 
 * **Frontend:** React, Tailwind CSS
-* **Authentication:** Firebase Authentication (Anonymous and Custom Token)
 * **APIs:** Google Gemini API, Google Maps Embed API, QR Server API

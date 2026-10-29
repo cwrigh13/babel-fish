@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: '/babel-fish/',
+  base: command === 'serve' ? '/' : '/babel-fish/',
   server: {
     port: 3000,
     strictPort: false, // If port 3000 is in use, try the next available port
@@ -25,4 +25,4 @@ export default defineConfig({
   define: {
     global: 'globalThis'
   }
-}) 
+})) 
