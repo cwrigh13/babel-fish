@@ -2,7 +2,7 @@
 // This file demonstrates how to integrate Google Translate API to replace the Gemini API
 
 // Configuration
-const GOOGLE_TRANSLATE_API_KEY = process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY || '';
+const GOOGLE_TRANSLATE_API_KEY = import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY || '';
 const GOOGLE_TRANSLATE_API_URL = 'https://translation.googleapis.com/language/translate/v2';
 
 // Language codes mapping (from the existing app)

@@ -142,13 +142,13 @@ function MainApp() {
 
   // Security: Initialize rate limiter
   const rateLimiter = useRef(new RateLimiter(
-    parseInt(process.env.REACT_APP_MAX_REQUESTS_PER_MINUTE) || 60,
+    parseInt(import.meta.env.VITE_MAX_REQUESTS_PER_MINUTE) || 60,
     60000
   ));
   
   // Security: Enforce HTTPS in production
   useEffect(() => {
-    if (process.env.REACT_APP_ENABLE_HTTPS_ENFORCEMENT === 'true') {
+    if (import.meta.env.VITE_ENABLE_HTTPS_ENFORCEMENT === 'true') {
       enforceHTTPS();
     }
   }, []);
@@ -220,7 +220,7 @@ function MainApp() {
       // Security: Sanitize API payload
       const sanitizedPayload = sanitizeAPIPayload(payload);
 
-      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || ""; // Get API key from environment variables
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY || ""; // Get API key from environment variables
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
       const response = await fetch(apiUrl, {
