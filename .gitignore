@@ -72,3 +72,9 @@ temp/
 # Build output
 build/
 dist/
+
+# Vite dependency cache
+.vite/
+
+# Claude Code worktrees
+.claude/worktrees/
