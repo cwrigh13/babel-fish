@@ -31,8 +31,9 @@ const CUSTOMER_CATEGORY_ORDER = [
   'Digital Services',
 ];
 
-// Sort phrases by custom category order, then by English phrase for consistent display
-const PHRASES = [...initialPhrases].sort((a, b) => {
+// Sort published phrases by custom category order, then by English phrase for consistent display.
+// Unpublished phrases stay in initialPhrases but are never rendered.
+const PHRASES = initialPhrases.filter(phrase => phrase.published === true).sort((a, b) => {
   if (a.type === 'staff' && b.type === 'staff') {
     const aIndex = STAFF_CATEGORY_ORDER.indexOf(a.category);
     const bIndex = STAFF_CATEGORY_ORDER.indexOf(b.category);
@@ -65,6 +66,19 @@ const LANGUAGE_CODES = {
   'Indonesian': { code: 'id-ID', nativeName: 'Bahasa Indonesia' },
   'English': { code: 'en-US', nativeName: 'English' }, // Added English for consistent lookup
 };
+
+// v1 release scope: only these languages appear anywhere in the UI
+const ENABLED_LANGUAGE_CODES = ['en-US', 'zh-CN'];
+const ENABLED_LANGUAGES = Object.keys(LANGUAGE_CODES).filter(langName => ENABLED_LANGUAGE_CODES.includes(LANGUAGE_CODES[langName].code));
+
+// Features held back from v1. Each stays dormant until its content is ready.
+const HAS_CUSTOMER_PHRASES = PHRASES.some(phrase => phrase.type === 'customer');
+const LANGUAGE_CHOICE_POPUP_ENABLED = ENABLED_LANGUAGE_CODES.includes('zh-HK'); // Mandarin/Cantonese chooser needs Cantonese
+const AI_SUGGESTIONS_ENABLED = false; // Gemini is deferred
+const TEST_SCENARIOS_ENABLED = false; // Scenarios reference languages and phrases outside v1
+
+// Recorded audio clip for a phrase in a given language, served from public/audio
+const audioUrl = (phraseId, langCode) => `${import.meta.env.BASE_URL}audio/${phraseId}_${langCode}.mp3`;
 
 // Custom brand colours (approximated from the Georges River Council website)
 const brandColors = {
@@ -153,6 +167,29 @@ function MainApp() {
     }
   }, []);
 
+  // Audio: find which recorded clips exist so missing ones get no play button
+  const [availableClips, setAvailableClips] = useState(() => new Set());
+  const audioRef = useRef(null);
+  useEffect(() => {
+    let cancelled = false;
+    const urls = PHRASES.flatMap(phrase => ENABLED_LANGUAGE_CODES.map(code => audioUrl(phrase.id, code)));
+    Promise.all(urls.map(url =>
+      fetch(url, { method: 'HEAD' })
+        .then(res => (res.ok && (res.headers.get('content-type') || '').startsWith('audio/') ? url : null))
+        .catch(() => null)
+    )).then(found => {
+      if (!cancelled) setAvailableClips(new Set(found.filter(Boolean)));
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  const playClip = (url) => {
+    if (audioRef.current) audioRef.current.pause();
+    const audio = new Audio(url);
+    audioRef.current = audio;
+    audio.play().catch(err => console.warn('Audio playback failed:', err));
+  };
+
 
   // Define Staff Subcategory Map for display names to actual category names
   const STAFF_SUBCATEGORY_DISPLAY_MAP = {
@@ -169,6 +206,12 @@ function MainApp() {
     'Digital Services': 'Digital Services',
   };
   const [customerSubcategoryFilter, setCustomerSubcategoryFilter] = useState('All'); // State for customer category filter
+
+  // Only offer category filters that have published phrases
+  const visibleStaffSubcategories = Object.entries(STAFF_SUBCATEGORY_DISPLAY_MAP)
+    .filter(([, category]) => phrases.some(p => p.type === 'staff' && p.category === category));
+  const visibleCustomerSubcategories = Object.entries(CUSTOMER_SUBCATEGORY_DISPLAY_MAP)
+    .filter(([, category]) => phrases.some(p => p.type === 'customer' && p.category === category));
 
 
   // Function to call Gemini API for phrase suggestions
@@ -270,7 +313,7 @@ function MainApp() {
     }
     if (currentMode === 'staff') {
       // Exclude "I speak..." phrases from here, they are handled by the popup
-      if (phrase.english === 'I speak Mandarin.' || phrase.english === 'I speak Cantonese.') {
+      if (LANGUAGE_CHOICE_POPUP_ENABLED && (phrase.english === 'I speak Mandarin.' || phrase.english === 'I speak Cantonese.')) {
         return false;
       }
       if (staffSubcategoryFilter === 'All') {
@@ -293,7 +336,7 @@ function MainApp() {
       acc[phrase.category] = [];
     }
     // Logic to insert "Do you prefer..." phrase
-    if (currentMode === 'staff' && phrase.english === 'Do you prefer to speak Mandarin or Cantonese?') { // Corrected English match
+    if (LANGUAGE_CHOICE_POPUP_ENABLED && currentMode === 'staff' && phrase.english === 'Do you prefer to speak Mandarin or Cantonese?') { // Corrected English match
         // Ensure this phrase is only added once per category if it exists
         if (!acc[phrase.category].some(p => p.english === 'Do you prefer to speak Mandarin or Cantonese?')) { // Corrected English match
             acc[phrase.category].push(phrase);
@@ -502,6 +545,7 @@ function MainApp() {
         </h1>
 
         {/* Navigation */}
+        {TEST_SCENARIOS_ENABLED && (
         <div className="flex justify-center gap-4 mb-4">
           <Link
             to="/"
@@ -516,6 +560,7 @@ function MainApp() {
             Test Scenarios
           </Link>
         </div>
+        )}
 
         {/* Mode Toggle Buttons */}
         <div className="flex justify-center gap-4 mb-8">
@@ -535,6 +580,7 @@ function MainApp() {
               })()}
             </span>
           </button>
+          {HAS_CUSTOMER_PHRASES && (
           <button
             onClick={() => setCurrentMode('customer')}
             className={`button-base mt-2 ${currentMode === 'customer' ? 'button-accent-active' : 'button-accent-inactive'}`}
@@ -551,6 +597,7 @@ function MainApp() {
               })()}
             </span>
           </button>
+          )}
         </div>
 
         {/* User ID Display */}
@@ -563,7 +610,7 @@ function MainApp() {
           <>
             {/* Language Selection Buttons */}
             <div className="flex flex-wrap justify-center gap-2 mb-4">
-              {Object.keys(LANGUAGE_CODES).filter(langName => langName !== 'English').map((langName) => ( // Filter out English
+              {ENABLED_LANGUAGES.map((langName) => (
                 <button
                   key={langName}
                   onClick={() => setStaffLanguage(langName)}
@@ -577,15 +624,18 @@ function MainApp() {
                 </button>
               ))}
               {/* Link to Suggested Phrases */}
+              {AI_SUGGESTIONS_ENABLED && (
               <a
                 href="#suggested-phrases-section"
                 className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ease-in-out mt-2 bg-gray-100 text-gray-700 hover:bg-teal-100 hover:text-teal-600"
               >
                 Suggested Phrases (AI)
               </a>
+              )}
             </div>
 
             {/* Category Filter Buttons */}
+            {visibleStaffSubcategories.length > 1 && (
             <div className="flex flex-wrap justify-center gap-2 mb-8">
               <button
                 onClick={() => setStaffSubcategoryFilter('All')}
@@ -597,7 +647,7 @@ function MainApp() {
               >
                 All
               </button>
-              {Object.entries(STAFF_SUBCATEGORY_DISPLAY_MAP).map(([displayKey, actualCategoryName]) => (
+              {visibleStaffSubcategories.map(([displayKey, actualCategoryName]) => (
                 <button
                   key={actualCategoryName}
                   onClick={() => setStaffSubcategoryFilter(actualCategoryName)}
@@ -611,6 +661,7 @@ function MainApp() {
                 </button>
               ))}
             </div>
+            )}
           </>
         )}
 
@@ -618,7 +669,7 @@ function MainApp() {
         {currentMode === 'customer' && (
           <>
             <div className="flex flex-wrap justify-center gap-2 mb-4">
-              {Object.keys(LANGUAGE_CODES).filter(langName => langName !== 'English').map((langName) => ( // Filter out English if present
+              {ENABLED_LANGUAGES.filter(langName => langName !== 'English').map((langName) => ( // Filter out English if present
                 <button
                   key={langName}
                   onClick={() => setCustomerLanguage(langName)}
@@ -633,6 +684,7 @@ function MainApp() {
               ))}
             </div>
             {/* Customer Category Filter Buttons */}
+            {visibleCustomerSubcategories.length > 1 && (
             <div className="flex flex-wrap justify-center gap-2 mb-8">
               <button
                 onClick={() => setCustomerSubcategoryFilter('All')}
@@ -644,7 +696,7 @@ function MainApp() {
               >
                 All
               </button>
-              {Object.entries(CUSTOMER_SUBCATEGORY_DISPLAY_MAP).map(([displayKey, actualCategoryName]) => (
+              {visibleCustomerSubcategories.map(([displayKey, actualCategoryName]) => (
                 <button
                   key={actualCategoryName}
                   onClick={() => setCustomerSubcategoryFilter(actualCategoryName)}
@@ -658,6 +710,7 @@ function MainApp() {
                 </button>
               ))}
             </div>
+            )}
           </>
         )}
 
@@ -676,7 +729,7 @@ function MainApp() {
             </h2>
             <ul className="phrase-list-grid">
               {/* Custom rendering for "Do you prefer to speak Mandarin or Cantonese?" */}
-              {currentMode === 'staff' && category === 'General Enquiries' && (staffLanguage === 'Mandarin' || staffLanguage === 'Cantonese') && ( // Condition for visibility
+              {LANGUAGE_CHOICE_POPUP_ENABLED && currentMode === 'staff' && category === 'General Enquiries' && (staffLanguage === 'Mandarin' || staffLanguage === 'Cantonese') && ( // Condition for visibility
                 <>
                   {phrases.find(p => p.english === 'Do you prefer to speak Mandarin or Cantonese?' && p.type === 'staff') && (
                     <li
@@ -719,8 +772,10 @@ function MainApp() {
 
               {/* Render all other phrases filtered by category and NOT "I speak..." or "Do you prefer..." */}
               {groupedPhrases[category]
-                .filter(phrase => !(phrase.english === 'Do you prefer to speak Mandarin or Cantonese?' || phrase.english === 'I speak Mandarin.' || phrase.english === 'I speak Cantonese.'))
-                .map((phrase) => (
+                .filter(phrase => !(LANGUAGE_CHOICE_POPUP_ENABLED && (phrase.english === 'Do you prefer to speak Mandarin or Cantonese?' || phrase.english === 'I speak Mandarin.' || phrase.english === 'I speak Cantonese.')))
+                .map((phrase) => {
+                  const clipUrl = audioUrl(phrase.id, currentMode === 'staff' ? LANGUAGE_CODES[staffLanguage].code : 'en-US');
+                  return (
                 <li
                   key={phrase.id}
                   className="phrase-card cursor-pointer"
@@ -757,20 +812,11 @@ function MainApp() {
                       </>
                     )}
                   </div>
+                  {availableClips.has(clipUrl) && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (currentMode === 'staff') {
-                        speakPhrase(
-                          phrase.translations?.[LANGUAGE_CODES[staffLanguage].code] || phrase.english,
-                          LANGUAGE_CODES[staffLanguage].code
-                        );
-                      } else {
-                        speakPhrase(
-                          phrase.english,
-                          'en-AU'
-                        );
-                      }
+                      playClip(clipUrl);
                     }}
                     className="flex-shrink-0 p-3 rounded-full shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75"
                     style={{ backgroundColor: currentMode === 'staff' ? brandColors.primaryTeal : brandColors.accentRed, color: 'white', focusRingColor: brandColors.primaryTeal }}
@@ -778,14 +824,16 @@ function MainApp() {
                   >
                     {speakerIcon}
                   </button>
+                  )}
                 </li>
-              ))}
+                  );
+                })}
             </ul>
           </div>
         ))}
 
         {/* Suggested Phrases Section - Moved to bottom */}
-        {currentMode === 'staff' && (
+        {AI_SUGGESTIONS_ENABLED && currentMode === 'staff' && (
           <div id="suggested-phrases-section" className="mb-8 p-4 bg-gray-50 rounded-lg shadow-inner">
             <h3 className="text-xl md:text-2xl font-bold text-teal-700 mb-4 pb-2 border-b-2 border-teal-200">
               Suggested Phrases
@@ -1018,7 +1066,7 @@ function App() {
     <BrowserRouter basename="/babel-fish">
       <Routes>
         <Route path="/" element={<MainApp />} />
-        <Route path="/live-test-scenarios" element={<LiveTestScenarios />} />
+        {TEST_SCENARIOS_ENABLED && <Route path="/live-test-scenarios" element={<LiveTestScenarios />} />}
       </Routes>
     </BrowserRouter>
   );
