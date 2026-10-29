@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: false, // If port 3000 is in use, try the next available port
-    open: true,
+    open: false,
     host: true // Allow access from network
   },
   build: {
