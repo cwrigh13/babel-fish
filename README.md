@@ -1,6 +1,6 @@
 # Georges River Libraries Babel Fish
 
-[Georges River Libraries Babel Fish](https://cwrigh13.github.io/babel-fish/ "Georges River Libraries Babel Fish") is a full-stack web application designed to bridge communication gaps between library staff and customers from diverse linguistic backgrounds. It acts as a digital phrasebook, providing instant, accurate translations and audio playback of common library-related inquiries and responses.
+[Georges River Libraries Babel Fish](https://cwrigh13.github.io/babel-fish/ "Georges River Libraries Babel Fish") is a web application designed to bridge communication gaps between library staff and customers from diverse linguistic backgrounds. It acts as a digital phrasebook, providing instant, accurate translations and audio playback of common library-related inquiries and responses.
 
 ## **Key Features**
 
@@ -14,6 +14,5 @@
 ## **Technologies**
 
 * **Frontend:** React, Tailwind CSS
-* **Backend:** Node.js, Express
 * **Authentication:** Firebase Authentication (Anonymous and Custom Token)
 * **APIs:** Google Gemini API, Google Maps Embed API, QR Server API

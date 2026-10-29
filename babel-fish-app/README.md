@@ -140,7 +140,7 @@ This guide explains how to integrate Google Translate API into the Babel Fish ap
 
 ## Current Implementation
 
-The app currently uses Google's Gemini API to generate phrase suggestions based on user input scenarios. The implementation is located in the `fetchSuggestedPhrases` function in `gemini-version.html`.
+The app currently uses Google's Gemini API to generate phrase suggestions based on user input scenarios. The implementation is located in the `fetchSuggestedPhrases` function in `src/App.jsx`.
 
 ## Google Translate API Integration
 

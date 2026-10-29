@@ -75,3 +75,6 @@ dist/
 
 # Vite dependency cache
 .vite/
+
+# Claude Code worktrees
+.claude/worktrees/
