@@ -72,7 +72,6 @@ const ENABLED_LANGUAGE_CODES = ['en-US', 'zh-CN'];
 const ENABLED_LANGUAGES = Object.keys(LANGUAGE_CODES).filter(langName => ENABLED_LANGUAGE_CODES.includes(LANGUAGE_CODES[langName].code));
 
 // Features held back from v1. Each stays dormant until its content is ready.
-const HAS_CUSTOMER_PHRASES = PHRASES.some(phrase => phrase.type === 'customer');
 const LANGUAGE_CHOICE_POPUP_ENABLED = ENABLED_LANGUAGE_CODES.includes('zh-HK'); // Mandarin/Cantonese chooser needs Cantonese
 const AI_SUGGESTIONS_ENABLED = false; // Gemini is deferred
 const TEST_SCENARIOS_ENABLED = false; // Scenarios reference languages and phrases outside v1
@@ -580,7 +579,6 @@ function MainApp() {
               })()}
             </span>
           </button>
-          {HAS_CUSTOMER_PHRASES && (
           <button
             onClick={() => setCurrentMode('customer')}
             className={`button-base mt-2 ${currentMode === 'customer' ? 'button-accent-active' : 'button-accent-inactive'}`}
@@ -597,12 +595,6 @@ function MainApp() {
               })()}
             </span>
           </button>
-          )}
-        </div>
-
-        {/* User ID Display */}
-        <div className="text-center text-sm mb-6" style={{ color: brandColors.mediumGrey }}>
-          Your User ID: <span className="font-mono text-xs break-all">{userId}</span>
         </div>
 
         {/* Staff Section UI */}
@@ -717,7 +709,7 @@ function MainApp() {
         {/* Phrase List Display */}
         {Object.keys(groupedPhrases).length === 0 && (
           <div className="text-center text-lg py-10" style={{ color: brandColors.mediumGrey }}>
-            No phrases found.
+            {currentMode === 'customer' ? 'No customer phrases available yet.' : 'No phrases found.'}
           </div>
         )}
 
