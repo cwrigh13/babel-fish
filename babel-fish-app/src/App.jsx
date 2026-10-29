@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, onSnapshot, addDoc, query, getDocs } from 'firebase/firestore';
 import {
   validateUserQuery,
   validateLanguage,
@@ -15,10 +12,8 @@ import FeedbackButton from './components/FeedbackButton';
 import FeedbackModal from './components/FeedbackModal';
 import LiveTestScenarios from './components/LiveTestScenarios';
 import { submitFeedback } from './services/feedback';
+import { initialPhrases } from './utils/initialPhrases';
 
-// Ensure __app_id and __firebase_config are defined in the environment
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
 
 // Define a custom order for staff categories
 const STAFF_CATEGORY_ORDER = [
@@ -35,6 +30,27 @@ const CUSTOMER_CATEGORY_ORDER = [
   'Language & Community Resources',
   'Digital Services',
 ];
+
+// Sort phrases by custom category order, then by English phrase for consistent display
+const PHRASES = [...initialPhrases].sort((a, b) => {
+  if (a.type === 'staff' && b.type === 'staff') {
+    const aIndex = STAFF_CATEGORY_ORDER.indexOf(a.category);
+    const bIndex = STAFF_CATEGORY_ORDER.indexOf(b.category);
+    if (aIndex !== -1 && bIndex !== -1) {
+      if (aIndex !== bIndex) return aIndex - bIndex;
+    }
+  } else if (a.type === 'customer' && b.type === 'customer') { // Apply custom order for customer section
+    const aIndex = CUSTOMER_CATEGORY_ORDER.indexOf(a.category);
+    const bIndex = CUSTOMER_CATEGORY_ORDER.indexOf(b.category);
+    if (aIndex !== -1 && bIndex !== -1) {
+      if (aIndex !== bIndex) return aIndex - bIndex;
+    }
+  }
+  // Default sort by category name, then by English phrase
+  const categoryCompare = a.category.localeCompare(b.category);
+  if (categoryCompare !== 0) return categoryCompare;
+  return a.english.localeCompare(b.english);
+});
 
 // Mapping of display names to BCP-47 language codes for SpeechSynthesisUtterance
 const LANGUAGE_CODES = {
@@ -108,454 +124,15 @@ const CLICK_FOR_OPTIONS_PROMPT_TRANSLATIONS = {
   'English': 'Click for options',
 };
 
-// Initial phrases for seeding the database
-const initialPhrases = [
-  // Staff Section Phrases
-  { type: 'staff', category: 'General Enquiries', english: 'Please follow me.',
-    translations: {
-      'zh-CN': '请跟我来。', 'zh-HK': '请跟我来。', 'ne-NP': 'कृपया मलाई पछ्याउनुहोस्。',
-      'el-GR': 'Παρακαλώ ακολουθήστε με。', 'ar-SA': 'الرجاء اتبعني。', 'mk-MK': 'Ве мо lám следете me。',
-      'es-ES': 'Por favor, sígame。', 'it-IT': 'Per favor, mi segua。',
-      'id-ID': 'Tolong ikiti saya。', 'en-US': 'Please follow me.',
-    }
-  },
-  { type: 'staff', category: 'General Enquiries', english: 'Do you prefer to speak Mandarin or Cantonese?', // Base English text
-    translations: {
-      'zh-CN': '您更喜欢说普通话还是粤语？', // Mandarin translation
-      'zh-HK': '你鍾意講普通話定廣東話？', // Cantonese translation
-      'ne-NP': 'तपाईं मन्डारिन वा क्यान्टोनिज बोल्न रुचाउनुहुन्छ?',
-      'el-GR': 'Προτιμάτε να μιλάτε Μανδαarinika ή Καντονέζικα？',
-      'ar-SA': 'هل تفضل التحدث بالماندرين أو الكانتونية？',
-      'mk-MK': 'Дали преتpočitate να зборувате μαндаринiski or кантонски？',
-      'es-ES': '¿Prefiere hablar mandarín o cantonés？', 'it-IT': 'Preferisce parlare mandarino or cantonese？',
-      'id-ID': 'Apakah Anda more like to speak Mandarin or Kanton？',
-      'en-US': 'Do you prefer to speak Mandarin or Cantonese?',
-    }
-  },
-  { type: 'staff', category: 'General Enquiries', english: 'I speak Mandarin.',
-    translations: {
-      'zh-CN': '我会说普通话。', // Mandarin spelling
-      'zh-HK': '我識講普通話。', // Traditional Chinese for Mandarin
-      'ne-NP': 'म मन्डारिन बोल्छु。',
-      'el-GR': 'Μιλάω Μανδαρινικά。', 'ar-SA': 'أنا أتحدث المανταрин。', 'mk-MK': 'Зboruam μαндаρινiski。',
-      'es-ES': 'Hablo mandarín。', 'it-IT': 'Parlo mandarino。',
-      'id-ID': 'Saya berbicara Mandarin。', 'en-US': 'I speak Mandarin.',
-    }
-  },
-  { type: 'staff', category: 'General Enquiries', english: 'I speak Cantonese.',
-    translations: {
-      'zh-CN': '我会说粤语。', // Simplified Chinese for Cantonese
-      'zh-HK': '我識講廣東話。', // Cantonese spelling (Traditional Chinese)
-      'ne-NP': 'म क्यान्टोनिज बोल्छु。',
-      'el-GR': 'Μιλάω Καντονέζικα。', 'ar-SA': 'أنا أتحدث الكانتونية。', 'mk-MK': 'Зoruam кантонски。',
-      'es-ES': 'Hablo cantonés。', 'it-IT': 'Parlo cantonese。',
-      'id-ID': 'Saya berbicara Kanton。', 'en-US': 'I speak Cantonese.',
-    }
-  },
-  { type: 'staff', category: 'General Enquiries', english: 'Please wait one moment',
-    translations: {
-      'zh-CN': '请稍等片刻。', 'zh-HK': '请你稍等一陣。', 'ne-NP': 'कृपया एक क्षण पर्खनुहोस्。',
-      'el-GR': 'Παρακαλώ περιμένετε μια στιγμή。', 'ar-SA': 'الرجاء الانت 기다리다。', 'mk-MK': 'Ве моlam počekajte moment。',
-      'es-ES': 'Por favor, espere un momento。', 'it-IT': 'Per favor, aspetti un momento。',
-      'id-ID': 'Mohon tunggu sebentar。', 'en-US': 'Please wait one moment',
-    }
-  },
-  { type: 'staff', category: 'General Enquiries', english: 'I understand.',
-    translations: {
-      'zh-CN': '我明白了。', 'zh-HK': '我明白喇。', 'ne-NP': 'मैले बुझें。',
-      'el-GR': 'Καταλαβαίνω。', 'ar-SA': 'أنا أفهم。', 'mk-MK': 'Разбирам。',
-      'es-ES': 'Entiendo。', 'it-IT': 'Capisco。',
-      'id-ID': 'Saya mengerti。', 'en-US': 'I understand.',
-    }
-  },
-  { type: 'staff', category: 'General Enquiries', english: 'Thank you.',
-    translations: {
-      'zh-CN': '谢谢您。', 'zh-HK': '多謝你。', 'ne-NP': 'धन्यवाद。',
-      'el-GR': 'Ευχαριστώ。', 'ar-SA': 'شكرا لك。', 'mk-MK': 'Ви благоδαρουμε。',
-      'es-ES': 'Salamat po。', 'it-IT': 'Grazie。',
-      'id-ID': 'Terima kindness。', 'en-US': 'Thank you.',
-    }
-  },
-  { type: 'staff', category: 'General Enquiries', english: 'You are welcome.',
-    translations: {
-      'zh-CN': '不客气。', 'zh-HK': '唔使客氣。', 'ne-NP': 'तपाईंलाई स्वागत छ。',
-      'el-GR': 'Παρακαλώ。', 'ar-SA': 'على الرحب والسعة。', 'mk-MK': 'Неμα na што。',
-      'es-ES': 'De nada。', 'it-IT': 'Prego。',
-      'id-ID': 'Sama-sama。', 'en-US': 'You are welcome.',
-    }
-  },
-
-  { type: 'staff', category: 'Transactional', english: 'Please show me your library card',
-    translations: {
-      'zh-CN': '请出示您的借书证', 'zh-HK': '请出示你的图书证。', 'ne-NP': 'कृपया आफ्नो पुस्तकालय कार्ड देखाउनुहोस्。',
-      'el-GR': 'Παρακαλώ δείξτε μου την κάρτα βιβλιοθήκης σας。', 'ar-SA': 'الرجاء إظهار بطاقة المكتبة الخاصة بك。', 'mk-MK': 'Ве мо lám pokažete mi ja vašata bibliotečna kartička。',
-      'es-ES': 'Por favor, muéstreme su tarjeta de la biblioteca。', 'it-IT': 'Per favor, mi mostri la sua tessera della biblioteca。',
-      'id-ID': 'Tolong tunjukkan kartu perpustakaan Anda。', 'en-US': 'Please show me your library card',
-    }
-  },
-  { type: 'staff', category: 'Transactional', english: 'Would you like to create a library card? It is free of charge.',
-    translations: {
-      'zh-CN': '您想办一张借书证吗？这是免费的。', 'zh-HK': '你想申请张图书证吗？系免费嘅。', 'ne-NP': 'के तपाईं पुस्तकालय कार्ड बनाउन चाहनुहुन्छ? यो निःशुल्क छ。',
-      'el-GR': 'Θα θέлаτε να βγάλετε κάρτα βιβλιοθήκης; Είναι δω ücretsiz。', 'ar-SA': 'هل ترغب في إنشاء بطاقة مكتبة？إنها مجانية。', 'mk-MK': 'Даli сакате da napravite bibliotečna kartička? Besplatno e。',
-      'es-ES': '¿Le gustaría crear una tarjeta de la biblioteca? Es gratis。', 'it-IT': 'Le piacerebbe creare una tessera della biblioteca? È gratuita。',
-      'id-ID': 'Apakah Anda ingin membuat kartu perpustakaan? This is free of charge。', 'en-US': 'Would you like to create a library card? It is free of charge.',
-    }
-  },
-  { type: 'staff', category: 'Transactional', english: 'Would you like to borrow these items?',
-    translations: {
-      'zh-CN': '您想借阅这些物品吗？', 'zh-HK': '你想借呢啲嘢嗎？', 'ne-NP': 'के तपाईं यी सामानहरू उधारो लिन चाहनुहुन्छ?',
-      'el-GR': 'Θα θέлаτε να δανειστείτε αυτά τα αντικείμενα？', 'ar-SA': 'هل ترغب في استعارة هذه المواد？', 'mk-MK': 'Дали сакате da gi pozajmite ovie predmeti？',
-      'es-ES': '¿Le gustaría pedir prestados estos artículos？', 'it-IT': 'Le piacerebbe prendre in prestito these items？',
-      'id-ID': 'Apakah Anda ingin meminjam barang-abag this？', 'en-US': 'Would you like to borrow these items?',
-    }
-  },
-  { type: 'staff', category: 'Transactional', english: 'Would you like to return these items?',
-    translations: {
-      'zh-CN': '您想归还这些物品吗？', 'zh-HK': '你想还呢啲嘢嗎？', 'ne-NP': 'के तपाईं यी सामानहरू फिर्ता गर्न चाहnuहुन्छ?',
-      'el-GR': 'Θα θέлаτε να επιστρέσετε αυτά τα αντικείμενα？', 'ar-SA': 'هل ترغب في إرجάζ هذه المواد？', 'mk-MK': 'Даli сакате da gi vratite ovie predmeti？',
-      'es-ES': '¿Le gustaría devolver estos artículos？', 'it-IT': 'Le piacerebbe restituire estos artículos？',
-      'id-ID': 'Apakah 您 want to return these items？', 'en-US': 'Would you like to return these items?',
-    }
-  },
-  { type: 'staff', category: 'Transactional', english: 'The due date is listed on the library receipt.',
-    translations: {
-      'zh-CN': '还书日期在图书馆收据上列明。', 'zh-HK': '还书日期喺图书馆收据上面。', 'ne-NP': 'फिर्ता गर्ने मिति पुस्तकालयको रसिदमा उल्लेख छ。',
-      'el-GR': 'Η ημερομηνία λήξης αναγράφεται στην απόδειψη της βιβλιοθήκης。', 'ar-SA': 'تاريخ الاستحقác مدرg على إيصال المكتبة。', 'mk-MK': 'Крајniot rok e naveden на sметката od bibliotekata。',
-      'es-ES': 'La fecha de vencimiento está en the recibo de la biblioteca。', 'it-IT': 'La data di scadencia is indicata sulla ricevuta della biblioteca。',
-      'id-ID': 'Tanggal jatuh tempo tertera di struk perpustakaan。', 'en-US': 'The due date is listed on the library receipt.',
-    }
-  },
-  { type: 'staff', category: 'Transactional', english: 'There is a fee for late and lost items.',
-    translations: {
-      'zh-CN': '逾期或遗失物品需支付費用。', 'zh-HK': '逾期或者遗失物品要收费。', 'ne-NP': 'ढिलो र हराएका सामानहरूको लागि शुल्क लाग्छ。',
-      'el-GR': 'Υπάρχει χρέωση για καθυστερημένα και χαμένα αντικείμενα。', 'ar-SA': 'هناك رسوم على المواد المتأخرة والمفقودة。', 'mk-MK': 'Има надомест за zaдоצnezi i izgubeni predmeti。',
-      'es-ES': 'Hay una tarifa por artículos atrasados y perdidos。', 'it-IT': 'C\'è una tassa for gli artículos in ritardo και smarriti。',
-      'id-ID': 'Ada biaya for barang yang terlambat and hilang。', 'en-US': 'There is a fee for late and lost items.',
-    }
-  },
-  { type: 'staff', category: 'Transactional', english: 'Your library card has expired. May I please see your photo identification so I may confirm your details.',
-    translations: {
-      'zh-CN': '您的借书证已过期。请出示您的带照片的身份证明，以便我确认您的信息。', 'zh-HK': '你嘅图书证过期喇。请出示你嘅有相身份证明，等我确认你嘅资料。', 'ne-NP': 'तपाईंको पुस्तकालय कार्ड म्याद सकिएको छ। कृपया तपाईंको फोटो परिचयपत्र देखाउनुहोस् ताकि म तपाईंको विवरणहरू पुष्टि गर्न सकूँ。',
-      'el-GR': 'Η κάρτα βιβλιοθήκης σας έχει λήξη. Μπορώ να δω την ταυτότητά σας με φωτογραφία για να επιβεβαιώσω τα στοιχεία σας？', 'ar-SA': 'انتهت صلاحية بطاقة مكتبتك. هل يمكنني رؤية إثبات هويتك المصور لتأكيد التفاصيل الخاصة بك？', 'mk-MK': 'Vašata bibliotečna kartička e istekana. Može li da vidam lična karta so fotografija za da gi potvrdiam vašite podatoci？',
-      'es-ES': 'Su tarjeta de la biblioteca ha caducado. ¿Puedo ver su identificación con foto para confirmar sus datos？', 'it-IT': 'La sua tessera della biblioteca is scaduta. Posso vedere un suo documento d\'identità με φωτογραφία para confirmar sus datos？',
-      'id-ID': 'Kartu perpustakaan Anda sudah kedaluwarsa. Bisakah I see your photo identification so I may confirm your details？', 'en-US': 'Your library card has expired. May I please see your photo identification so I may confirm your details.',
-    }
-  },
-  { type: 'staff', category: 'Transactional', english: 'May I see your photo ID to confirm details? If no photo ID, a passport plus a bank statement or phone bill copy is needed.',
-    translations: {
-      'zh-CN': '请出示您的带照片的身份证明以确认信息。如果没有带照片的身份证明，需要护照以及银行账单或电话账单的复印件。', 'zh-HK': '请出示你嘅有相身份证明嚟确认资料。如果冇有相身份证明，需要护照同埋银行月结单或者电话费单副本。', 'ne-NP': 'विवरण पुष्टि गर्नका लागि फोटो परिचयपत्र देखाउन सक्नुहुन्छ? यदि फोटो परिचयपत्र छैन भने, राहदानी र बैंक स्टेटमेन्ट वा फोन billको प्रतिलिलिपी चाहिन्छ。',
-      'el-GR': 'Μπορώ να δω την ταυτότητά σας με φωτογραφία για επιβεβαίωση στοιχείων; Εάν δεν έχετε ταυτότητα με φωτογραφία, χρειάζεται διαβατήριο συν αντίγραφο τραπεζικής κατάσης ή λογαριασμού τηλεφώνου。', 'ar-SA': 'هل يمكنني رؤية هويتك المصورة لتأكيد التفاصيل？إذا لم يكن لديك هوية مصورة， فجواز سفر بالإضافة إلى كشف حساب بنكي أو فاتورة هاتف ضروريان.', 'mk-MK': 'Моże li da vidam lična karta so fotografija za potvrda na podatoci? Ako nemaate lična karta so fotografija, potreben e pasport plus kopija od bankarski izvod ili telefonska smetka。',
-      'es-ES': '¿Puedo ver su identificación con foto para confirmar los details? If no photo ID, a passport plus a bank statement or phone bill copy is needed.', 'it-IT': 'Posso vedere un suo documento d\'identità με φωτογραφία para επιβεβαίωση στοιχείων; Εάν δεν έχετε ταυτότητα με φωτογραφία, χρειάζεται διαβατήριο συν αντίγραφο τραπεζικής κατάσης ή λογαριασμού τηλεφώνου。',
-      'id-ID': 'Bisakah saya melihat ID foto Anda untuk mengonfirm details? If no photo ID, a passport plus a bank statement or phone bill copy is needed.', 'en-US': 'May I see your photo ID to confirm details? If no photo ID, a passport plus a bank statement or phone bill copy is needed.',
-    }
-  },
-
-  { type: 'staff', category: 'Digital Services', english: 'Would you like to use the internet?',
-    translations: {
-      'zh-CN': '您想使用互联网吗？', 'zh-HK': '你想用上网吗？', 'ne-NP': 'के तपाईं इन्टरनेट प्रयोग गर्न चाहनुहुन्छ?',
-      'el-GR': 'Θα θέлаτε να χρησιμοποιήσετε το διαδίκτυο？', 'ar-SA': 'هل ترغب في استخدام الإنترنت？', 'mk-MK': 'Дали сакате to κοριστε internet？',
-      'es-ES': '¿Le gustaría usar internet？', 'it-IT': 'Le piacerebbe usar internet？',
-      'id-ID': 'Apakah 您 want to use internet？', 'en-US': 'Would you like to use the internet?',
-    }
-  },
-  { type: 'staff', category: 'Digital Services', english: 'Do you need help using the internet?',
-    translations: {
-      'zh-CN': '您需要使用互联网的帮助吗？', 'zh-HK': '你需要上网嘅帮助吗？', 'ne-NP': 'के तपाईंलाई इन्टरनेट प्रयोग गर्न मद्दत चाहिन्छ?',
-      'el-GR': 'Χρειάζεστε βοήθεια με τη χρήση του διαδικτύου？', 'ar-SA': 'هل تحتاج مساعدة في استخدام الإنترنت？', 'mk-MK': 'Даli vi треба pomoš за κοριστε internet？',
-      'es-ES': '¿Necesita ayuda para usar internet？', 'it-IT': 'Ha bisogno of help for usar internet？',
-      'id-ID': 'Apakah 您 butuh bantuan using internet？', 'en-US': 'Do you need help using the internet?',
-    }
-  },
-  { type: 'staff', category: 'Digital Services', english: 'Would you like to use the printer?',
-    translations: {
-      'zh-CN': '您想使用打印机吗？', 'zh-HK': '你想用打印机吗？', 'ne-NP': 'के तपाईं प्रिन्टर प्रयोग गर्न चाहनुहुन्छ?',
-      'el-GR': 'Θα θέλατε να χρησιμοποιήσετε τον εκτυπωτή？', 'ar-SA': 'هل ترغب في استخدام الطابعة？', 'mk-MK': 'Дали сакате da go koristite pečatačот？',
-      'es-ES': '¿Le gustaría usar la impresora？', 'it-IT': 'Le piacerebbe usar la stampante？',
-      'id-ID': 'Apakah 您 want to use printer？', 'en-US': 'Would you like to use the printer?',
-    }
-  },
-  { type: 'staff', category: 'Digital Services', english: 'Do you need help using the printer?',
-    translations: {
-      'zh-CN': '您需要使用打印机使用方面的帮助吗？', 'zh-HK': '你需要打印机嘅帮助吗？', 'ne-NP': 'मलाई प्रिन्टर प्रयोग गर्न मद्दत चाहिन्छ。',
-      'el-GR': 'Χρειάζεστε βοήθεια με τη χρήση του εκτυπωτή？', 'ar-SA': 'هل تحتاج مساعدة في استخدام الطابعة？', 'mk-MK': 'Даli vi треба pomoš за κοrisenje на pečatačот？',
-      'es-ES': '¿Necesita ayuda para usar la impresora？', 'it-IT': 'Ha bisogno de aiuto for usar la stampante？',
-      'id-ID': 'Apakah 您 butuh bantuan using printer？', 'en-US': 'Do you need help using the printer?',
-    }
-  },
-  { type: 'staff', category: 'Digital Services', english: 'How many copies do you need?',
-    translations: {
-      'zh-CN': '您需要多少份？', 'zh-HK': '你需要几多份？', 'ne-NP': 'तपाईंलाई कति प्रति चाहिन्छ?',
-      'el-GR': 'Πόσα αντίγραφα χρειάζεστε？', 'ar-SA': 'كم عدد النسسख التي تحتاجها？', 'mk-MK': 'Коmčine pečatenjeto？',
-      'es-ES': '¿Cuántas copias necesita？', 'it-IT': 'Quante copies le servono？',
-      'id-ID': 'Berapa many copies do you need？', 'en-US': 'How many copies do you need?',
-    }
-  },
-
-  // Customer Section Phrases
-  { type: 'customer', category: 'General Assistance', english: 'How do I renew my borrowed items?',
-    translations: {
-      'zh-CN': '我如何续借我的借阅物品？', 'zh-HK': '我点样续借我借嘅嘢？', 'ne-NP': 'मैले मेरो उधारो सामानहरू कसरी नवीकरण गर्ने?',
-      'el-GR': 'Πώς ανανεώνω τα δανεισμένα μου αντικείμενα？', 'ar-SA': 'كيف can I renew my borrowed items？', 'mk-MK': 'Каको da gi obnovaam pozajmenite predmeti？',
-      'es-ES': '¿Cómo renuevo mis artículos prestados？', 'it-IT': 'Come posso rinnovare i miei artículos pris in prestito？',
-      'id-ID': 'Bagaimana cara memperpanjang peminjaman barang-abag this？', 'en-US': 'How do I renew my borrowed items?',
-    }
-  },
-  { type: 'customer', category: 'Transactional', english: 'I do not have a library card.',
-    translations: {
-      'zh-CN': '我没有借书证。', 'zh-HK': '我冇图书证。', 'ne-NP': 'मसँग पुस्तकालय कार्ड छैन。',
-      'el-GR': 'Δεν έχω κάρτα βιβλιοθήκης。', 'ar-SA': 'ليس لدي بطاقة مكتبة。', 'mk-MK': 'Немам бібліотечна картичка。',
-      'es-ES': 'No tengo tarjeta de la biblioteca。', 'it-IT': 'Non ho una tessera della biblioteca。',
-      'id-ID': 'Saya tidak punya kartu perpustaraan。', 'en-US': 'I do not have a library card.',
-    }
-  },
-  { type: 'customer', category: 'Transactional', english: 'I would like to sign up for a library card.',
-    translations: {
-      'zh-CN': '我想办理一张借书证。', 'zh-HK': '我想申请图书证。', 'ne-NP': 'म पुस्तकालय कार्ड बनाउन चाहन्छु。',
-      'el-GR': 'Θα ήθελα να εγγραφώ για κάρτα βιβλιοθήκης。', 'ar-SA': 'أود التسجيل للحصول على بطاقة مكتبة。', 'mk-MK': 'Би сакал da se začlenam for bibliotečna kartička。',
-      'es-ES': 'Me gustaría solicitar una tarjeta de la biblioteca。', 'it-IT': 'Vorrei iscrivermi per una tessera della biblioteca。',
-      'id-ID': 'Saya ingin mendaftar kartu perpustakaan。', 'en-US': 'I would like to sign up for a library card.',
-    }
-  },
-  { type: 'customer', category: 'Transactional', english: 'How much does it cost to join the library?',
-    translations: {
-      'zh-CN': '加入图书馆需要多少钱？', 'zh-HK': '加入图书馆要几多钱？', 'ne-NP': 'पुस्तकालयमा सामेल हुन कति लाग्छ?',
-      'el-GR': 'Πόσο κοسτίζει η εγγραφή στη βιβλιοθήκη？', 'ar-SA': 'كم تكلفة الانضمณ إلى المكتبة？', 'mk-MK': 'Коmčine začlenuvanjeto vo bibliotekata？',
-      'es-ES': '¿Cuánto cuesta hacerse socio de la biblioteca？', 'it-IT': 'Quanto costa iscriversi in biblioteca？',
-      'id-ID': 'Berapa biaya for bergabung with perpustakaan？', 'en-US': 'How much does it cost to join the library?',
-    }
-  },
-  { type: 'customer', category: 'General Assistance', english: 'Can you assist me with reserving an item?',
-    translations: {
-      'zh-CN': '您可以帮我预订物品吗？', 'zh-HK': '你可唔可以帮我预留一件物品？', 'ne-NP': 'के तपाईं मलाई कुनै वस्तु आरक्षित गर्न मद्दत गर्न सक्नुहुन्छ?',
-      'el-GR': 'Μπορείτε να με βοηθήσετε να κάνω κράτηση ενός αντικειμένου？', 'ar-SA': 'هل يمكنك مساعدتي في حجز مادة？', 'mk-MK': 'Моže li da mi pomognete so rezerviranje να предмет？',
-      'es-ES': '¿Puede ayudarme a reservar un artículo？', 'it-IT': 'Può aiutarmi να prenotare un artículo？',
-      'id-ID': 'Bisakah Anda helping me with reserving an item？', 'en-US': 'Can you assist me with reserving an item?',
-    }
-  },
-  { type: 'customer', category: 'General Assistance', english: 'How can I pay for my fees?',
-    translations: {
-      'zh-CN': '我如何支付費用？', 'zh-HK': '我点样交费？', 'ne-NP': 'मैले मेरो शुल्क कसरी तिर्न सक्छु?',
-      'el-GR': 'Πώς μπορώ να πληρώσω τα τέλη μου？', 'ar-SA': 'كيف can I pay for my fees？', 'mk-MK': 'КаKаको можам da gi platiam moite taksi？',
-      'es-ES': '¿Cómo puedo pagar mis cuotas？', 'it-IT': 'Como posso pagar le mie tasse？',
-      'id-ID': 'Bagaimana cara saya membayar biaya saya？', 'en-US': 'How can I pay for my fees?',
-    }
-  },
-  { type: 'customer', category: 'General Assistance', english: 'When is this item due back?',
-    translations: {
-      'zh-CN': '这个物品什么时候到期归还？', 'zh-HK': '呢件物品几时要还？', 'ne-NP': 'यो सामान कहिले फिर्ता गर्नुपर्scha?',
-      'el-GR': 'Πότε πρέπει να επιστραφεί αυτό το αντικείμενο？', 'ar-SA': 'متى يجب إرجάς هذه المادة？', 'mk-MK': 'Коm треба da se vrati ovoj предмет？',
-      'es-ES': '¿Cuando debo devolver este artículo？', 'it-IT': 'Cuando debe be restituido este artículo？',
-      'id-ID': 'Kapan barang this harus dikembalikan？', 'en-US': 'When is this item due back?',
-    }
-  },
-  { type: 'customer', category: 'General Assistance', english: 'Can I borrow this item?',
-    translations: {
-      'zh-CN': '我可以借阅这个物品吗？', 'zh-HK': '我可唔可以借呢件物品？', 'ne-NP': 'के म यो सामान उधारो लिन सक्छु?',
-      'el-GR': 'Μπορώ να δανειστώ αυτό το αντικείμενο？', 'ar-SA': 'هل يمكنني استعارة هذه المادة？', 'mk-MK': 'Моže li da go pozajmam ovoj предмет？',
-      'es-ES': '¿Puedo tomar prestado este artículo？', 'it-IT': 'Posso prendre in prestito este artículo？',
-      'id-ID': 'Bisakah saya meminjam barang this？', 'en-US': 'Can I borrow this item?',
-    }
-  },
-  { type: 'customer', category: 'General Assistance', english: 'How long can I borrow items from the library?',
-    translations: {
-      'zh-CN': '我可以在图书馆借阅物品多久？', 'zh-HK': '我点样借几耐图书馆嘅嘢？', 'ne-NP': 'म पुस्तकालयबाट कति लामो समयसम्म सामान उधारो लिन सक्छु?',
-      'el-GR': 'Πόσο καιρό μπορώ να δανειστώ αντικείDμενα from τη βιβλιοθήκη？', 'ar-SA': 'كم المدة التي can I borrow items from المكتبة？', 'mk-MK': 'Колку dugo možam da pozajmuvam predmeti od bibliotekata？',
-      'es-ES': '¿For cuánto tempo posso pedir prestados artículos da biblioteca？', 'it-IT': 'Per quanto tempo posso prendere in prestito artículos dalla biblioteca？',
-      'id-ID': 'Berapa lama saya can borrow items from perpustakaan？', 'en-US': 'How long can I borrow items from the library?',
-    }
-  },
-  { type: 'customer', category: 'General Assistance', english: 'Where can I return these items?',
-    translations: {
-      'zh-CN': '我在哪里可以归还这些物品？', 'zh-HK': '我喺边度可以还呢啲嘢？', 'ne-NP': 'मैले यी सामानहरू कहाँ फिर्ता गर्न सक्छु?',
-      'el-GR': 'Πού μπορώ να επιστρέψω αυτά τα αντικείμενα？', 'ar-SA': 'أén can I return these items？', 'mk-MK': 'Каde можам da gi vratam ovie predmeti？',
-      'es-ES': '¿Dónde puedo devolver estos artículos？', 'it-IT': 'Dove puedo restituir estos artículos？',
-      'id-ID': 'Di mana saya can return these items？', 'en-US': 'Where can I return these items?',
-    }
-  },
-  { type: 'customer', category: 'General Assistance', english: 'Is there a justice of the peace available today?',
-    translations: {
-      'zh-CN': '今天有太平绅士吗？', 'zh-HK': '今天有冇太平绅士喺度？', 'ne-NP': 'आज शान्ति न्यायाधीश उपलब्ध छ?',
-      'el-GR': 'Υπάρχει διαθέσιμος ειρηνοδίκης σήμερα？', 'ar-SA': 'هل يوجد qazi صلح mتاح اليوم？', 'mk-MK': 'Даli ima mirovén sudija dostapen denes？',
-      'es-ES': '¿Has un juez de paz available today？', 'it-IT': 'C\'è un giudice of peace disponible today？',
-      'id-ID': 'Apakah ada hakim perdamaímที่ verfügbar heute？', 'en-US': 'Is there a justice of the peace available today?',
-    }
-  },
-
-  { type: 'customer', category: 'Library Layout', english: 'Where is the bathroom?',
-    translations: {
-      'zh-CN': '洗手间在哪里？', 'zh-HK': '洗手间喺边度？', 'ne-NP': 'शौचालय कहाँ छ?',
-      'el-GR': 'Πού είναι η τουαλέτα？', 'ar-SA': 'أén دورة المياه？', 'mk-MK': 'Каde е toaletoт？',
-      'es-ES': '¿Dónde está el baño？', 'it-IT': 'Dov\'è el baño？',
-      'id-ID': 'Di mana kamar mandi？', 'en-US': 'Where is the bathroom?',
-    }
-  },
-  { type: 'customer', category: 'Library Layout', english: 'Where is the Chinese section?',
-    translations: {
-      'zh-CN': '中文区在哪里？', 'zh-HK': '中文区喺边度？', 'ne-NP': 'चिनियाँ खण्ड कहाँ छ?',
-      'el-GR': 'Πού είναι το κινεζικό τμήμα？', 'ar-SA': 'أén القسم الصيني？', 'mk-MK': 'Каde е kineskiot del？',
-      'es-ES': '¿Dónde está la sección china？', 'it-IT': 'Dov\'è la sección china？',
-      'id-ID': 'Di mana bagian Cina？', 'en-US': 'Where is the Chinese section?',
-    }
-  },
-  { type: 'customer', category: 'Library Layout', english: 'Are there any quiet spots to sit?',
-    translations: {
-      'zh-CN': '有安静的地方可以坐吗？', 'zh-HK': '有冇啲静嘅地方可以坐？', 'ne-NP': 'बस्नको लागि कुनै शान्त ठाउँ छ?',
-      'el-GR': 'Υπάρχουν ήσυχα σημεία για να καθίσετε？', 'ar-SA': 'هل توجد أماكن هادئة لل جلوس？', 'mk-MK': 'Даli ima тивки mesta za sedenje？',
-      'es-ES': '¿Hay algún lugar tranquilo para sentarse？', 'it-IT': 'Ci sono posti tranquilli per sedersi？',
-      'id-ID': 'Apakah ada tempatที่ tenang for duduk？', 'en-US': 'Are there any quiet spots to sit?',
-    }
-  },
-  { type: 'customer', category: 'Library Layout', english: 'Where is the children\'s section?',
-    translations: {
-      'zh-CN': '儿童区在哪里？', 'zh-HK': '儿童区喺边度？', 'ne-NP': 'बालबालिकाको खण्ड कहाँ छ?',
-      'el-GR': 'Πού είναι το παιδικό τμήμα？', 'ar-SA': 'أén قسم الأطفال？', 'mk-MK': 'Каde е detskiot oddeel？',
-      'es-ES': '¿Dónde está la sección infantil？', 'it-IT': 'Dov\'è la sección bambini？',
-      'id-ID': 'Di mana bagian anak-आana？', 'en-US': 'Where is the children\'s section?',
-    }
-  },
-  { type: 'customer', category: 'Library Layout', english: 'How do I get to Centrelink?',
-    translations: {
-      'zh-CN': '我怎么去Centrelink？', 'zh-HK': '我点样去Centrelink？', 'ne-NP': 'सेन्टरलिंक कसरी जाने?',
-      'el-GR': 'Πώς πηγαίνω στο Centrelink？', 'ar-SA': 'كيف أصل إلى سنترلينك？', 'mk-MK': 'КаKаको da stignam до Centrelink？',
-      'es-ES': '¿Cómo llego a Centrelink？', 'it-IT': 'Como arrivo al Centrelink？',
-      'id-ID': 'Bagaimana cara menuju Centrelink？', 'en-US': 'How do I get to Centrelink?',
-    }
-  },
-  { type: 'customer', category: 'Library Layout', english: 'How do I get to Council?',
-    translations: {
-      'zh-CN': '我怎么去市政厅？', 'zh-HK': '我点样去市政局？', 'ne-NP': 'काउन्सिल कसरी जाने?',
-      'el-GR': 'Πώς πηγαίνω στο Συμβούλιο？', 'ar-SA': 'كيف أصل إلى المجلس？', 'mk-MK': 'КаKаको da stignam до Sovetot？',
-      'es-ES': '¿Cómo llego al Ayuntamiento？', 'it-IT': 'Como arrivo al Comune？',
-      'id-ID': 'Bagaimana cara menuju Dewan？', 'en-US': 'How do I get to Council?',
-    }
-  },
-  { type: 'customer', category: 'Library Layout', english: 'How do I get to the Seniors Centre?',
-    translations: {
-      'zh-CN': '我怎么去老年活动中心？', 'zh-HK': '我点样去长者中心？', 'ne-NP': 'वरिष्ठ नागरिक केन्द्र कसरी जाने?',
-      'el-GR': 'Πώς πηγαίνω στο Κέντρο Ηλικιωμένων？', 'ar-SA': 'كيف أصل إلى مركز كبار السν？', 'mk-MK': 'КаKаको da stignam до Centarot za postari graǵani？',
-      'es-ES': '¿Cómo llego al Centro de Mayores？', 'it-IT': 'Como arrivo al Centro Anziani？',
-      'id-ID': 'Bagaimana cara menuju Pusat Lansia？', 'en-US': 'How do I get to the Seniors Centre?',
-    }
-  },
-
-  { type: 'customer', category: 'Digital Services', english: 'How can I connect to the wifi?',
-    translations: {
-      'zh-CN': '我怎么连接无线网络？', 'zh-HK': '我点样连接无线网络？', 'ne-NP': 'वाइफाइ कसरी जोड्ने?',
-      'el-GR': 'Πώς μπορώ να συνδεθώ στο Wi-Fi？', 'ar-SA': 'كيف can I connect to the wifi？', 'mk-MK': 'КаKаको da se povrzam на Wi-Fi？',
-      'es-ES': '¿Cómo me conecto al wifi？', 'it-IT': 'Come posso connettermmi al Wi-Fi？',
-      'id-ID': 'Bagaimana cara menghubungkan to Wi-Fi？', 'en-US': 'How can I connect to the wifi?',
-    }
-  },
-  { type: 'customer', category: 'Digital Services', english: 'Are there public computers available with an internet connection?',
-    translations: {
-      'zh-CN': '有可以连接互联网的公共電腦嗎？', 'zh-HK': '有冇可以上网嘅公共电脑？', 'ne-NP': 'इन्टरनेट जडान भएको सार्वजनिक कम्प्युटरहरू उपलब्ध छन्?',
-      'el-GR': 'Υπάρχουν διαθέσιμοι δημόσιοι υπολογιστές με σύνδεση στο διαδίκτυο？', 'ar-SA': 'هل توجد أجهزة كمبيوتر عامة متوفرة with اتصال بالإنترنت？', 'mk-MK': 'Даli ima dostapni javni kompjuteri со internet konekcija？',
-      'es-ES': '¿Hay computadoras públicas disponibles con conexión a internet？', 'it-IT': 'Ci sono computer publics disponibles with connessione internet？',
-      'id-ID': 'Apakah ada komputer umumที่ available with koneksi internet？', 'en-US': 'Are there public computers available with an internet connection?',
-    }
-  },
-  { type: 'customer', category: 'Digital Services', english: 'I need help using a computer',
-    translations: {
-      'zh-CN': '我需要电脑使用方面的帮助。', 'zh-HK': '我需要电脑使用方面嘅帮助。', 'ne-NP': 'मलाई कम्प्युटर प्रयोग गर्न मद्दत चाहिन्छ।',
-      'el-GR': 'Χρειάζομαι βοήθεια με τη χρήση υπολογιστή。', 'ar-SA': 'أحتاج مساعدة في استخدام الحاسوب。', 'mk-MK': 'Ми треба pomoš за κοριστε kompjuter。',
-      'es-ES': 'Necesito ayuda para usar una computadora。', 'it-IT': 'Ho bisogno di aiuto for usar un computer。',
-      'id-ID': 'Saya butuh bantuan using komputer。', 'en-US': 'I need help using a computer',
-    }
-  },
-  { type: 'customer', category: 'Digital Services', english: 'I need help using the internet.',
-    translations: {
-      'zh-CN': '我需要互联网使用方面的帮助。', 'zh-HK': '我需要上网方面嘅帮助。', 'ne-NP': 'मलाई इन्टरनेट प्रयोग गर्न मद्दत चाहिन्छ।',
-      'el-GR': 'Χρειάζομαι βοήθεια με τη χρήση του διαδικτύου。', 'ar-SA': 'أحتاج مساعدة في استخدام الإنترنت。', 'mk-MK': 'Ми треба pomoš за κοrisenje internet。',
-      'es-ES': '¿Necesita ayuda para usar internet？', 'it-IT': 'Ha bisogno of help for usar internet？',
-      'id-ID': 'Saya butuh bantuan using internet。', 'en-US': 'I need help using the internet.',
-    }
-  },
-  { type: 'customer', category: 'Digital Services', english: 'Are there printers available?',
-    translations: {
-      'zh-CN': '有打印机吗？', 'zh-HK': '有冇打印机？', 'ne-NP': 'प्रिन्तरहरू उपलब्ध छन्?',
-      'el-GR': 'Υπάρχουν διαθέσιμοι εκτυπωτές？', 'ar-SA': 'هل تووجد طابعات متاحة？', 'mk-MK': 'Даli ima dostapni printeri？',
-      'es-ES': '¿Hay impresoras available？', 'it-IT': 'Ci sono stampanti available？',
-      'id-ID': 'Apakah there printers available？', 'en-US': 'Are there printers available?',
-    }
-  },
-  { type: 'customer', category: 'Digital Services', english: 'I need help using a printer.',
-    translations: {
-      'zh-CN': '我需要打印机使用方面的帮助。', 'zh-HK': '我需要打印机使用方面嘅帮助。', 'ne-NP': 'मलाई प्रिन्टर प्रयोग गर्न मद्दत चाहिन्छ。',
-      'el-GR': 'Χρειάζομαι βοήθεια με τη χρήση εκτυπωτή。', 'ar-SA': 'هل تحتاج مساعدة في استخدام الطابعة？', 'mk-MK': 'Ми треба pomoš за κοrisenje printer。',
-      'es-ES': '¿Necesita ayuda para usar una impresora？', 'it-IT': 'Ha bisogno de aiuto for usar una stampante？',
-      'id-ID': 'Saya butuh bantuan using printer。', 'en-US': 'I need help using a printer.',
-    }
-  },
-  { type: 'customer', category: 'Digital Services', english: 'Are there scanners available?',
-    translations: {
-      'zh-CN': '有扫描仪吗？', 'zh-HK': '有冇扫描器？', 'ne-NP': 'स्क्यानरहरू उपलब्ध छन्?',
-      'el-GR': 'Υπάρχουν διαθέσιμοι σαρωτές？', 'ar-SA': 'هل توجد ماسحات ضوئية متاحة？', 'mk-MK': 'Даli ima dostapni skeneri？',
-      'es-ES': '¿Hay escáneres available？', 'it-IT': 'Ci sono scanner disponibles？',
-      'id-ID': 'Apakah ada pemindाईที่ available？', 'en-US': 'Are there scanners available?',
-    }
-  },
-  { type: 'customer', category: 'Digital Services', english: 'I need help using a scanner',
-    translations: {
-      'zh-CN': '我需要扫描仪使用方面的帮助。', 'zh-HK': '我需要扫描器使用方面嘅帮助。', 'ne-NP': 'मलाई स्क्यानर प्रयोग गर्न मद्दत चाहिन्छ。',
-      'el-GR': 'Χρειάζομαι βοήθεια με τη χρήση σαρωτή。', 'ar-SA': 'أحتاج مسساعدة في استخدام الماسح الضوئي。', 'mk-MK': 'Ми треба pomoš for κοrisenje skener。',
-      'es-ES': '¿Necesito ayuda para usar un escáner。', 'it-IT': 'Ho bisogno of help using a scanner。',
-      'id-ID': 'Saya butuh bantuan using a scanner。', 'en-US': 'I need help using a scanner',
-    }
-  },
-  { type: 'customer', category: 'Digital Services', english: 'How much does printing cost?',
-    translations: {
-      'zh-CN': '打印費用是多少？', 'zh-HK': '打印要几多钱？', 'ne-NP': 'प्रिन्ट गर्न कति लाग्छ?',
-      'el-GR': 'Πόσο κοسτίζει η εκτύπωση？', 'ar-SA': 'كم تكلفة الطباعة？', 'mk-MK': 'Коmčine pečatenjeto？',
-      'es-ES': '¿Cuánto cuesta imprimir？', 'it-IT': 'Quanto cuesta stampare？',
-      'id-ID': 'Berapa biaya pencetakan？', 'en-US': 'How much does printing cost?',
-    }
-  },
-
-  { type: 'customer', category: 'Language & Community Resources', english: 'Do you have Chinese language magazines?',
-    translations: {
-      'zh-CN': '你們有中文雜誌嗎？', 'zh-HK': '你有冇中文杂志？', 'ne-NP': 'तपाईंसँग चिनियाँ भाषाका पत्रिका छन्?',
-      'el-GR': 'Έχετε κινεζικά περιοδικά？', 'ar-SA': 'هل لديكم مجلات باللغة الصينية？', 'mk-MK': 'Даli imate spisaniјa на kineski jazik？',
-      'es-ES': '¿Tienen revistas en chino？', 'it-IT': 'Avete riviste in lingua cinese？',
-      'id-ID': 'Apakah Anda punya majalah berbahasa Cina？', 'en-US': 'Do you have Chinese language magazines?',
-    }
-  },
-  { type: 'customer', category: 'Language & Community Resources', english: 'Do you have Chinese language DVDs?',
-    translations: {
-      'zh-CN': '你們有中文DVD嗎？', 'zh-HK': '你有冇中文DVD？', 'ne-NP': 'त तपाईंसँग चिनियाँ भाषाका डीभीडी छन्?',
-      'el-GR': 'Έχετε κινεζικά DVD？', 'ar-SA': 'هل لديكم أقraṣa DVD باللغة الصينية？', 'mk-MK': 'Даli imate kineski DVD-a？',
-      'es-ES': '¿Tienen DVDs in chino？', 'it-IT': 'Avete DVD in lingua cinese？',
-      'id-ID': 'Apakah 您 punya majalah berbahasas Cina？', 'en-US': 'Do you have Chinese language DVDs?',
-    }
-  },
-  { type: 'customer', category: 'Language & Community Resources', english: 'Is there anyone here who can speak Mandarin?',
-    translations: {
-      'zh-CN': '这里有人会说普通话吗？', 'zh-HK': '呢度有冇人识讲普通话？', 'ne-NP': 'यहाँ कोही मन्डारिन बोल्न सक्ने छ?',
-      'el-GR': 'Υπάρχει κάποιος εδώ που να μιλάει Μανδαarinika？', 'ar-SA': 'هل يوجد هنا من يتحدث المανταрин？', 'mk-MK': 'Даli ima nekoj ovde што zboruva mandarinski？',
-      'es-ES': '¿Hay alguien here que hable mandarín？', 'it-IT': 'C\'è qualcuno here que parla mandarino？',
-      'id-ID': 'Apakah ada orang di here who can speak Mandarin？', 'en-US': 'Is there anyone here who can speak Mandarin?',
-    }
-  },
-  { type: 'customer', category: 'Language & Community Resources', english: 'Is there anyone here who can speak Cantonese?',
-    translations: {
-      'zh-CN': '这里有人会说粤语吗？', 'zh-HK': '呢度有冇人识讲广东话？', 'ne-NP': 'यहाँ कोही क्यान्टोनिज बोल्न सक्ने छ?',
-      'el-GR': 'Υπάρχει κάποιος here who can speak Cantonese？', 'ar-SA': 'هل يوجد هنا من يتحدث الكانتونية？', 'mk-MK': 'Даli ima nekoj ovde што zboruva kantonski？',
-      'es-ES': '¿Has alguien here who can speak Cantonese？', 'it-IT': 'C\'è qualcuno here who can speak Cantonese？',
-      'id-ID': 'Apakah there is anyone here who can speak Cantonese？', 'en-US': 'Is there anyone here who can speak Cantonese?',
-    }
-  },
-];
 
 
 // Main Babel Fish App Component
 function MainApp() {
-  const [phrases, setPhrases] = useState([]);
+  const phrases = PHRASES;
   const [currentMode, setCurrentMode] = useState('staff'); // 'staff' or 'customer'
   const [customerLanguage, setCustomerLanguage] = useState('Mandarin'); // Default customer language
   const [staffLanguage, setStaffLanguage] = useState('Mandarin'); // Changed default from 'English' to 'Mandarin'
-  const [userId, setUserId] = useState('Loading...');
-  const [db, setDb] = useState(null);
-  const [auth, setAuth] = useState(null);
-  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [userId] = useState(() => crypto.randomUUID()); // Per-session identifier for rate limiting
   const [staffQuery, setStaffQuery] = useState(''); // State for staff's dynamic query
   const [suggestedPhrases, setSuggestedPhrases] = useState([]); // State for LLM suggested phrases
   const [isSuggesting, setIsSuggesting] = useState(false);
@@ -593,104 +170,6 @@ function MainApp() {
   };
   const [customerSubcategoryFilter, setCustomerSubcategoryFilter] = useState('All'); // State for customer category filter
 
-
-  // Initialize Firebase and authenticate anonymously
-  useEffect(() => {
-    try {
-      const app = initializeApp(firebaseConfig);
-      const firestore = getFirestore(app);
-      const firebaseAuth = getAuth(app);
-
-      setDb(firestore);
-      setAuth(firebaseAuth);
-
-      const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
-        if (user) {
-          setUserId(user.uid);
-        } else {
-          try {
-            // Sign in with custom token if available, otherwise anonymously
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-              await signInWithCustomToken(firebaseAuth, __initial_auth_token);
-              setUserId(firebaseAuth.currentUser.uid);
-            } else {
-              await signInAnonymously(firebaseAuth);
-              setUserId(crypto.randomUUID()); // Fallback to a random ID if sign-in fails
-            }
-          } catch (error) {
-            console.error("Error during anonymous sign-in or custom token sign-in:", error);
-            // Fallback to a random ID if sign-in fails
-            setUserId(crypto.randomUUID());
-          }
-        }
-        setIsAuthReady(true); // Authentication state is ready
-      });
-
-      return () => unsubscribe(); // Cleanup auth listener
-    } catch (error) {
-      console.error("Firebase initialisation error:", error);
-      setUserId('Error: Check Firebase Config');
-    }
-  }, []);
-
-  // Fetch phrases from Firestore and set up real-time listener
-  useEffect(() => {
-    if (!db || !isAuthReady) return; // Wait for Firebase and auth to be ready
-
-    const phrasesCollectionRef = collection(db, `artifacts/${appId}/public/data/phrases`);
-
-    // Check if the collection is empty and seed it if necessary
-    const seedInitialData = async () => {
-      try {
-        const querySnapshot = await getDocs(phrasesCollectionRef);
-        if (querySnapshot.empty) {
-          console.log("Firestore 'phrases' collection is empty. Seeding initial data...");
-          for (const phrase of initialPhrases) {
-            await addDoc(phrasesCollectionRef, phrase);
-          }
-          console.log("Initial data seeded successfully.");
-        }
-      } catch (e) {
-        console.error("Error checking or seeding initial data: ", e);
-      }
-    };
-
-    seedInitialData();
-
-    // Set up real-time listener for phrases
-    const q = query(phrasesCollectionRef);
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedPhrases = [];
-      snapshot.forEach((doc) => {
-        fetchedPhrases.push({ id: doc.id, ...doc.data() });
-      });
-      // Sort phrases by custom category order, then by English phrase for consistent display
-      fetchedPhrases.sort((a, b) => {
-        if (a.type === 'staff' && b.type === 'staff') {
-          const aIndex = STAFF_CATEGORY_ORDER.indexOf(a.category);
-          const bIndex = STAFF_CATEGORY_ORDER.indexOf(b.category);
-          if (aIndex !== -1 && bIndex !== -1) {
-            if (aIndex !== bIndex) return aIndex - bIndex;
-          }
-        } else if (a.type === 'customer' && b.type === 'customer') { // Apply custom order for customer section
-          const aIndex = CUSTOMER_CATEGORY_ORDER.indexOf(a.category);
-          const bIndex = CUSTOMER_CATEGORY_ORDER.indexOf(b.category);
-          if (aIndex !== -1 && bIndex !== -1) {
-            if (aIndex !== bIndex) return aIndex - bIndex;
-          }
-        }
-        // Default sort by category name, then by English phrase
-        const categoryCompare = a.category.localeCompare(b.category);
-        if (categoryCompare !== 0) return categoryCompare;
-        return a.english.localeCompare(b.english);
-      });
-      setPhrases(fetchedPhrases);
-    }, (error) => {
-      console.error("Error fetching phrases from Firestore:", error);
-    });
-
-    return () => unsubscribe(); // Cleanup onSnapshot listener
-  }, [db, isAuthReady]); // Re-run when db or auth state changes
 
   // Function to call Gemini API for phrase suggestions
   const fetchSuggestedPhrases = async () => {
@@ -1185,7 +664,7 @@ function MainApp() {
         {/* Phrase List Display */}
         {Object.keys(groupedPhrases).length === 0 && (
           <div className="text-center text-lg py-10" style={{ color: brandColors.mediumGrey }}>
-            {isAuthReady ? 'Loading phrases or no phrases found.' : 'Initialising application...'}
+            No phrases found.
           </div>
         )}
 
