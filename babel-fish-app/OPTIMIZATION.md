@@ -10,10 +10,9 @@ The Babel Fish app has been completely restructured for better maintainability, 
 babel-fish-app/
 ├── src/
 │   ├── components/           # Reusable UI components
-│   │   ├── LanguageSelector.jsx
-│   │   ├── ModeToggle.jsx
-│   │   ├── CategoryFilter.jsx
-│   │   └── PhraseCard.jsx
+│   │   ├── FeedbackButton.jsx
+│   │   ├── FeedbackModal.jsx
+│   │   └── LiveTestScenarios.jsx
 │   ├── hooks/               # Custom React hooks
 │   │   ├── useFirebase.js
 │   │   └── useSpeech.js
@@ -123,13 +122,13 @@ The optimized version maintains full compatibility with:
 
 ### Component Testing
 ```javascript
-// Example: Testing LanguageSelector
+// Example: Testing FeedbackButton
 import { render, screen } from '@testing-library/react';
-import LanguageSelector from './components/LanguageSelector';
+import FeedbackButton from './components/FeedbackButton';
 
-test('renders language options', () => {
-  render(<LanguageSelector selectedLanguage="English" />);
-  expect(screen.getByText('English')).toBeInTheDocument();
+test('renders feedback button', () => {
+  render(<FeedbackButton onClick={() => {}} />);
+  expect(screen.getByLabelText('Leave feedback')).toBeInTheDocument();
 });
 ```
 
