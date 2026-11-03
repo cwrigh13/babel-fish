@@ -451,7 +451,7 @@ The modular architecture and integration with existing services ensure scalabili
   ```
 - **Environment Variable Fallbacks**: The Google Translate integration has fallback to hardcoded values:
   ```javascript
-  const GOOGLE_TRANSLATE_API_KEY = process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY || 'YOUR_API_KEY_HERE';
+  const GOOGLE_TRANSLATE_API_KEY = import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY || 'YOUR_API_KEY_HERE';
   ```
 
 ### 3. **Client-Side Security Vulnerabilities**
