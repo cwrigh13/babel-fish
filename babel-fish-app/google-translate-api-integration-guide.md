@@ -164,13 +164,13 @@ Update the suggested phrases display section:
 Create a `.env` file in your project root:
 
 ```env
-REACT_APP_GOOGLE_TRANSLATE_API_KEY=your_api_key_here
+VITE_GOOGLE_TRANSLATE_API_KEY=your_api_key_here
 ```
 
 Then update the API key reference:
 
 ```javascript
-const apiKey = process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY;
+const apiKey = import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY;
 ```
 
 #### Option B: Direct Configuration (For Development)

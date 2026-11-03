@@ -3,6 +3,7 @@ export const initialPhrases = [
   // Staff Section Phrases
   { 
     id: 'staff_general_1',
+    published: true,
     type: 'staff', 
     category: 'General Enquiries', 
     english: 'Please follow me.',
@@ -21,6 +22,7 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_general_2',
+    published: true,
     type: 'staff', 
     category: 'General Enquiries', 
     english: 'Do you prefer to speak Mandarin or Cantonese?',
@@ -39,6 +41,7 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_general_3',
+    published: true,
     type: 'staff', 
     category: 'General Enquiries', 
     english: 'I speak Mandarin.',
@@ -57,6 +60,7 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_general_4',
+    published: true,
     type: 'staff', 
     category: 'General Enquiries', 
     english: 'I speak Cantonese.',
@@ -75,6 +79,7 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_general_5',
+    published: true,
     type: 'staff', 
     category: 'General Enquiries', 
     english: 'Please wait one moment',
