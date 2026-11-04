@@ -404,6 +404,7 @@ export const initialPhrases = [
   // Customer Section Phrases
   { 
     id: 'customer_general_1',
+    published: true,
     type: 'customer', 
     category: 'General Assistance', 
     english: 'How do I renew my borrowed items?',
@@ -422,6 +423,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_transactional_1',
+    published: true,
     type: 'customer', 
     category: 'Transactional', 
     english: 'I do not have a library card.',
@@ -440,6 +442,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_transactional_2',
+    published: true,
     type: 'customer', 
     category: 'Transactional', 
     english: 'I would like to sign up for a library card.',
@@ -458,6 +461,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_transactional_3',
+    published: true,
     type: 'customer', 
     category: 'Transactional', 
     english: 'How much does it cost to join the library?',
@@ -476,6 +480,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_general_2',
+    published: true,
     type: 'customer', 
     category: 'General Assistance', 
     english: 'Can you assist me with reserving an item?',
@@ -494,6 +499,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_general_3',
+    published: true,
     type: 'customer', 
     category: 'General Assistance', 
     english: 'How can I pay for my fees?',
@@ -512,6 +518,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_general_4',
+    published: true,
     type: 'customer', 
     category: 'General Assistance', 
     english: 'When is this item due back?',
@@ -530,6 +537,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_general_5',
+    published: true,
     type: 'customer', 
     category: 'General Assistance', 
     english: 'Can I borrow this item?',
@@ -548,6 +556,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_general_6',
+    published: true,
     type: 'customer', 
     category: 'General Assistance', 
     english: 'How long can I borrow items from the library?',
@@ -566,6 +575,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_general_7',
+    published: true,
     type: 'customer', 
     category: 'General Assistance', 
     english: 'Where can I return these items?',
@@ -584,6 +594,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_general_8',
+    published: true,
     type: 'customer', 
     category: 'General Assistance', 
     english: 'Is there a justice of the peace available today?',
@@ -602,6 +613,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_layout_1',
+    published: true,
     type: 'customer', 
     category: 'Library Layout', 
     english: 'Where is the bathroom?',
@@ -620,6 +632,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_layout_2',
+    published: true,
     type: 'customer', 
     category: 'Library Layout', 
     english: 'Where is the Chinese section?',
@@ -638,6 +651,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_layout_3',
+    published: true,
     type: 'customer', 
     category: 'Library Layout', 
     english: 'Are there any quiet spots to sit?',
@@ -656,6 +670,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_layout_4',
+    published: true,
     type: 'customer', 
     category: 'Library Layout', 
     english: 'Where is the children\'s section?',
@@ -674,6 +689,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_layout_5',
+    published: true,
     type: 'customer', 
     category: 'Library Layout', 
     english: 'How do I get to Centrelink?',
@@ -692,6 +708,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_layout_6',
+    published: true,
     type: 'customer', 
     category: 'Library Layout', 
     english: 'How do I get to Council?',
@@ -710,6 +727,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_layout_7',
+    published: true,
     type: 'customer', 
     category: 'Library Layout', 
     english: 'How do I get to the Seniors Centre?',
@@ -728,6 +746,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_1',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'How can I connect to the wifi?',
@@ -746,6 +765,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_2',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'Are there public computers available with an internet connection?',
@@ -764,6 +784,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_3',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'I need help using a computer',
@@ -782,6 +803,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_4',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'I need help using the internet.',
@@ -800,6 +822,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_5',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'Are there printers available?',
@@ -818,6 +841,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_6',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'I need help using a printer.',
@@ -836,6 +860,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_7',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'Are there scanners available?',
@@ -854,6 +879,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_8',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'I need help using a scanner',
@@ -872,6 +898,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_digital_9',
+    published: true,
     type: 'customer', 
     category: 'Digital Services', 
     english: 'How much does printing cost?',
@@ -890,6 +917,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_language_1',
+    published: true,
     type: 'customer', 
     category: 'Language & Community Resources', 
     english: 'Do you have Chinese language magazines?',
@@ -908,6 +936,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_language_2',
+    published: true,
     type: 'customer', 
     category: 'Language & Community Resources', 
     english: 'Do you have Chinese language DVDs?',
@@ -926,6 +955,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_language_3',
+    published: true,
     type: 'customer', 
     category: 'Language & Community Resources', 
     english: 'Is there anyone here who can speak Mandarin?',
@@ -944,6 +974,7 @@ export const initialPhrases = [
   },
   { 
     id: 'customer_language_4',
+    published: true,
     type: 'customer', 
     category: 'Language & Community Resources', 
     english: 'Is there anyone here who can speak Cantonese?',

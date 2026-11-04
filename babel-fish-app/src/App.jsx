@@ -202,7 +202,9 @@ function MainApp() {
   const CUSTOMER_SUBCATEGORY_DISPLAY_MAP = {
     'General Assistance': 'General Assistance',
     'Transactional': 'Transactional',
+    'Library Layout': 'Library Layout',
     'Digital Services': 'Digital Services',
+    'Language & Community Resources': 'Language & Community Resources',
   };
   const [customerSubcategoryFilter, setCustomerSubcategoryFilter] = useState('All'); // State for customer category filter
 
