@@ -98,7 +98,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_general_6',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'General Enquiries', 
     english: 'I understand.',
     translations: {
@@ -116,7 +117,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_general_7',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'General Enquiries', 
     english: 'Thank you.',
     translations: {
@@ -134,7 +136,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_general_8',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'General Enquiries', 
     english: 'You are welcome.',
     translations: {
@@ -152,7 +155,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_transactional_1',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Transactional', 
     english: 'Please show me your library card',
     translations: {
@@ -170,7 +174,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_transactional_2',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Transactional', 
     english: 'Would you like to create a library card? It is free of charge.',
     translations: {
@@ -188,7 +193,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_transactional_3',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Transactional', 
     english: 'Would you like to borrow these items?',
     translations: {
@@ -206,7 +212,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_transactional_4',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Transactional', 
     english: 'Would you like to return these items?',
     translations: {
@@ -224,7 +231,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_transactional_5',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Transactional', 
     english: 'The due date is listed on the library receipt.',
     translations: {
@@ -242,7 +250,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_transactional_6',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Transactional', 
     english: 'There is a fee for late and lost items.',
     translations: {
@@ -260,7 +269,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_transactional_7',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Transactional', 
     english: 'Your library card has expired. May I please see your photo identification so I may confirm your details.',
     translations: {
@@ -278,7 +288,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_transactional_8',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Transactional', 
     english: 'May I see your photo ID to confirm details? If no photo ID, a passport plus a bank statement or phone bill copy is needed.',
     translations: {
@@ -296,7 +307,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_digital_1',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Digital Services', 
     english: 'Would you like to use the internet?',
     translations: {
@@ -314,7 +326,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_digital_2',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Digital Services', 
     english: 'Do you need help using the internet?',
     translations: {
@@ -332,7 +345,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_digital_3',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Digital Services', 
     english: 'Would you like to use the printer?',
     translations: {
@@ -350,7 +364,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_digital_4',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Digital Services', 
     english: 'Do you need help using the printer?',
     translations: {
@@ -368,7 +383,8 @@ export const initialPhrases = [
   },
   { 
     id: 'staff_digital_5',
-    type: 'staff', 
+    published: true,
+    type: 'staff',
     category: 'Digital Services', 
     english: 'How many copies do you need?',
     translations: {
